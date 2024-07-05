@@ -1,0 +1,43 @@
+# What is data science in production?
+
+I think there are four main characteristics:
+
+* It's code.
+* That's run run repeatedly.
+* To produce an artefact.
+* That helps someone to makes make a better decision.
+
+Note that this is not Production-with-a-capital-P. That adds an additional component of paging: i.e, if something goes wrong with code that is in Production, you need to fix it right away even if it's 2am on Saturday morning.
+
+What might that artefact be?
+
+* A static document or dashboard that a human looks at.
+* A dynamic app or API.
+* Data engineering.
+* A notification, like an email or a push notification to a phone.
+
+Putting code into production adds some additional challenges:
+
+* It's run repeatedly over time. You want it to return the same results if the data hasn't changed. Error if the data schema has changed. Update calculations and summaries if the values have changed naturally.
+
+* It's run on a different computer to where you developed it. This is likely to be a linux machine, so you'll have to learn some new truths of computing if you've only used windows before. You'll also need to learn some differences between desktop and server computers. Finally, you'll need to learn some new skills for remote debugging.
+
+* Important artefacts are responsibility of a team of data scientists. That implies shared knowledge, tools, and processes.
+
+# Why R?
+
+Because R is an unparallel environment for exploratory data anaylsis. So why not use it for production to? It's totally possible - it just requires some new tools and techniques, and a slightly different mindset, that you need for interactive analysis.
+
+## Platforms
+
+Putting code into production requires some computational platform. While many of the details are the same regardless of platform, there are often minor, but important differences. Not possible to cover every possible platform so in this book we'll focus on three:
+
+* [GitHub Actions](https://docs.github.com/en/actions): Hosted offering. GitHub Actions are free for public repos and available to anyone with a GitHub account. They're a great way to learn the basics of R in production and to generate outputs for the whole world to see. But it's not likely that you'll use them in a job. Cheap and easy to use. But only supports static content. Very popular in open source world (e.g. many R packages use it for automated test) so useful tool regardless.
+
+* [Posit Connect Cloud](https://connect.posit.cloud): A centrally hosted service. At this moment in time is free and public, but in the future there will be a paid offering that is private. Supports dynamic content.
+
+* [Posit Connect](https://posit.co/products/enterprise/connect/): On prem offering designed to make publishing R (and now Python) data science content as easy as possible. 
+
+I have picked these three because they embrace three different ways of working, but they have all been tooled up specifically to support R. That means that they 
+
+Two of them are created by my employer Posit. 

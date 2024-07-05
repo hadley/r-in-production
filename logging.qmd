@@ -1,0 +1,55 @@
+# Logging
+
+When your scripts are running unattended, logging becomes an important tool for retrospective debugging, because it can help you understand what happened in the steps leading up to a failure. 
+
+The technology of logging is fairly simple: in most cases, the actual collection and recording of the logging data will be handled by someone else. All you need to do is get data out of R and into the log. There are three main scenarios:
+
+* Running an RScript: Anything that you print or `cat()` will be captured by the log.
+
+* Running a `.rmd`/`.qmd`: Anything that you print or `cat()` will be captured by RMarkdown and will appear in the rendered doc. So if you want info to appear in the log, you'll need to manually send it to `stderr()`. 
+
+    This is same as rendering a Rmd, with the additional quirk that by default the quarto cli will colour stderr as red, so you'll need to suppress this by setting the env var `NO_COLOR=1`.
+
+* shiny app/plumber API. Logging each user action.
+
+## General advice
+
+* Use emoji
+
+* When rendering a `.rmd` or `.qmd` in an unattended environment, chunk names become particularly important because they'll give you some logging for free. Make sure to name all your chunks, so you can easily see what's happening.
+
+* Include information about the shape of data
+
+* Log just before you take any important actions (e.g. saving to database, sending pull notification etc). Then if the action fails, you'll have a better sense of if it never got called for some reason or it didn't work.
+
+* Log before important if statements. If your code branches, include enough logging information you get a sense for which branch it took.
+
+## Logging terminology
+
+### Output streams
+
+### Log levels
+
+* debug
+* info
+* warning
+* error
+
+## Specialised advice
+
+### Crash
+
+Set env var so that each line of your knitr is printed.
+
+What's the equivalent for `Rscript`?
+
+### Performance
+
+Sometimes the problem isn't that your code doesn't work, but it performs particularly slowly. Perhaps it runs much slower than on your laptop or perhaps its performance varies in surprising ways.
+
+* `.Rmd`/`.qmd`: `gha::knitr_time_chunks`
+* `.R`: tictoc
+
+### Summary page Github Actions
+
+Special GHA 
