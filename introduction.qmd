@@ -1,28 +1,33 @@
-# What is data science in production?
+# Introduction
 
-I think there are four main characteristics:
+## What is data science in production?
 
-* It's code.
-* That's run run repeatedly.
-* To produce an artefact.
-* That helps someone to makes make a better decision.
+What does it mean for code to be running in production? I think there are three main characteristics:
 
-Note that this is not Production-with-a-capital-P. That adds an additional component of paging: i.e, if something goes wrong with code that is in Production, you need to fix it right away even if it's 2am on Saturday morning.
+* It's **run on another computer**. This is called your production environment and is typically a linux server. This often means its a different operating system to your person computer (which is usually linux or windows), is configured differently, because it's a server and not a desktop, and it offers limited capabilities for interactive debugging.
 
-What might that artefact be?
+* It's **run repeatedly**. A production job is not a one off. It's something's that run repeatedly over months or years. This introduces new challenges because of all the things that can change over time: the data schema, package versions, system libraries, operating systems, the universe, and requirements.
 
-* A static document or dashboard that a human looks at.
-* A dynamic app or API.
-* Data engineering.
-* A notification, like an email or a push notification to a phone.
+* **Someone cares about the results**. If your job stops working someone is going to bug you about it. This means that you need to take additional care when programming to minimise the chances of failure and if something goes wrong while you're on vacation, you want your colleagues to be able to step in. That implies shared knowledge, tools, and processes.
 
-Putting code into production adds some additional challenges:
+    The highest level of caring leads to Production-with-a-capital-P which adds in paging: i.e, if something goes wrong, you need to fix it immediately, even if it's 2am on Saturday morning. Most data science projects don't end up in Production, not because you can't put R in Production, but because you don't want to put your data scientists in Production.
 
-* It's run repeatedly over time. You want it to return the same results if the data hasn't changed. Error if the data schema has changed. Update calculations and summaries if the values have changed naturally.
+It's useful to split production jobs up into two categories based on how the computation happen: is it run in the background as **batch job** or is a human or computer waiting for the results of an **interactive job**.
 
-* It's run on a different computer to where you developed it. This is likely to be a linux machine, so you'll have to learn some new truths of computing if you've only used windows before. You'll also need to learn some differences between desktop and server computers. Finally, you'll need to learn some new skills for remote debugging.
+* A typical batch job renders documents, transforms and saves data, fits models, or sends notifications (or any combination of the above). Batch jobs are usually run on a schedule or when some other job completes. If needed, these jobs can be computationally intensive because they’re running in the background.
 
-* Important artefacts are responsibility of a team of data scientists. That implies shared knowledge, tools, and processes.
+* Interactive jobs are either apps (if the target audience is a human) or an APIs (if the target audience is another computer). They're executed dynamically when someone needs them, and if there's a lot of demand, multiple instances might be run at the same time. Interactive jobs should not generally be computationally intensive because someone is waiting for the results.
+
+Some examples that help illustrate the difference are:
+
+* Depending on what technology you use to build it, a dashboard might be a batch job (e.g. flexdashboard, quarto dashboards) or an interactive job (e.g. shinydashboard, shiny + bslib).
+
+* If your interactive job is slow, a powerful and general technique is to pair it with a batch job that performs as much computation as possible and caches results.
+
+* Parameterising an RMarkdown report turns it from batch a job to an interactive job. (Behind the scenes parameterising a report turns it into a Shiny app that runs `rmarkdown::render()` on demand.)
+
+* You could use shinylive to turn a shiny app from an interactive job to a batch job. This produces a static HTML file that you can deploy anywhere and the viewer's computer now does any computation.
+
 
 # Why R?
 

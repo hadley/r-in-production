@@ -1,0 +1,9 @@
+project:
+  type: book
+
+book:
+  title: R in Production
+  author: Hadley Wickham
+  chapters:
+    - index.qmd
+    - introduction.qmd
