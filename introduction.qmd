@@ -28,6 +28,7 @@ Some examples that help illustrate the difference are:
 
 * You could use shinylive to turn a shiny app from an interactive job to a batch job. This produces a static HTML file that you can deploy anywhere and the viewer's computer now does any computation.
 
+* The online version of this book is an example a batch job. Every time I push a change to GitHub, a GitHub action renders the book and publishes it to GitHub pages.
 
 # Why R?
 
