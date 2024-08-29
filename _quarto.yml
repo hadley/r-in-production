@@ -7,3 +7,7 @@ book:
   chapters:
     - index.qmd
     - introduction.qmd
+
+    - part: another-machine.qmd
+      chapters:
+      - packages.qmd

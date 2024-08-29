@@ -1,0 +1,32 @@
+# Package installation
+
+There are two challenges when it comes to installing R packages in production. Firstly, you're going to be installing packages on a linux server and your primary experience is installing packages on a mac or windows desktop. There are some important differences that you need to learn about. Secondly, you need some way to communicate your current package versions to the production machine so that it installs the same package version as you.
+
+Typically production jobs are run in some sort of throwaway container. That means that unlike in your development environment, you don't have the option of installing packages once and then using them forever. You need to install the packages every time you run the job. This means that the speed of package installation becomes more important, and for simple jobs, it's quite possible that package installation takes more time than running your code.
+
+## Binary packages and system dependencies
+
+## Matching package versions
+
+
+### Use the latest CRAN versions
+
+This is the easiest (all you need is a list of package names) but also the most dangerous (which is why it's not currently supported in connect+cloud). This style is a really good fit for CRAN package development (because your package has to work with the latest version of every package it uses) and for short-term jobs that aren't particularly important.
+
+To use this style all you need to do record package names in your `DESCRIPTION` file and use the `setup-r-dependencies` setp in your action.
+
+The main (major!) downside of this approach is that you're fundamentally at the mercy of the package maintainers that you use. If you use only a small set of packages that are changing slowly or with strong backward compatibility guarantees, this is relatively low risk. But if you use a lot of packages, or packages developed by less experienced maintainers, you're much more likely to run into problems.
+
+### Capturing your current versions
+
+The next step up (and the first place that you want to consider for any "real" job) is capturing the all the versions of all the packages (and their dependencies) that your project uses. One way to do that that's widely supported is to use `rsconnect::writeManifest()` to create `manifest.json`. This function looks through all the code in your project, identifying all the packages that it uses (whether thats with a `library()` or `require()` call, because you use `::` or something else), finds all the packages that those packages use, and then records their versions in `manifest.json`.
+
+Connect and connect cloud both require this file, and GHA can use it with `setup-r-manifest`. If you're using Git-backed deploys then you'll need to create it yourself (and update it every time you install or update a package); if you're using push-button deploy, it'll be run for you automatically behind the scenes.
+
+(TODO: how can we get `manifest.json` to automatically update itself?)
+
+The downside of this approach is that while the versions on the deployment server are locked, the versions on your development machine are not. Imagine that you create a dashboard, and it runs successfully for a couple of years because the package versions are the same everytime you run it. When you come back to that project,
+
+### Lock current versions
+
+The most rigoous
