@@ -1,13 +1,72 @@
 # Package installation
 
-There are two challenges when it comes to installing R packages in production. Firstly, you're going to be installing packages on a linux server and your primary experience is installing packages on a mac or windows desktop. There are some important differences that you need to learn about. Secondly, you need some way to communicate your current package versions to the production machine so that it installs the same package version as you.
+There are two challenges when it comes to installing R packages in production:
 
-Typically production jobs are run in some sort of throwaway container. That means that unlike in your development environment, you don't have the option of installing packages once and then using them forever. You need to install the packages every time you run the job. This means that the speed of package installation becomes more important, and for simple jobs, it's quite possible that package installation takes more time than running your code.
+-   You're going to be installing packages on a linux server and your primary experience is probably installing packages on a mac or windows desktop. There are some important differences that you need to learn about, including packages binarie and system libraries.
+
+-   Production jobs are usually run in some sort of throwaway container. That means that unlike in your development environment, you need to install packages every time your production job runs. This means that the speed of package installation becomes more important.
+
+-   Because packages are re-installed all the time, you probably don't just want to install the latest packages from CRAN, because they will change over time. Instead, you want to make sure that the production machine always installs the same versions, and those versions are the same as what you're using locally.
 
 ## Binary packages and system dependencies
 
-## Matching package versions
+On Mac and Windows, you can expect to install a package from CRAN that you will get a self-contained binary package. That has two consequences: being self-contained means that you don't need to install any other tools to make it work, and because it's a binary package it installs quickly (because all R has to do is unzip a file). Things are different on linux because CRAN doesn't provide binaries. That means you need to compile the package, and if the package has any external dependencies, you'll need to install those before compilation will succeed.
 
+For example, take the xml2 package which provides tools for working with xml files. Most of the work in xml2 is done in C code, which unlike R needs to be compiled before you can run it, and while there is some C code in xml2 itself, most of the code comes from the external libxml2 library[^packages-1]. When you install xml2 on mac or windows, CRAN provides a binary package that has already compiled the C code for you and includes libxml2. If you install xml2 from CRAN, you'll need to make sure that you have libxml2 installed on your computer and you can expect building the xml2 package to take a few minutes because it needs to compile the C code.
+
+[^packages-1]: Confusingly the C equivalents of R's packages are called libraries.
+
+This is a bit annoying if you use a linux machine as a development machine, but it can be crippling on a production machine because the packages have to be installed every time your job is run. Luckily, we have provide a solution to this through the freely available [Posit Public Package Manager](https://p3m.dev)[^packages-2] (or P3M for short). P3M provides binaries for many popular Linux distributions. At time of writing, that included CentOs, Rocky Linux, OpenSUSE, RHEL, SLES, Ubunutu and Debian.
+
+[^packages-2]: We also provide the non-free Posit Package Manager which you can use inside your organisation. Using PPM typically makes your IT department happy because you're not installing code from random corners of the internet, and it makes you happy because it allows you to install all the open source data science packages (in R and Python) that you need to do your job. You can also use PPM to distribute your own internal packages. We'll come back to that later in the book.
+
+You can use P3M by setting you CRAN mirror to:
+
+```{R}
+options(repos = c(CRAN = "https://p3m.dev/cran/latest")
+```
+
+While P3M gives you binaries, unlike on Windows and Mac these are not self-contained. That's because on your Linux servers your server admin wants to control what versions of system libraries are installed. The most important reason is security: if your packages are using a central version of system library, it's very easy to update them all to make sure every tool is protected from any security risks. It also saves a little disk space, because instead of every tool having to have it's own copy of the system library they can all point to a common central location.
+
+To avoid this problem as much as possible, we recommend that admins install the most common set of system dependencies needed by R packages <https://docs.posit.co/connect/admin/r/dependencies/index.html>. Additioanlly, one of the reasons that we recommend that you use `pak()` to install packages is that it will report if any system dependencies are missing, and give you actionable advice. For example, if you attempt to install the tidyverse on a fresh linux install system, you'll get an error like this:
+
+``` R
+→ Will install 101 packages.
+→ Will download 31 CRAN packages (34.93 MB), cached: 70 (33.19 MB).
+
+[...]
+
+✖ Missing 11 system packages. You'll probably need to install them manually:
++ libcurl4-openssl-dev  - curl
++ libfontconfig1-dev    - systemfonts
++ libfreetype6-dev      - ragg, systemfonts, textshaping
++ libfribidi-dev        - textshaping
++ libharfbuzz-dev       - textshaping
++ libjpeg-dev           - ragg
++ libpng-dev            - ragg
++ libssl-dev            - curl, openssl
++ libtiff-dev           - ragg
++ libxml2-dev           - xml2
++ pandoc                - knitr, reprex, rmarkdown
+```
+
+You can then drop that info into a ticket to your IT department.
+
+pak also provides tools to do this programmatically, e.g:
+
+```{r}
+pak::pkg_sysreqs("devtools", sysreqs_platform = "centos")
+```
+
+You can vary the `sysreqs_platform` to see one of the reasons that installing system dependencies is so frustrating to do by hand: every Linux distribution seems to have a slightly different name for the same system dependency.
+
+## More details
+
+On linux, however, you have to start from a source package. That means that you need to
+
+C has another important difference from R: it separates the definition of the API (i.e. the names of the functions and their arguments) from their implementations. The headers are just the definition of the API. You need the headers to compile the package; you need the runtime library to use it.
+
+## Matching package versions
 
 ### Use the latest CRAN versions
 
