@@ -23,7 +23,7 @@ This is a bit annoying if you use a linux machine as a development machine, but 
 You can use P3M by setting you CRAN mirror to:
 
 ```{R}
-options(repos = c(CRAN = "https://p3m.dev/cran/latest")
+options(repos = c(CRAN = "https://p3m.dev/cran/latest"))
 ```
 
 While P3M gives you binaries, unlike on Windows and Mac these are not self-contained. That's because on your Linux servers your server admin wants to control what versions of system libraries are installed. The most important reason is security: if your packages are using a central version of system library, it's very easy to update them all to make sure every tool is protected from any security risks. It also saves a little disk space, because instead of every tool having to have it's own copy of the system library they can all point to a common central location.
