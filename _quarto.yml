@@ -10,4 +10,20 @@ book:
 
     - part: another-machine.qmd
       chapters:
+      - paper-cuts.qmd
       - packages.qmd
+      - debugging.qmd
+      - auth.qmd
+
+    - part: multiple-times.qmd
+      chapters:
+      - schema.qmd
+      - packages-platform.qmd
+      - universe.qmd
+      - requirements.qmd
+
+    - part: shared-responsibility.qmd
+      chapters:
+      - parquet.qmd
+      - team-conventions.qmd
+      - code-review.qmd

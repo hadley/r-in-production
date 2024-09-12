@@ -7,3 +7,5 @@
 
 /.quarto/
 /_book/
+site_libs/
+*.html
