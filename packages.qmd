@@ -1,36 +1,75 @@
 # Package installation
 
-There are two challenges when it comes to installing R packages in production:
+There are three challenges when it comes to installing R packages in production:
 
--   You're going to be installing packages on a linux server and your primary experience is probably installing packages on a mac or windows desktop. There are some important differences that you need to learn about, including packages binarie and system libraries.
+-   You're going to be installing packages on a linux server and your primary experience is probably installing packages on a mac or windows desktop. There are some important differences that you need to learn about, including binary packages and system libraries.
 
 -   Production jobs are usually run in some sort of throwaway container. That means that unlike in your development environment, you need to install packages every time your production job runs. This means that the speed of package installation becomes more important.
 
 -   Because packages are re-installed all the time, you probably don't just want to install the latest packages from CRAN, because they will change over time. Instead, you want to make sure that the production machine always installs the same versions, and those versions are the same as what you're using locally.
 
+The overall message of this chapter is that in a stock installation of R on Linux, package installation is rather different to Mac and Windows. But if you use pak and make sure your system is configured to use P3M (by talking to your system administrator or doing a little work if you're the admin), you can get very close to the same experience (and you should because it's much better).
+
+## pak
+
+We recommend that you use `pak::pak()` to install R packages instead of `install.packages()`.
+
+-   **Fast**: It downloads and installs packages in parallel considerably reducing the time required to get up and running. It also caches packages so that repeatedly switching between two versions of the same package is fast.
+
+-   **Safe**: It works out an installation plan up front, and reports to you exactly what's going to be installed. It protects you against common failure modes on Windows (e.g. a package is loaded in another session) and Linux (e.g. you are missing a system dependency).
+
+-   **Convenient**: It is It can install packages from a variety of locations including GitHub. It automatically works with P3M to install binaries on Linux (more on that shortly). It allows you to install historical versions of packages.
+
+Using pak is simple. First install it:
+
+``` R
+install.packages("pak")
+```
+
+And then you can supply the packages to install:
+
+``` R
+pak::pak("tidyverse")
+# Install a package from GitHub
+pak::pak("r-lib/rlang")
+```
+
+You can learn about more advanced features at <https://pak.r-lib.org/reference/get-started.html#package-installation>.
+
+We'll assume that you use `pak::pak()` in the rest of the book because it eliminates a class of failures that we'd otherwise have to explain.
+
 ## Binary packages and system dependencies
 
-On Mac and Windows, you can expect to install a package from CRAN that you will get a self-contained binary package. That has two consequences: being self-contained means that you don't need to install any other tools to make it work, and because it's a binary package it installs quickly (because all R has to do is unzip a file). Things are different on linux because CRAN doesn't provide binaries. That means you need to compile the package, and if the package has any external dependencies, you'll need to install those before compilation will succeed.
+On Mac and Windows, when you install a package from CRAN you get a self-contained binary package. That has two consequences:
 
-For example, take the xml2 package which provides tools for working with xml files. Most of the work in xml2 is done in C code, which unlike R needs to be compiled before you can run it, and while there is some C code in xml2 itself, most of the code comes from the external libxml2 library[^packages-1]. When you install xml2 on mac or windows, CRAN provides a binary package that has already compiled the C code for you and includes libxml2. If you install xml2 from CRAN, you'll need to make sure that you have libxml2 installed on your computer and you can expect building the xml2 package to take a few minutes because it needs to compile the C code.
+-   **Self-contained** means that you don't need to install any other tools to make it work.
+
+-   **Binary** means that CRAN has done all the work to get the package ready for your specific operating system, and so installation happens quickly because all R needs to do is unzip a file.
+
+Things are different on Linux because CRAN only provide source packages. That means you need to compile the package (which can take multiple minutes for complex packages), and if the package has any external dependencies, you'll need to install those before compilation will succeed. For example, take the xml2 package. Most of the work in xml2 is done in C code, and while there is some C code in xml2 itself, most of the code comes from the external libxml2 library[^packages-1]. When you install xml2 on Mac or Windows you can get a binary package that already contains the external code. If you install xml2 on Linux, you have to first install libxml2 on your computer and then compile the package (which might take a few minutes).
 
 [^packages-1]: Confusingly the C equivalents of R's packages are called libraries.
 
-This is a bit annoying if you use a linux machine as a development machine, but it can be crippling on a production machine because the packages have to be installed every time your job is run. Luckily, we have provide a solution to this through the freely available [Posit Public Package Manager](https://p3m.dev)[^packages-2] (or P3M for short). P3M provides binaries for many popular Linux distributions. At time of writing, that included CentOs, Rocky Linux, OpenSUSE, RHEL, SLES, Ubunutu and Debian.
+This is a bit annoying if you use a Linux machine as a development machine, but it can be crippling on a production machine because the packages have to be installed every time your job starts. Luckily, you can resolve this problem by using the freely available [Posit Public Package Manager](https://p3m.dev)[^packages-2] (or P3M for short). P3M is very similar to CRAN, but also provides binaries for many popular Linux distributions, like CentOS, Rocky Linux, OpenSUSE, RHEL, SLES, Ubunutu and Debian.
 
 [^packages-2]: We also provide the non-free Posit Package Manager which you can use inside your organisation. Using PPM typically makes your IT department happy because you're not installing code from random corners of the internet, and it makes you happy because it allows you to install all the open source data science packages (in R and Python) that you need to do your job. You can also use PPM to distribute your own internal packages. We'll come back to that later in the book.
 
-You can use P3M by setting you CRAN mirror to:
+You should ask your system administrator to configure P3M for your production systems so that it just works. If you want to do it yourself, you can following the instructions at <https://p3m.dev/client/#/repos/cran/setup>, e.g.:
 
 ```{R}
-options(repos = c(CRAN = "https://p3m.dev/cran/latest"))
+options(repos = c(
+  PPPM = "https://p3m.dev/cran/__linux__/bookworm/latest",
+  CRAN = "https://cloud.r-project.org"
+))
 ```
 
-While P3M gives you binaries, unlike on Windows and Mac these are not self-contained. That's because on your Linux servers your server admin wants to control what versions of system libraries are installed. The most important reason is security: if your packages are using a central version of system library, it's very easy to update them all to make sure every tool is protected from any security risks. It also saves a little disk space, because instead of every tool having to have it's own copy of the system library they can all point to a common central location.
+This resolves one problem: P3M gives you binaries so package installation will be fast. However, it still leaves you with the other: the binaries are not self-contained and expect system dependencies to be installed in standard locations. That's because on your Linux servers your server admin wants to control what versions of system libraries are installed. The most important reason is security: if your packages are using a central version of system library, it's very easy to update them all to make sure every tool is protected from any security risks. It also saves a little disk space, because instead of every tool having to have it's own copy of the system library they can all point to a common central location.
 
-To avoid this problem as much as possible, we recommend that admins install the most common set of system dependencies needed by R packages <https://docs.posit.co/connect/admin/r/dependencies/index.html>. Additioanlly, one of the reasons that we recommend that you use `pak()` to install packages is that it will report if any system dependencies are missing, and give you actionable advice. For example, if you attempt to install the tidyverse on a fresh linux install system, you'll get an error like this:
+To avoid this problem as much as possible, we recommend that admins install the most common set of system dependencies needed by R packages <https://docs.posit.co/connect/admin/r/dependencies/index.html>.
 
-``` R
+Additionally, one of the reasons that we recommend that you use `pak()` to install packages is that it will report if any system dependencies are missing, and give you actionable advice. For example, if you attempt to install the tidyverse on a fresh Linux system, you'll get an message like this:
+
+```
 → Will install 101 packages.
 → Will download 31 CRAN packages (34.93 MB), cached: 70 (33.19 MB).
 
@@ -60,21 +99,11 @@ pak::pkg_sysreqs("devtools", sysreqs_platform = "centos")
 
 You can vary the `sysreqs_platform` to see one of the reasons that installing system dependencies is so frustrating to do by hand: every Linux distribution seems to have a slightly different name for the same system dependency.
 
-## More details
-
-On linux, however, you have to start from a source package. That means that you need to
-
-C has another important difference from R: it separates the definition of the API (i.e. the names of the functions and their arguments) from their implementations. The headers are just the definition of the API. You need the headers to compile the package; you need the runtime library to use it.
-
 ## Matching package versions
 
-### Use the latest CRAN versions
+We've tackled the first challenge of installing packages on Linux. Now we need to talk about the next challenge: installing the right versions of the packages.
 
-This is the easiest (all you need is a list of package names) but also the most dangerous (which is why it's not currently supported in connect+cloud). This style is a really good fit for CRAN package development (because your package has to work with the latest version of every package it uses) and for short-term jobs that aren't particularly important.
-
-To use this style all you need to do record package names in your `DESCRIPTION` file and use the `setup-r-dependencies` setp in your action.
-
-The main (major!) downside of this approach is that you're fundamentally at the mercy of the package maintainers that you use. If you use only a small set of packages that are changing slowly or with strong backward compatibility guarantees, this is relatively low risk. But if you use a lot of packages, or packages developed by less experienced maintainers, you're much more likely to run into problems.
+You need to make sure that you have the same versions of packages on your development and deployment environments.
 
 ### Capturing your current versions
 
@@ -84,8 +113,14 @@ Connect and connect cloud both require this file, and GHA can use it with `setup
 
 (TODO: how can we get `manifest.json` to automatically update itself?)
 
-The downside of this approach is that while the versions on the deployment server are locked, the versions on your development machine are not. Imagine that you create a dashboard, and it runs successfully for a couple of years because the package versions are the same everytime you run it. When you come back to that project,
+The downside of this approach is that while the versions on the deployment server are locked, the versions on your development machine are not. Imagine that you create a dashboard, and it runs successfully for a couple of years because the package versions are the same everytime you run it. When you come back to that project, the code might no longer run. We'll come back to that problem in ...
 
-### Lock current versions
+### Use the latest CRAN versions
 
-The most rigoous
+There is another workflow available on GitHub Actions that worth talking about: installing packages from CRAN.
+
+This is the easiest (all you need is a list of package names) but also the most dangerous (which is why it's not currently supported in connect+cloud). This style is the best fit for code that you're sharing widely, because you'll quickly find out if it doens't work with the current versions of CRAN packages. This makes it a really good fit for package development, because you want to make sure that your package always works with the latest version of CRAN packages (since you have no control over what package versions your users will install).
+
+It can also be a good fit for short-term jobs that aren't particularly important. But you're fundamentally at the mercy of the package maintainers that you use. If you use only a small set of packages that are changing slowly or with strong backward compatibility guarantees, this is relatively low risk. But if you use a lot of packages, or packages developed by less experienced maintainers, you're much more likely to run into problems.
+
+To use this style all you need to do record package names in your `DESCRIPTION` file and use the `setup-r-dependencies` step in your action.
