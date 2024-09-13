@@ -1,12 +1,14 @@
 # Logging
 
-When your scripts are running unattended, logging becomes an important tool for retrospective debugging, because it can help you understand what happened in the steps leading up to a failure. 
+When your scripts are running unattended, logging becomes an important tool for retrospective debugging, because it can help you understand what happened in the steps leading up to a failure.
+
+## Basics
 
 The technology of logging is fairly simple: in most cases, the actual collection and recording of the logging data will be handled by someone else. All you need to do is get data out of R and into the log. There are three main scenarios:
 
 * Running an RScript: Anything that you print or `cat()` will be captured by the log.
 
-* Running a `.rmd`/`.qmd`: Anything that you print or `cat()` will be captured by RMarkdown and will appear in the rendered doc. So if you want info to appear in the log, you'll need to manually send it to `stderr()`. 
+* Running a `.rmd`/`.qmd`: Anything that you print or `cat()` will be captured by RMarkdown and will appear in the rendered doc. So if you want info to appear in the log, you'll need to manually send it to `stderr()`.
 
     This is same as rendering a Rmd, with the additional quirk that by default the quarto cli will colour stderr as red, so you'll need to suppress this by setting the env var `NO_COLOR=1`.
 
@@ -52,4 +54,4 @@ Sometimes the problem isn't that your code doesn't work, but it performs particu
 
 ### Summary page Github Actions
 
-Special GHA 
+Special GHA

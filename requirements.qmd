@@ -1,1 +1,10 @@
 # Handling changing requirements
+
+## Investing in maintenance
+
+### Refactoring
+
+## Managing change
+
+Time boxing
+Batching

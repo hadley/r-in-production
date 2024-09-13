@@ -1,1 +1,7 @@
 # Authentication and authorization
+
+## Important terminology
+
+## Encrypted environment variables
+
+## Federated auth/Token exchange

@@ -7,12 +7,16 @@ book:
   chapters:
     - index.qmd
     - introduction.qmd
+    - whole-game.qmd
+    - project-life.qmd
 
     - part: another-machine.qmd
       chapters:
+      - github-actions.qmd
       - paper-cuts.qmd
       - packages.qmd
       - debugging.qmd
+      - logging.qmd
       - auth.qmd
 
     - part: multiple-times.qmd

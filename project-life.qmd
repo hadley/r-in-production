@@ -1,0 +1,7 @@
+# Living a project-oriented life
+
+* Each project is a directory
+* In Git
+* On GitHub (or similar)
+
+The usethis tools that help you.

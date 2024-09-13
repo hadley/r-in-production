@@ -1,0 +1,15 @@
+# GitHub actions
+
+## When
+
+### Scheduling
+
+### On push
+
+### Manual
+
+## What
+
+### Setup
+
+### Publishing

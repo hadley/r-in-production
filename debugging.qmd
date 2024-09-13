@@ -1,1 +1,5 @@
-# Debugging and logging
+# Debugging
+
+## Backtraces
+
+## Overall strategy

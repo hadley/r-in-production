@@ -1,1 +1,18 @@
 # Packages and platform
+
+## Packages
+
+### Right sizing dependencies
+
+### renv
+
+### Compared to python
+
+If you're familiar with Python, it's worth talking a little about the differences:
+
+* CRAN vs PyPI
+* Chances of random packages working together
+* Virtual env as default vs optional
+* SemVer
+
+## Platform

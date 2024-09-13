@@ -1,1 +1,9 @@
 # Cross-platform paper cuts
+
+## Windows vs Mac/Linux
+
+## Locales
+
+## Graphics devices
+
+## Fonts
