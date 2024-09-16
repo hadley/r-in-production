@@ -1,1 +1,50 @@
 # Shared responsibility
+
+## Investing in your skills
+
+<!--
+Namrata Shetty-Anderson, UPS
+-->
+* Invest a small amount of time regularly (e.g. 2 hours a week).
+* Invert a bigger amount of time a couple of times a year as team (e.g. 1 week every 6 months).
+
+### Why do it?
+
+You have to. Otherwise you are going to fall out of date, and the longer you do, the harder it is to catch up. Fortunately, it caps out so it's always still possible to catch out.
+
+Hard to do in the moment with all the other work you have to do. But it can really pay of in the long term when you learn how to do things faster and more effectively.
+
+Goal is for each project that you tackle to be a little bit faster and better than the last (on average; there will be challenges along the way!). Want to avoid the case where each project takes a little bit more time because you have the baggage of previous projects weighing you down.
+
+From Steph Locke:
+
+Everything we do requires maintainence. If you don't do anything to reduce that burden, maintainence inevitably ends up sucking up all your time, and you don't have time to do anything new.
+
+Flesh out concrete example based <https://www.linkedin.com/pulse/developer-velocity-choked-bau-stephanie-locke-fsiqe/?trackingId=eG5meBX8TZqUFQ2Q07jlYA%3D%3D>
+
+Adopting an "Ops" mindset. "How you collectively work is more
+important than how you work individually"
+
+### How to argue for the time?
+
+Tell the story about the cost of maintenance.
+
+Prepare your stakeholders for delay for that week, and have a plan in case an emergency crops up.
+
+Figure out some small wins and deliver them, without asking for permission first. Then you can tell the story of how a bigger investment will pay off. Just do it and then show the results.
+
+Want to move away from just fighting fires every day to build fire breaks and train better fire fighters. A good way to do that is to figure out what is not being used, and stop doing that. e.g. [Subtract](https://www.amazon.com/dp/1250249864). If there's something time consuming that you don't think is being used; put it on a 90 day pause. If someone complains, you just apologies for the promise and then put it back it. If no one complains, then you can probably get stop doing it for longer.
+
+### Once you have it, how to use it most effectively
+
+Make it part of accountability.
+
+Put it on your calendar.
+
+Stay focussed.
+
+### What to do with it?
+
+Pick someone to make a monthly blog post on something they learned. Rotate around the team.
+
+Spring cleaning.
