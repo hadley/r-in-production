@@ -4,6 +4,14 @@ project:
 book:
   title: R in Production
   author: Hadley Wickham
+
+  reader-mode: true
+
+  site-url: https://r-in-production.org/
+  repo-url: https://github.com/hadley/r-in-production/
+  repo-branch: main
+  repo-actions: [edit, issue]
+
   chapters:
     - index.qmd
     - introduction.qmd
@@ -31,3 +39,12 @@ book:
       - parquet.qmd
       - team-conventions.qmd
       - code-review.qmd
+
+format:
+  html:
+    theme:
+      - cosmo
+      - r-in-production.scss
+    code-link: true
+    include-in-header: "plausible.html"
+    callout-appearance: simple

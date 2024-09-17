@@ -54,17 +54,17 @@ When you install a package from CRAN on Mac and Windows you get a self-contained
 
 -   **Binary** means that CRAN has done all the work to get the package ready for your specific operating system. In turn that means installation happens quickly because all R needs to do is unzip a file.
 
-Things are different on Linux because CRAN only provides source packages. That means you need to compile the package (which can take multiple minutes for complex packages) and if the package has any external dependencies, you'll need to install those before compilation will succeed. For example, take the xml2 package. Most of the work in xml2 is done in C code, and while there is some C code in xml2 itself, most of the code comes from the external libxml2 library[^packages-1]. When you install xml2 on Mac or Windows you can get a binary package that already contains the external code. If you install xml2 on Linux, you have to first install libxml2 on your computer and then compile the package (which might take a few minutes).
+Things are different on Linux because CRAN only provides source packages. That means you need to compile the package (which can take multiple minutes for complex packages) and if the package has any external dependencies, you'll need to install those before compilation will succeed. For example, take the xml2 package. Most of the work in xml2 is done in C code, and while there is some C code in xml2 itself, most of the code comes from the external libxml2 library[^1]. When you install xml2 on Mac or Windows you can get a binary package that already contains the external code. If you install xml2 on Linux, you have to first install libxml2 on your computer and then compile the package (which might take a few minutes).
 
-[^packages-1]: Confusingly, the C equivalent of R's packages are called libraries.
+[^1]: Confusingly, the C equivalent of R's packages are called libraries.
 
 To resolve these two problems we can use P3M and pak.
 
 ### Package binaries from P3M
 
-P3M is a freely available service[^packages-2] provided by Posit. It's very similar to CRAN, but provides binaries for many popular Linux distributions, like CentOS, Rocky Linux, OpenSUSE, RHEL, SLES, Ubunutu and Debian. (Not relevant to this discussion, but very useful in general, it also provides snapshots so you can easily roll back packages to any point in time.)
+P3M is a freely available service[^2] provided by Posit. It's very similar to CRAN, but provides binaries for many popular Linux distributions, like CentOS, Rocky Linux, OpenSUSE, RHEL, SLES, Ubunutu and Debian. (Not relevant to this discussion, but very useful in general, it also provides snapshots so you can easily roll back packages to any point in time.)
 
-[^packages-2]: We also provide the non-free Posit Package Manager which you can use inside your organisation. Using PPM typically makes your IT department happy because you're not installing code from random corners of the internet, and it makes you happy because it allows you to install all the open source data science packages (in R and Python) that you need to do your job. You can also use PPM to distribute your own internal packages. We'll come back to that later in the book.
+[^2]: We also provide the non-free Posit Package Manager which you can use inside your organisation. Using PPM typically makes your IT department happy because you're not installing code from random corners of the internet, and it makes you happy because it allows you to install all the open source data science packages (in R and Python) that you need to do your job. You can also use PPM to distribute your own internal packages. We'll come back to that later in the book.
 
 You should ask your system administrator to configure P3M for your production systems so that it just works. If you need to do it yourself, you can following the [P3M setup instructions](https://p3m.dev/client/#/repos/cran/setup), e.g.:
 
@@ -141,9 +141,9 @@ If you're server admin, we recommend that you install the most common set of sys
 
 Now you know how to efficiently install packages on Linux so we can move on to tackling the final challenge: installing the right versions of the packages. The goal is to install the same versions of packages in your deployment environment as your development environment so that you get the same results. There are many ways you can do this, but Posit's open source and pro tools have standardised on one format: `manifest.json`.
 
-You generate a `manifest.json`, call `rsconnect::writeManifest()`. This function looks through all the code in your project, identifying all the packages that it uses[^packages-3], finds all the packages that those packages use, and then records their versions in `manifest.json`. It also records some other useful metadata like the version of R that you're using. You'll then check this file into Git, and include it whenever you deploy your package.
+You generate a `manifest.json`, call `rsconnect::writeManifest()`. This function looks through all the code in your project, identifying all the packages that it uses[^3], finds all the packages that those packages use, and then records their versions in `manifest.json`. It also records some other useful metadata like the version of R that you're using. You'll then check this file into Git, and include it whenever you deploy your package.
 
-[^packages-3]: Whether that's with `library()` or `require()`, via `::` or something else.
+[^3]: Whether that's with `library()` or `require()`, via `::` or something else.
 
 Connect and Connect Cloud will automatically use this file (and in fact require it). For GitHub actions, you'll need to use the `setup-manifest` step. This installs the version of R described in the manifest, and then all the packages that you need.
 
