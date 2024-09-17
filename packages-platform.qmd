@@ -1,6 +1,6 @@
 # Packages and platform
 
-## Packages
+## Packages {#sec-package-changes}
 
 ### Right sizing dependencies
 

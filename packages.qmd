@@ -1,30 +1,34 @@
 # Package installation
 
-There are three challenges when it comes to installing R packages in production:
+```{r}
+#| include: false
+pak::meta_update()
+pak::sysreqs_db_update()
+```
 
--   You will have to install packages on a Linux server and your primary experience is likely installing packages on a Mac or Windows desktop. There are some important differences that you need to learn about and some new vocabulary including binary packages and system libraries.
+When working in production, you're much more likely to be using a Linux server. R package installations are a little different there, so in this chapter you'll learn more about the best ways to install R packages on Linux, regardless of whether it's your development or production environment. There are three challenges you'll need to overcome:
 
--   Production jobs are usually run in some sort of throwaway container. That means that unlike in your development environment, you need to install packages every time your production job runs. This means that the speed of package installation becomes more much important.
+1.  You're probably most used to installing packages on a Mac or Windows computer. There are some important differences with Linux and to understand them, you'll need some new vocabulary like binary packages and system libraries.
+2.  Production jobs are usually run in a throwaway container. That means packages are installed every time your production job runs and the speed of package installation becomes more much important than in your development environment.
+3.  You want to make sure that you're installing exactly the same package versions on your development and production environments.
 
--   Because packages are re-installed all the time, you don't want to install the latest packages from CRAN, because they will change over time. Instead, you want to make sure that the production machine always installs the same versions, and those versions match the versions that you're using locally.
+We'll tackle each of those challenges in this chapter. But if you're already familiar with the problems and just want to hear the solutions, there are two many takeaways from this chapter:
 
-We'll tackle each of those challenges in this chapter. But if you just want a quick take away to make installing packages on Linux as easy as possible there are two things you need to do:
+-   Use [Posit Public Package Manager](https://p3m.dev) (**P3M** for short) instead of CRAN. This is a free service provided by Posit that provides R package binaries for Linux and makes package installation much much faster.
 
--   Use `pak::pak()` instead of `install.packages()`. `pak()` gives more actionable feedback if package installation fails.
+-   Use `pak::pak()` instead of `install.packages()`. `pak()` gives more actionable feedback if package installation fails due to a missing system dependency.
 
--   Use [Posit Public Package Manager](https://p3m.dev) (**P3M** for short) instead of CRAN. This is a free service provided by Posit that provides R package binaries for Linux.
-
-We'll begin by learning about pak, because it's useful for both development and deployment, regardless of what platform you're using. We'll then continue on to talk about some of the most important vocabulary you'll need to understand the difference between package installation on Mac/Windows and Linux, and then finish off by talking about how you can match deployment package versions to your development environment.
+We'll begin by learning about pak, because it's useful for both development and deployment, regardless of what platform you're using. You'll then learn the vocabulary you need in order to understand the difference between package installation on Mac/Windows and Linux. We'll finish off by discussing how you can match your development and deployment package versions.
 
 ## pak
 
-We recommend that you use `pak::pak()` to install R packages instead of `install.packages()`. It has three main properties:
+Regardless of where you're installing packages, we recommend that you use `pak::pak()` instead of `install.packages()`. There are three main reasons:
 
--   It's **fast**: pak downloads and installs packages in parallel, making installation much faster. It also caches packages making it faster to switch between multiple versions of the same package.
+-   It's **safe**: pak works out an installation plan up front, and tells you exactly what it's going to do. It also protects you against common failure modes including a package being loaded in another session on Windws or missing a system dependency on Linux.
 
--   It's **safe**: pak works out an installation plan up front, and tells you exactly what it's going to do before it does anything. It also protects you against common failure modes on Windows (e.g. a package is loaded in another session) and Linux (e.g. you are missing a system dependency).
+-   It's **convenient**: as well as installing packages from CRAN, pak can also install packages from GitHub, GitLab, Biocondutor and much much more. It also makes it easy to install historical versions of packages and works with P3M to provide CRAN snapshots at any given point in time.
 
--   It's **convenient**: as well as installing packages from CRAN, pak can also install packages from GitHub, GitLab, Biocondutor and more. It makes it easy to install historical versions of packages and works with P3M to install binaries on Linux.
+-   It's **fast**: pak downloads and installs packages in parallel. It also caches packages, making it fast to switch between multiple versions of the same package.
 
 Using pak is simple. First install it:
 
@@ -32,7 +36,7 @@ Using pak is simple. First install it:
 install.packages("pak")
 ```
 
-And then you can supply the packages to install:
+And then call it:
 
 ``` r
 pak::pak("tidyverse")
@@ -52,17 +56,17 @@ When you install a package from CRAN on Mac and Windows you get a self-contained
 
 Things are different on Linux because CRAN only provides source packages. That means you need to compile the package (which can take multiple minutes for complex packages) and if the package has any external dependencies, you'll need to install those before compilation will succeed. For example, take the xml2 package. Most of the work in xml2 is done in C code, and while there is some C code in xml2 itself, most of the code comes from the external libxml2 library[^packages-1]. When you install xml2 on Mac or Windows you can get a binary package that already contains the external code. If you install xml2 on Linux, you have to first install libxml2 on your computer and then compile the package (which might take a few minutes).
 
-[^packages-1]: Confusingly the C equivalents of R's packages are called libraries.
+[^packages-1]: Confusingly, the C equivalent of R's packages are called libraries.
 
 To resolve these two problems we can use P3M and pak.
 
-### Package binaries
+### Package binaries from P3M
 
-This is a bit annoying if you use a Linux machine as a development machine, but it can be crippling on a production machine because the packages have to be installed every time your job starts. Luckily, you can resolve this problem by using the freely available [Posit Public Package Manager](https://p3m.dev)[^packages-2] (or P3M for short). P3M is very similar to CRAN, but also provides binaries for many popular Linux distributions, like CentOS, Rocky Linux, OpenSUSE, RHEL, SLES, Ubunutu and Debian.
+P3M is a freely available service[^packages-2] provided by Posit. It's very similar to CRAN, but provides binaries for many popular Linux distributions, like CentOS, Rocky Linux, OpenSUSE, RHEL, SLES, Ubunutu and Debian. (Not relevant to this discussion, but very useful in general, it also provides snapshots so you can easily roll back packages to any point in time.)
 
 [^packages-2]: We also provide the non-free Posit Package Manager which you can use inside your organisation. Using PPM typically makes your IT department happy because you're not installing code from random corners of the internet, and it makes you happy because it allows you to install all the open source data science packages (in R and Python) that you need to do your job. You can also use PPM to distribute your own internal packages. We'll come back to that later in the book.
 
-You should ask your system administrator to configure P3M for your production systems so that it just works. If you want to do it yourself, you can following the [P3M setup instructions](https://p3m.dev/client/#/repos/cran/setup), e.g.:
+You should ask your system administrator to configure P3M for your production systems so that it just works. If you need to do it yourself, you can following the [P3M setup instructions](https://p3m.dev/client/#/repos/cran/setup), e.g.:
 
 ``` r
 options(repos = c(
@@ -81,11 +85,25 @@ options(repos = c(
 ))
 ```
 
-### System dependencies
+You can also use pak to help automate this task:
 
-Using P3M resolves the speed problem, but it doesn't give you self-contained binaries: the binaries expect system dependencies to be installed in standard locations. That's the convention on Linux servers because typically a server admin wants to control exactly what versions of system libraries are used. The most important reason is security: if your packages are using a central version of system library, it's very easy to update them all to make sure every package is protected from any security risks. It also saves a little disk space, because instead of every package having it's own copy of the system library they can all point to a common central location.
+``` r
+# override CRAN
+pak::repo_add(CRAN = "PPM@latest")
 
-So that means you'll need to install some system dependencies in order to make some packages work. How do you know which packages need which system dependencies? That's where pak comes in. If you use `pak()` to install packages is that it will report if any system dependencies are missing, and give you actionable advice. For example, if you attempt to install the tidyverse on a fresh Linux system, you'll get an message like this:
+# supplement P3M
+pak::repo_add(P3M = "PPM@latest")
+```
+
+Regardless of how you set up the repos, you'll need to make this change globally, which typically means running the code in your `.Rprofile`. The easiest way to open this file is by running `usethis::edit_r_profile()`.
+
+### System dependencies with pak
+
+Using P3M resolves the speed problem by giving you binary packages, but it doesn't give you self-contained binaries: the binaries expect system dependencies to be installed in standard locations. That's the convention on Linux servers because typically a server admin wants to control exactly what versions of system libraries are used. This is most important for security: if an urgent update is needed, you want to be able to update it in just one place.
+
+That means you'll need to install some system dependencies in order to make some packages work. How do you know which packages need which system dependencies? That's a tricky problem because R projects have a very casual way of declaring system dependencies. Fortunately, however, Posit has invested a bunch of time and effort into turning that casual metadata into something actionable, which you can find at <https://github.com/rstudio/r-system-requirements>.
+
+`pak()` uses this metadata to automatically report if any system dependencies are missing, telling you exactly what you need to install. For example, if you attempt to install the tidyverse on a fresh Linux system, you'll get an message like this:
 
 ```
 → Will install 101 packages.
@@ -115,32 +133,37 @@ pak also provides tools to do this programmatically, e.g:
 pak::pkg_sysreqs("devtools", sysreqs_platform = "centos")
 ```
 
-You can vary the `sysreqs_platform` to see one of the reasons that installing system dependencies is so frustrating to do by hand: every Linux distribution seems to have a slightly different name for the same system dependency.
+You can vary the `sysreqs_platform` to see one of the reasons that installing system dependencies is so frustrating to do by hand: every Linux distribution seems to use a slightly different name for the same system dependency.
 
-Additionally, at Posit, we recommend that server admins install the most common set of system dependencies needed by R packages. This doesn't take up a huge amount of disk space, and it saves everyone time by installing a bunch of packages at once rather than them dribbling in one at a time via tickets. You can find that list at <https://docs.posit.co/connect/admin/r/dependencies/index.html>.
+If you're server admin, we recommend that you install the most common set of system dependencies up front. That doesn't take up a huge amount of disk space, and it saves everyone time by installing a bunch of packages at once rather than them dribbling in one at a time via tickets. You can find that list at <https://docs.posit.co/connect/admin/r/dependencies/index.html>.
 
 ## Matching package versions
 
-We've tackled the first challenge of installing packages on Linux. Now we need to talk about the next challenge: installing the right versions of the packages. The goal is to install the same versions of packages in your deployment environment as your development environment so that you get the same results. There are many ways you can do this, but Posit's open source and pro tools have standardised on one format: `manifest.json`.
+Now you know how to efficiently install packages on Linux so we can move on to tackling the final challenge: installing the right versions of the packages. The goal is to install the same versions of packages in your deployment environment as your development environment so that you get the same results. There are many ways you can do this, but Posit's open source and pro tools have standardised on one format: `manifest.json`.
 
-### Capturing your current versions
+You generate a `manifest.json`, call `rsconnect::writeManifest()`. This function looks through all the code in your project, identifying all the packages that it uses[^packages-3], finds all the packages that those packages use, and then records their versions in `manifest.json`. It also records some other useful metadata like the version of R that you're using. You'll then check this file into Git, and include it whenever you deploy your package.
 
-The next step up (and the first place that you want to consider for any "real" job) is capturing the all the versions of all the packages (and their dependencies) that your project uses. One way to do that that's widely supported is to use `rsconnect::writeManifest()` to create `manifest.json`. This function looks through all the code in your project, identifying all the packages that it uses (whether thats with a `library()` or `require()` call, because you use `::` or something else), finds all the packages that those packages use, and then records their versions in `manifest.json`.
+[^packages-3]: Whether that's with `library()` or `require()`, via `::` or something else.
 
-Connect and Connect Cloud both require this file, and GHA can use it with `setup-r-manifest`. If you're using Git-backed deploys then you'll need to create it yourself (and update it every time you install or update a package); if you're using push-button deploy, it'll be run for you automatically behind the scenes.
+Connect and Connect Cloud will automatically use this file (and in fact require it). For GitHub actions, you'll need to use the `setup-manifest` step. This installs the version of R described in the manifest, and then all the packages that you need.
 
-(TODO: how can we get `manifest.json` to automatically update itself?)
+``` yaml
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-manifest@feature/setup-manifest
+```
 
-The downside of this approach is that while the versions on the deployment server are locked, the versions on your development machine are not. Imagine that you create a dashboard, and it runs successfully for a couple of years because the package versions are the same everytime you run it. When you come back to that project, the code might no longer run. We'll come back to that problem in ...
+When you update packages, you'll need to remember to update this file and re-commit it to Git.
 
-### Use the latest CRAN versions
+<!--# TODO: how can we get `manifest.json` to automatically update itself? -->
 
-There is another workflow available on GitHub Actions that worth talking about: installing packages from CRAN.
+Note that this not a complete solution to package management because while the versions on the deployment environment are locked, the versions on your development environment are not. Imagine that you create a dashboard, and it runs successfully for a couple of years without changes. When you come back it, the code no longer runs because you've installed a bunch of new versions in your development environment. We'll come back to that problem in @sec-package-changes.
 
-This is the easiest (all you need is a list of package names) but also the most dangerous (which is why it's not currently supported in connect+cloud). This style is the best fit for code that you're sharing widely, because you'll quickly find out if it doens't work with the current versions of CRAN packages. This makes it a really good fit for package development, because you want to make sure that your package always works with the latest version of CRAN packages (since you have no control over what package versions your users will install).
+::: callout-note
+## Using latest versions
 
-It can also be a good fit for short-term jobs that aren't particularly important. But you're fundamentally at the mercy of the package maintainers that you use. If you use only a small set of packages that are changing slowly or with strong backward compatibility guarantees, this is relatively low risk. But if you use a lot of packages, or packages developed by less experienced maintainers, you're much more likely to run into problems.
-
-To use this style all you need to do record package names in your `DESCRIPTION` file ansd use the `setup-r-dependencies` step in your action.
-
-I'd encourage you to have at least one daily job that uses this workflow. It shouldn't be a critical job, but it'll help you get a better sense of risk and reward, and it'll give you one small job that requires a regular care and feeding
+There is another workflow available on GitHub Actions that worth briefly talking about: always installing the latest versions of packages from CRAN. This is very easy (all you need is a list of package names) but also the high risk. It's more suitable code that you're sharing widely with others that you want to run anywhere, not just in a curated deployment environment. To use this style all you need to do record package names in a `DESCRIPTION` file and use the `setup-r-dependencies` step in your action. I'd encourage you to have at least one job that uses this workflow. It shouldn't be a critical job, but it'll help you get a better sense of risk and reward, and it'll give you one small job that requires a regular care and feeding.
+:::
