@@ -59,7 +59,7 @@ How to use it depends on how you're creating plots:
 
 -   In knitr, you can use it with `knitr::opts_chunk$set(dev = "ragg_png")`.
 
--   Shiny will ragg by default if it's installed.
+-   Shiny will use ragg by default if it's installed.
 
 If you want `ggsave()` and Shiny to use ragg in your production environment, you'll need to explicitly add it as a dependency by including `requireNamespace(ragg)` so that it gets automatically installed.
 
