@@ -1,14 +1,32 @@
 # Cross-platform paper cuts
 
+```{R}
+#| include: false
+knitr::opts_chunk$set(
+  comment = "#>",
+  collapse = TRUE
+)
+```
+
 Before we dive into the biggest challenges of working on another machine, I wanted to quickly cover a bunch of annoying paper cuts. None of these is particularly hard to work around, but they can be confusing the first time you encounter them and they're a nuisance to keep in the back of your head.
+
+These are particularly likely to surprise you when you first move from running R code on your laptop (usually Windows or Mac) to Linux. That might be because you've joined a company that provides a central development environment on Linux or you're deploying production code onto a Linux server.
 
 ## Windows vs Mac/Linux
 
 There are a few differences specifically between Windows and Linux that you need to know about. If you're using a Mac you can skip this section.
 
-Generally, in Windows, you use `\` to separate directories in a path. This is a pain in R because `\` is also the string escape character so whenever you're typing a path you have to use `\\`. On Linux (and Mac), you use `/` to separate directories and `\` doesn't work. Easiest way around this is to just get in the habit of use `/`; this works everywhere and is easier to type 😄. (Definitely avoid mixing the two!)
+### Paths
 
-Window uses `\n\r` (CRLF) as a line-ending character and Linux uses just `\n` (CR). This is generally taken care of for you, with most R functions automatically switching between the two forms as needed. If for some reason this becomes a problem, you might try [brio](https://brio.r-lib.org).
+Generally, in Windows, you use `\` to separate directories in a path. This is a pain in R because `\` is also the string escape character so whenever you're typing a path you have to use `\\`. On Linux (and Mac), you use `/` to separate directories and `\` doesn't work. So the easiest way around this is to just get in the habit of using `/`; this works everywhere and is easier to type 😄. Alternatively, you can avoid every typing a directory separator by using a tool like `file.path()`, or even better, `fs::path()`. We highly recommend using the [fs package](https://fs.r-lib.org) for path manipulations as it standardizes every input to use `/` and ensures that your paths never have have multiple `/` or trailing `/`.
+
+Another path issue that crops up is the meaning of `~.` On Windows and Mac this is a shortcut to your home directory, i.e. the directory in which your desktop and documents directories live. On Windows, however, `~` refers to your documents directory. You can again avoid this problem by using fs, which uses the standard meaning of `~`. This shouldn't affect your production code (since it should be self-contained) but it's good to be aware of.
+
+### Line endings
+
+Windows uses `\r\n` (CRLF) as a line-ending character and Linux uses just `\n` (LF). This is generally taken care of for you, with most R functions automatically switching between the two forms as needed[^paper-cuts-1]. If for some reason this becomes a problem, you might try the [brio package](https://brio.r-lib.org).
+
+[^paper-cuts-1]: This is the primary difference between text and binary mode connections in R: when writing to a text mode connection any `\n` is automatically converted to `\r\n` on Windows.
 
 ::: callout-note
 ## UTF-8 encoding
@@ -18,21 +36,23 @@ One paper cut has been eliminated in recent versions of R (4.2 or greater) or re
 
 ## Locales
 
-The **system locale** defines the regional settings that affect how certain types of data are display and processed by R. It affects things like your time zone, how strings are sorted, upper/lower case, how dates are display and parsed, how numbers are displayed.
+The **system locale** defines the regional settings that affect how certain types of data are display and processed by R. It includes things like your time zone and your language, which affects how strings are sorted, how upper and lower case work, how dates are displayed and parsed, and how numbers are displayed.
 
-Worth being aware of the base R functions that can return different results on different locales:
+You almost certainly have your laptop set up with your current time zone and whatever regional settings make the most for you. When you run your code on a Linux server, it's likely to be in a default state where the time zone is UTC and the language is English. Although these problems probably won't affect you that much, it's important to know which R functions are likely to give you different results locally and on the server:
 
--   `sort()`, `order()`. You can instead use `stringr::str_sort()` and `stringr::str_order().` They take an explicit locale argument. On Linux server likely to default to C ordering, which orders strings by their underlying numeric representation. This is unlikely to be what you want, and is particularly bad for English because it sorts upper case and lower case letters far apart.
+-   When you convert a date-time to a string (e.g. by printing it, `format()`ing it, or pass it to `as.character())` it will use the system time zone, which is likely to be UTC on a server. To make the time easier to understand you might want to supply the `tz` that you work in. You can find the name of the timezone that your laptop uses by running `Sys.timezone()` and learn more about timezone names in general in [R4DS](https://r4ds.hadley.nz/datetimes.html#time-zones).
 
--   By default, `factor()` uses a sorted list of unique values for the levels. Because `sort()` varies (as above) this means that your factor levels might vary, and because factor levels define the contrasts this means that coefficients of models can differ (but not the predictions). Instead you can explicitly supply the `levels` or use `forcats::fct()` which defaults to the unique values in the order that they are encountered.
+-   Whenever you `sort()`, `order()`, or `rank()` a character vector, R will use the current locale to determine the sorting order. On Linux server likely to default to C ordering, which orders strings by their underlying numeric representation. This is unlikely to be what you want, even for English, because it sorts upper case and lower case letters far apart. You can instead use `stringr::str_sort()`, `stringr::str_order()`, and `stringr::str_rank()`which all take an explicit locale argument.
 
--   `toupper()` and `tolower()`. Different languages use different rules; fairly unlikely in practice. But if it's a problem you can switch to `str_to_upper()` and `str_to_lower()` which take an explicit locale. Another similar case is the `ignore.case` argument `grepl()`, `gsub()` and friends. In the even rarer case, you need an explicit locale, you can use `stringr::collate()`.
+-   When you create a new `factor()`, it creates the levels from the sorted unique values. Becausing sorting varies (as above) this means that your factor levels might vary, and because factor levels define the contrasts this means that coefficients of models can differ (but not their predictions). Instead you can explicitly supply the `levels` or use `forcats::fct()` which uses the unique values in the order that they appear.
 
--   `strptime()`, which parses dates and times, relies on the current locale for day of week (`%a` / `%A)` and month name (`%b` / `%B`). If you need to control exactly which language is used, you can use `readr::parse_date()`, `lubridate::ymd()` and friends, or `clock::date_parse()`. All of these functions take an explicit locale arguments.
+-   `toupper()` and `tolower()` can vary based on the current locale. For example, Turkish has a dotless i, ı, which is the lower case form of I. Apart from Turkish[^paper-cuts-2], there are relatively few languages that have upper and lower case but you should know about the problem, and the solution: using`stringr::str_to_upper()` and `stringr::str_to_lower()` which take an explicit locale.
 
--   When you convert a date-time to a string (e.g. by printing it, `format()`ing it, or pass it to `as.character())`. It will use the system time zone, which is likely to be UTC on a server. To make it more clear, you might want to supply an explicit `tz`. Learn more about time zone names in [R4DS](https://r4ds.hadley.nz/datetimes.html#time-zones).
+-   `strptime()`, which parses dates and times, relies on the current locale for day of week (`%a` / `%A)` and month name (`%b` / `%B`) (e.g. English has Monday and January, but French has lundi and janvier, and Korean has 일요일 and 1월). If you're parsing dates and need to control which language is used, you can use `readr::parse_date()`, `lubridate::ymd()` and friends, or `clock::date_parse()`. All of these functions take an explicit locale argument.
 
-Finally note option `OutDec` which determines what character is used for the decimal place:
+[^paper-cuts-2]: Which did actually cause a real bug in ggplot2!
+
+Finally note the `OutDec` option which determines what character is used for the decimal place:
 
 ```{R}
 x <- 1.234
@@ -45,23 +65,21 @@ This doesn't affect parsing, so is less likely to cause problems, but you may ne
 
 ## Graphics devices
 
-Windows, Mac, and Linux each default to a different graphics device for on screen display: `windows()`, `quartz()`, and `X11()` respectively. That's not too surprising, but what's more surprising is that the underlying implementation of `png()` can also vary. That means the rendering of plots is going to be a little different. Most of the time this is isn't too important but if you really care about the details of your plots you might be taken a back when a plot in the deployment environment looks slightly different to the plot in your development environment.
+If you are producing PNG graphics, be aware that the underlying implementation of the `png()` graphics device varies from platform to platform. That means the rendering of your plots is going to be a little different (and generally worse) when rendering them on Linux . Most of the time this is isn't too important but if you really care about the details of your plots it's worth doing better.
 
-If this is a problem for you, we recommend using the [ragg](https://ragg.r-lib.org) package. As well as creating pixel identical plots on every platform, it's also faster than the defaults, provides advanced text rendering (including right-to-left text and emoji), consistently high-quality graphics rendering, and more convenient access to system fonts.
-
-How to use it depends on how you're creating plots:
+Fortunately the solution is easy: use the [ragg](https://ragg.r-lib.org) package. As well as creating identical plots on every platform, it's also faster, provides advanced text rendering (including right-to-left text and emoji), consistently high-quality graphics rendering, and more convenient access to system fonts. How to use it depends on how you're creating plots:
 
 -   If you're manually creating plots, switch from `png()` to `ragg::agg_png()`.
 
--   If you use `ggplot2::ggsave()` with a png extension, ggplot2 will use ragg if it's installed.
+-   For ggplot2, `ggplot2::ggsave()` with a png extension will use ragg if it's installed.
 
--   You can use ragg in RStudio by following the advice at <https://ragg.r-lib.org/#use-ragg-in-rstudio>.
+-   For RStudio, follow the advice at <https://ragg.r-lib.org/#use-ragg-in-rstudio>.
 
--   In knitr, you can use it with `knitr::opts_chunk$set(dev = "ragg_png")`.
+-   For knitr, change the default plotting device by including the following code in your setup chunk: `knitr::opts_chunk$set(dev = "ragg_png")`.
 
--   Shiny will use ragg by default if it's installed.
+-   For Shiny, `plotOutput()` will use use ragg if it's installed.
 
-If you want `ggsave()` and Shiny to use ragg in your production environment, you'll need to explicitly add it as a dependency by including `requireNamespace(ragg)` so that it gets automatically installed.
+If you want ggplot2 and Shiny to use ragg in your production environment, you'll need to explicitly add it as a dependency by including `requireNamespace(ragg)` somewhere in your code. That will ensure it gets captured in your manifest and installed in your production environment.
 
 ## Fonts
 
