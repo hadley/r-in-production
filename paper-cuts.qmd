@@ -20,7 +20,7 @@ There are a few differences specifically between Windows and Linux that you need
 
 Generally, in Windows, you use `\` to separate directories in a path. This is a pain in R because `\` is also the string escape character so whenever you're typing a path you have to use `\\`. On Linux (and Mac), you use `/` to separate directories and `\` doesn't work. So the easiest way around this is to just get in the habit of using `/`; this works everywhere and is easier to type 😄. Alternatively, you can avoid every typing a directory separator by using a tool like `file.path()`, or even better, `fs::path()`. We highly recommend using the [fs package](https://fs.r-lib.org) for path manipulations as it standardizes every input to use `/` and ensures that your paths never have have multiple `/` or trailing `/`.
 
-Another path issue that crops up is the meaning of `~.` On Windows and Mac this is a shortcut to your home directory, i.e. the directory in which your desktop and documents directories live. On Windows, however, `~` refers to your documents directory. You can again avoid this problem by using fs, which uses the standard meaning of `~`. This shouldn't affect your production code (since it should be self-contained) but it's good to be aware of.
+Another path issue that crops up is the meaning of `~.` On Linux and Mac this is a shortcut to your home directory, i.e. the directory in which your desktop and documents directories live. On Windows, however, `~` refers to your documents directory. You can again avoid this problem by using fs, which uses the standard meaning of `~`. This shouldn't affect your production code (since it should be self-contained) but it's good to be aware of.
 
 ### Line endings
 
