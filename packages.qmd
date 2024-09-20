@@ -1,4 +1,4 @@
-# Package installation
+# Package installation {#sec-package-install}
 
 ```{r}
 #| include: false

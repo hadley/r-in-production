@@ -22,17 +22,50 @@ Generally, in Windows, you use `\` to separate directories in a path. This is a 
 
 Another path issue that crops up is the meaning of `~.` On Linux and Mac this is a shortcut to your home directory, i.e. the directory in which your desktop and documents directories live. On Windows, however, `~` refers to your documents directory. You can again avoid this problem by using fs, which uses the standard meaning of `~`. This shouldn't affect your production code (since it should be self-contained) but it's good to be aware of.
 
+The final path issue is that paths on Linux are generally case-sensitive, and paths on Windows are not. If you're ever scratching your head wondering why your production script can't find a file that's very obviously there, start by double-checking that the case!
+
 ### Line endings
 
 Windows uses `\r\n` (CRLF) as a line-ending character and Linux uses just `\n` (LF). This is generally taken care of for you, with most R functions automatically switching between the two forms as needed[^paper-cuts-1]. If for some reason this becomes a problem, you might try the [brio package](https://brio.r-lib.org).
 
 [^paper-cuts-1]: This is the primary difference between text and binary mode connections in R: when writing to a text mode connection any `\n` is automatically converted to `\r\n` on Windows.
 
+On your Windows machine you can configure git to automatically convert CRLF to LF:
+
+```
+git config --global core.autocrlf true
+```
+
+GitHub provides some [nice documentation](https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings) that gives more details if you're interested.
+
 ::: callout-note
 ## UTF-8 encoding
 
 One paper cut has been eliminated in recent versions of R (4.2 or greater) or recent versions of Windows (Windows 10 or later): character encoding. Now Windows uses UTF-8 just the same as Mac and Linux. You can learn more about this challenge and how it was overcome on the [R Core blog](https://blog.r-project.org/2022/11/07/issues-while-switching-r-to-utf-8-and-ucrt-on-windows/){.uri}.
 :::
+
+## Installing R
+
+On Mac and Windows, it's pretty straightforward to know how to install R: you go to <https://www.r-project.org> and find the appropriate installer. How do you install R on Linux? There are two ways:
+
+1.  Using your system package manager, e.g. with `sudo yum install R`.
+2.  Using [rig](https://github.com/r-lib/rig).
+
+We recommend using rig because it makes it easy to install any version of R, you can install multiple versions and switch between them, and it automatically sets you up for R package installation success by installing pak and setting up the right CRAN mirrors. (More on that in @sec-package-install). On Linux, it installs R built at <https://github.com/rstudio/r-builds>, which also includes backported fixes for any major CVEs.
+
+The main downside to using rig is that it's a little bit more work to install it by [following the instructions](https://github.com/r-lib/rig?tab=readme-ov-file#installing-rig-on-linux-) on its website. But once you've got it, it's really easy to install new versions of R:
+
+```
+rig install release
+```
+
+Or change your default R back to an older version:
+
+```
+rig default 3.6
+```
+
+rig also works great on Windows and Mac and we recommend you use it whenever you want to install R.
 
 ## Locales
 
