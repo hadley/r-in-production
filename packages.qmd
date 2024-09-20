@@ -97,6 +97,8 @@ pak::repo_add(P3M = "PPM@latest")
 
 Regardless of how you set up the repos, you'll need to make this change globally, which typically means running the code in your `.Rprofile`. The easiest way to open this file is by running `usethis::edit_r_profile()`.
 
+If you're using renv, follow [Shannon Pileggi's advice](https://www.pipinghotdata.com/posts/2024-09-16-ease-renvrestore-by-updating-your-repositories-to-p3m/) to use P3M in your existing projects (new renv projects will automatically use P3M if you've set up as your default repo). If you haven't heard of renv, don't worry, you'll learn about it @sec-package-changes.
+
 ### System dependencies with pak
 
 Using P3M resolves the speed problem by giving you binary packages, but it doesn't give you self-contained binaries: the binaries expect system dependencies to be installed in standard locations. That's the convention on Linux servers because typically a server admin wants to control exactly what versions of system libraries are used. This is most important for security: if an urgent update is needed, you want to be able to update it in just one place.
