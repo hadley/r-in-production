@@ -83,4 +83,6 @@ If you want ggplot2 and Shiny to use ragg in your production environment, you'll
 
 ## Fonts
 
-TBD
+Moreso than differences in graphic devices, what might make your output look different between local and production environment is the fonts available during rendering of graphics. This is something that will inevitably crop up, even if you use ragg, since the default fonts ("sans", "serif", "mono", and "symbol") are mapped to different fonts depending on your operating system. If you decide to be explicit about the fonts in use and provide the full name of the fonts you use, you run into the problem that this font might not be available on the production environment. While most users are comfortable installing new fonts on their own machine, installing fonts on a Linux server is a different challenge entirely.
+
+There is no perfect solution at the moment. Asking the system administrator to make sure that certain fonts are available on the server is of course possible, but also far from agile. If you use ragg or svglite you can make use of systemfonts ability to register fonts not installed on the system and provide the font files as part of the deployment. We are planning to improve on this process in the future so that needed fonts can be declared in your code and automatically fetched if missing, but we are not there yet.
