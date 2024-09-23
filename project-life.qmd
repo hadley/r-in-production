@@ -1,7 +1,67 @@
 # Living a project-oriented life
 
-* Each project is a directory
-* In Git
-* On GitHub (or similar)
+While the focus of this book is on R in production, we also need to lay out some principles for how to organise your work. This chapter is about how to organise your work and how to live the project oriented lifestyle.
 
-The usethis tools that help you.
+There are three basic principles:
+
+* Each project is a directory.
+* In Git.
+* On GitHub (or similar).
+
+One of the advantages of choosing to live this lifestyle is that you get a bunch of free tools from the usethis package.
+
+```R
+install.packages("pak")
+pak::pak("usethis")
+```
+
+## Setup
+
+We recommend that you automatically load usethis in your interactive sessions so that you can access usethis functions with a minimum of fuss. This is done by adding some code to your `.Rprofile` file, and of course usethis has a helper for that: `usethis::use_usethis()`. I highly recommend running that function and following its advice before continuing.
+
+If you use RStudio, we also highly recommend that you run `usethis::use_blank_slate()` to ensure that RStudio never saves or reloads state. This forces you to capture all important information in your code files, ensuring that you never have objects in your global environment that you don't know how to recreate.
+
+## Directory
+
+Each project is a directory. This directory contains all the files needed to complete the project. All paths inside the project should be relative to that directory.
+
+> Any resident R script is written assuming that it will be run from a fresh R process with working directory set to the project directory. It creates everything it needs, in its own workspace or folder, and it touches nothing it did not create. For example, it does not install additional packages (another pet peeve of mine).
+>
+> This convention guarantees that the project can be moved around on your computer or onto other computers and will still “just work”. I argue that this is the only practical convention that creates reliable, polite behavior across different computers or users and over time. This convention is neither new, nor unique to R.
+>
+> It’s like agreeing that we will all drive on the left or the right. A hallmark of civilization is following conventions that constrain your behavior a little, in the name of public safety.
+
+
+There is one small challenge when using Rmd, namely that paths in an Rmd are relatively to the location of the `.Rmd`, not the project. If this becomes a problem, you can work around this by using `here::here()`. This function always returns the path to the project directory, so you can use `here::here("data/my-data.csv")` to refer to a file in the project directory, regardless of where you Rmd/qmd lives.
+
+## Git
+
+What's commited to Git is the source of truth.
+
+In this book, I assume that you're already familiar with the basics of Git. You certainly don't need to be an expert but you should know how to add and commit files, push and pull, and create branches. I also expect you to know the other key skill for using Git: how to Google/LLM for advice when you get yourself stuck in a situation that you've never seen before.
+
+If you haven't used Git before, I'd recommend that you start by reading [Happy Git and GitHub for the useR](https://happygitwithr.com/).
+
+Depending on how you work you may or may not be storing data in your Git repo. But often for production jobs you won't be; because the goal is to run the job regularly with changing datasets. But if the data doesn't live in the repo, you need to include code to get it. No manual steps allowed! (At least aspriationally; they're fine to do pragmatically but over time you want to reduce your reliance on manual steps as much as possible so that your process is reproducible and reliable regardless of who's running it.)
+
+## GitHub
+
+You only get a small amount of the value of Git if you use it locally. You get much more value from combining it with a online site like GitHub. Throughout the rest of the book, I'll talk about GitHub exclusively, but there are a number of both professional and open source solutions that provide very similar functionality, including [GitLab](https://about.gitlab.com), [Bitbucket](https://bitbucket.org), or [Azure DevOps](https://azure.microsoft.com/en-us/services/devops/).
+
+If you don't have access to any of these inside your organisation, you need to start a campaign to get it. Any of these tools will provide the opportunity to substantially improve collaboration and coordination within your data science team.
+
+We'll talk about GitHub particularly when it comes to working with a team. But we'll also use it a bunch when deploying your own personal production jobs because GitHub Actions are such a great platform for deplying batch jobs.
+
+If you're just starting out in your career GitHub is a great place to build a portfolio of some of the production jobs you've created for your own life.
+
+## Warning signs
+
+> If the first line of your R script is
+> `setwd("C:\Users\jenny\path\that\only\I\have")`
+> I will come into your office and SET YOUR COMPUTER ON FIRE 🔥.
+>
+> If the first line of your R script is
+> `rm(list = ls())`
+> I will come into your office and SET YOUR COMPUTER ON FIRE 🔥.
+>
+> --- Jenny Bryan
