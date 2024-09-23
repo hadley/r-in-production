@@ -8,7 +8,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-Before we dive into the biggest challenges of working on another machine, I wanted to quickly cover a bunch of annoying paper cuts. None of these is particularly hard to work around, but they can be confusing the first time you encounter them and they're a nuisance to keep in the back of your head.
+Before we dive into the biggest challenges of working on another machine, I wanted to quickly cover a bunch of annoying paper cuts. None of these are particularly hard to work around, but they're likely to confusing the first time you encounter them and they continue to be a minor nuisance for long in your production journey.
 
 These are particularly likely to surprise you when you first move from running R code on your laptop (usually Windows or Mac) to Linux. That might be because you've joined a company that provides a central development environment on Linux or you're deploying production code onto a Linux server.
 
@@ -18,42 +18,50 @@ There are a few differences specifically between Windows and Linux that you need
 
 ### Paths
 
-Generally, in Windows, you use `\` to separate directories in a path. This is a pain in R because `\` is also the string escape character so whenever you're typing a path you have to use `\\`. On Linux (and Mac), you use `/` to separate directories and `\` doesn't work. So the easiest way around this is to just get in the habit of using `/`; this works everywhere and is easier to type 😄. Alternatively, you can avoid every typing a directory separator by using a tool like `file.path()`, or even better, `fs::path()`. We highly recommend using the [fs package](https://fs.r-lib.org) for path manipulations as it standardizes every input to use `/` and ensures that your paths never have have multiple `/` or trailing `/`.
+There are three main differences when it comes to handling paths on windows: the path separator, the meaning of `~`, and case-sensitivity.
 
-Another path issue that crops up is the meaning of `~.` On Linux and Mac this is a shortcut to your home directory, i.e. the directory in which your desktop and documents directories live. On Windows, however, `~` refers to your documents directory. You can again avoid this problem by using fs, which uses the standard meaning of `~`. This shouldn't affect your production code (since it should be self-contained) but it's good to be aware of.
+In Windows generally, you use `\` to separate directories in a path. This is a pain in R because `\` is the string escape character so whenever you're typing a path you have to use `\\`. On Linux (and Mac), you use `/` to separate directories and `\` doesn't work. So the easiest way around this is to just get in the habit of using `/`; this works everywhere and is easier to type 😄. Alternatively, you can avoid ever typing a directory separator by using a tool like `file.path()`, or even better, `fs::path()`. We highly recommend using the [fs package](https://fs.r-lib.org) for path manipulations as it standardizes every input to use `/` and ensures that your paths never have have multiple `/` or trailing `/`.
 
-The final path issue is that paths on Linux are generally case-sensitive, and paths on Windows are not. If you're ever scratching your head wondering why your production script can't find a file that's very obviously there, start by double-checking that the case!
+Another path issue is the meaning of `~.` On Linux and Mac this is a shortcut to your home directory, i.e. the directory in which your desktop and documents directories live. On Windows, however, `~` points to your documents directory. You can again avoid this problem by using fs, which uses the standard meaning of `~`. This is unlikely to affect your production code (since it should be self-contained) but it's good to be aware of.
+
+The final path issue that you might run into is that paths on Linux are generally case-sensitive, and paths on Windows are not. If you're ever scratching your head wondering why your production script can't find a file that's very obviously there, start by double-checking the case! (The most common way that this affects me is that I refer to `foo.r` but I have actually created `foo.R`.)
 
 ### Line endings
 
-Windows uses `\r\n` (CRLF) as a line-ending character and Linux uses just `\n` (LF). This is generally taken care of for you, with most R functions automatically switching between the two forms as needed[^paper-cuts-1]. If for some reason this becomes a problem, you might try the [brio package](https://brio.r-lib.org).
+Windows uses `\r\n` (CRLF) as a line-ending character and Linux uses `\n` (LF). Generally, most R functions automatically switch between the two forms as needed[^paper-cuts-1], but if for some reason this becomes a problem, you might try the [brio package](https://brio.r-lib.org) which always uses `\r\n` when writing file.
 
 [^paper-cuts-1]: This is the primary difference between text and binary mode connections in R: when writing to a text mode connection any `\n` is automatically converted to `\r\n` on Windows.
 
-On your Windows machine you can configure git to automatically convert CRLF to LF:
+Git also provides some tools to deal with this problem: on your Windows machine you can configure git to automatically convert CRLF to LF:
 
 ```
 git config --global core.autocrlf true
 ```
 
-GitHub provides some [nice documentation](https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings) that gives more details if you're interested.
+GitHub provides some [nice documentation](https://docs.github.com/en/get-started/getting-started-with-git/configuring-git-to-handle-line-endings) with more details if you're interested.
 
-::: callout-note
-## UTF-8 encoding
+### UTF-8 encoding
 
 One paper cut has been eliminated in recent versions of R (4.2 or greater) or recent versions of Windows (Windows 10 or later): character encoding. Now Windows uses UTF-8 just the same as Mac and Linux. You can learn more about this challenge and how it was overcome on the [R Core blog](https://blog.r-project.org/2022/11/07/issues-while-switching-r-to-utf-8-and-ucrt-on-windows/){.uri}.
-:::
 
 ## Installing R
 
-On Mac and Windows, it's pretty straightforward to know how to install R: you go to <https://www.r-project.org> and find the appropriate installer. How do you install R on Linux? There are two ways:
+On Mac and Windows, it's pretty straightforward to know how to install R: you go to <https://www.r-project.org> and download the appropriate installer. How do you install R on Linux? There are two ways:
 
 1.  Using your system package manager, e.g. with `sudo yum install R`.
 2.  Using [rig](https://github.com/r-lib/rig).
 
-We recommend using rig because it makes it easy to install any version of R, you can install multiple versions and switch between them, and it automatically sets you up for R package installation success by installing pak and setting up the right CRAN mirrors. (More on that in @sec-package-install). On Linux, it installs R built at <https://github.com/rstudio/r-builds>, which also includes backported fixes for any major CVEs.
+We recommend rig for four reasons:
 
-The main downside to using rig is that it's a little bit more work to install it by [following the instructions](https://github.com/r-lib/rig?tab=readme-ov-file#installing-rig-on-linux-) on its website. But once you've got it, it's really easy to install new versions of R:
+-   It makes it easy to install any version of R.
+
+-   It makes it easy to install multiple versions of R and easily switch between them.
+
+-   It sets you up for package installation success by installing pak and picking good defaults for your CRAN mirrors (more on that in @sec-package-install).
+
+-   On Linux, it installs R binaries built by <https://github.com/rstudio/r-builds> and these binaries also include backported fixes for any major CVEs.
+
+The main downside to using rig is that installing it the first time a bit more work, and you'll need to the [follow the instructions](https://github.com/r-lib/rig?tab=readme-ov-file#installing-rig-on-linux-) on its website. But once you've got it, it's really easy to install new versions of R:
 
 ```
 rig install release
@@ -79,13 +87,13 @@ You almost certainly have your laptop set up with your current time zone and wha
 
 -   When you create a new `factor()`, it creates the levels from the sorted unique values. Becausing sorting varies (as above) this means that your factor levels might vary, and because factor levels define the contrasts this means that coefficients of models can differ (but not their predictions). Instead you can explicitly supply the `levels` or use `forcats::fct()` which uses the unique values in the order that they appear.
 
--   `toupper()` and `tolower()` can vary based on the current locale. For example, Turkish has a dotless i, ı, which is the lower case form of I. Apart from Turkish[^paper-cuts-2], there are relatively few languages that have upper and lower case but you should know about the problem, and the solution: using`stringr::str_to_upper()` and `stringr::str_to_lower()` which take an explicit locale.
+-   `toupper()` and `tolower()` can vary based on the current locale. For example, Turkish has a dotless i, ı, which is the lower case form of I. There are relatively few languages where this matters[^paper-cuts-2] but it's worth knowing about the problem and the solution: switching `stringr::str_to_upper()` and `stringr::str_to_lower()`.
 
--   `strptime()`, which parses dates and times, relies on the current locale for day of week (`%a` / `%A)` and month name (`%b` / `%B`) (e.g. English has Monday and January, but French has lundi and janvier, and Korean has 일요일 and 1월). If you're parsing dates and need to control which language is used, you can use `readr::parse_date()`, `lubridate::ymd()` and friends, or `clock::date_parse()`. All of these functions take an explicit locale argument.
+-   `strptime()`, which parses dates and times, relies on the current locale for day of week (`%a` / `%A)` and month name (`%b` / `%B`). For example, English has Monday and January, but French has lundi and janvier, and Korean has 일요일 and 1월. If you're parsing date-times and need to control which language is used, you can use `readr::parse_date()`, `lubridate::ymd()` and friends, or `clock::date_parse()`. All of these functions take an explicit locale argument.
 
-[^paper-cuts-2]: Which did actually cause a real bug in ggplot2!
+[^paper-cuts-2]: Mostly because there are relatively few languages that have both upper and lower case letters and different rules to English, but the differing rules for Turkish did cause a real bug in ggplot2!
 
-Finally note the `OutDec` option which determines what character is used for the decimal place:
+Finally, note the `OutDec` option which determines what character is used for the decimal place:
 
 ```{R}
 x <- 1.234
@@ -96,15 +104,17 @@ x
 
 This doesn't affect parsing, so is less likely to cause problems, but you may need to explicit set it if numbers are not correctly formatted in your ouptut.
 
-## Graphics devices
+## Plots
 
-If you are producing PNG graphics, be aware that the underlying implementation of the `png()` graphics device varies from platform to platform. That means the rendering of your plots is going to be a little different (and generally worse) when rendering them on Linux . Most of the time this is isn't too important but if you really care about the details of your plots it's worth doing better.
+### Graphics devices
 
-Fortunately the solution is easy: use the [ragg](https://ragg.r-lib.org) package. As well as creating identical plots on every platform, it's also faster, provides advanced text rendering (including right-to-left text and emoji), consistently high-quality graphics rendering, and more convenient access to system fonts. How to use it depends on how you're creating plots:
+If you are producing PNG graphics, be aware that the underlying implementation of the `png()` graphics device varies from platform to platform. That means the rendering of your plots is going to be a little different when rendering them on Linux (but you may find they look better than on Windows, where the default png device is not so good). Most of the time this is isn't too important, but if you really care about the details of your plots it's worth knowing how to do better.
+
+Fortunately the solution is easy: use the [ragg](https://ragg.r-lib.org) package. As well as creating identical plots on every platform, it's also faster, provides advanced text rendering (including right-to-left text and emoji), consistently high-quality graphics rendering, and more convenient access to system fonts. How to use it depends on how you're creating your plots:
 
 -   If you're manually creating plots, switch from `png()` to `ragg::agg_png()`.
 
--   For ggplot2, `ggplot2::ggsave()` with a png extension will use ragg if it's installed.
+-   For ggplot2, `ggplot2::ggsave()` will use ragg if it's installed.
 
 -   For RStudio, follow the advice at <https://ragg.r-lib.org/#use-ragg-in-rstudio>.
 
@@ -114,8 +124,10 @@ Fortunately the solution is easy: use the [ragg](https://ragg.r-lib.org) package
 
 If you want ggplot2 and Shiny to use ragg in your production environment, you'll need to explicitly add it as a dependency by including `requireNamespace(ragg)` somewhere in your code. That will ensure it gets captured in your manifest and installed in your production environment.
 
-## Fonts
+Alternatively, if you need vector plots, you can try [svglite](https://svglite.r-lib.org). This is similarly designed to produce identical plots on every platform, but instead of using the raster `.png` format, it uses the vector `.svg` format. For plots with relatively few elements this can produce files that are both higher quality and have a smaller size.
 
-Moreso than differences in graphic devices, what might make your output look different between local and production environment is the fonts available during rendering of graphics. This is something that will inevitably crop up, even if you use ragg, since the default fonts ("sans", "serif", "mono", and "symbol") are mapped to different fonts depending on your operating system. If you decide to be explicit about the fonts in use and provide the full name of the fonts you use, you run into the problem that this font might not be available on the production environment. While most users are comfortable installing new fonts on their own machine, installing fonts on a Linux server is a different challenge entirely.
+### Fonts
 
-There is no perfect solution at the moment. Asking the system administrator to make sure that certain fonts are available on the server is of course possible, but also far from agile. If you use ragg or svglite you can make use of systemfonts ability to register fonts not installed on the system and provide the font files as part of the deployment. We are planning to improve on this process in the future so that needed fonts can be declared in your code and automatically fetched if missing, but we are not there yet.
+Fonts are more likely to make a difference to the rendering of your plot than the graphics because different operating systems come with different fonts. This will inevitably crop up, even if you use ragg, since the default fonts (`"sans"`, `"serif"`, `"mono"`, and `"symbol"`) are mapped to different fonts. But if you decide to be explicit about the fonts by provide their full name, you'll run into a different problem: custom fonts probably aren't installed in your production environment. And while you probably know how to install a font on your laptop, installing installing fonts on a Linux server is a different challenge entirely.
+
+There is no perfect solution at the moment. You can ask your system administrator to install fonts fonts, but this is far from nimble. If you use ragg or svglite you can make use of systemfonts ability to register fonts not installed on the system and provide the font files as part of the deployment. We plan to improve on this process in the future so that fonts can be declared in your code and automatically fetched if missing, but we are not there yet.
