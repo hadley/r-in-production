@@ -1,5 +1,11 @@
 # Living a project-oriented life
 
+<!--
+Drawn from:
+* https://r4ds.hadley.nz/workflow-scripts#fig-new-project
+* https://www.tidyverse.org/blog/2017/12/workflow-vs-script/
+-->
+
 While the focus of this book is on R in production, we also need to lay out some principles for how to organise your work. This chapter is about how to organise your work and how to live the project oriented lifestyle.
 
 There are three basic principles:
@@ -23,6 +29,10 @@ If you use RStudio, we also highly recommend that you run `usethis::use_blank_sl
 
 ## Directory
 
+### Working directory
+
+R has a powerful notion of the working directory. This is where R looks for files that you ask it to load, and where it will put any files that you ask it to save. RStudio shows your current working directory at the top of the console:
+
 Each project is a directory. This directory contains all the files needed to complete the project. All paths inside the project should be relative to that directory.
 
 > Any resident R script is written assuming that it will be run from a fresh R process with working directory set to the project directory. It creates everything it needs, in its own workspace or folder, and it touches nothing it did not create. For example, it does not install additional packages (another pet peeve of mine).
@@ -31,8 +41,51 @@ Each project is a directory. This directory contains all the files needed to com
 >
 > It’s like agreeing that we will all drive on the left or the right. A hallmark of civilization is following conventions that constrain your behavior a little, in the name of public safety.
 
-
 There is one small challenge when using Rmd, namely that paths in an Rmd are relatively to the location of the `.Rmd`, not the project. If this becomes a problem, you can work around this by using `here::here()`. This function always returns the path to the project directory, so you can use `here::here("data/my-data.csv")` to refer to a file in the project directory, regardless of where you Rmd/qmd lives.
+
+### RStudio projects
+
+Keeping all the files associated with a given project (input data, R scripts, analytical results, and figures) together in one directory is such a wise and common practice that RStudio has built-in support for this via projects. Let’s make a project for you to use while you’re working through the rest of this book. Click File > New Project, then follow the steps shown in Figure 6.3.
+
+`usethis::create_project()`
+
+### Files
+
+1. File names should be machine readable: avoid spaces, symbols, and special characters. Don’t rely on case sensitivity to distinguish files.
+1. File names should be human readable: use file names to describe what’s in the file.
+1. File names should play well with default ordering: start file names with numbers so that alphabetical sorting puts them in the order they get used.
+
+```
+alternative model.R
+code for exploratory analysis.r
+finalreport.qmd
+FinalReport.qmd
+fig 1.png
+Figure_02.png
+model_first_try.R
+run-first.r
+temp.txt
+```
+
+There are a variety of problems here: it’s hard to find which file to run first, file names contain spaces, there are two files with the same name but different capitalization (`finalreport` vs. `FinalReport1`), and some names don’t describe their contents (`run-first` and `temp`).
+
+Here’s a better way of naming and organizing the same set of files:
+
+```
+01-load-data.R
+02-exploratory-analysis.R
+03-model-approach-1.R
+04-model-approach-2.R
+fig-01.png
+fig-02.png
+report-2022-03-20.qmd
+report-2022-04-02.qmd
+report-draft-notes.txt
+```
+
+### Subdirectories
+
+No strong feelings yet, except that if you start writing reusable functions they should go in R, and then you can add tests for them in `tests/testthat`.
 
 ## Git
 
@@ -53,6 +106,16 @@ If you don't have access to any of these inside your organisation, you need to s
 We'll talk about GitHub particularly when it comes to working with a team. But we'll also use it a bunch when deploying your own personal production jobs because GitHub Actions are such a great platform for deplying batch jobs.
 
 If you're just starting out in your career GitHub is a great place to build a portfolio of some of the production jobs you've created for your own life.
+
+This is the way you share your code with others: no on a shared network drive and certainly not by attaching it to emails!
+
+### Source of truth
+
+Whenever you have multiple copies of something, you need to carefully think about which think is going to be the "source of truth". In production scenarios, you have at least two copies of the project: one in your development environment and one in your production environment. And if you code is in git there's one more in the central repo. And if you're working with colleagues, they'll each have their own version. I think there's one obvious place that you should consider the source of truth: the code stored in your central git repo.
+
+(Git is a decentralised protocol and it's certainly possible to use it that way. But it's almost always easier to consider one repo as "special" and that's the one that's available on GitHub.)
+
+Whereever possible we recommend using "Git-backed" deployments where the production environment retrieves the code directly from your central Git repo. This means avoiding click-to-deploy for important jobs, because it eliminates one possible copy of the project.
 
 ## Warning signs
 
