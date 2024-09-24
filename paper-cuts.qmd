@@ -8,9 +8,9 @@ knitr::opts_chunk$set(
 )
 ```
 
-Before we dive into the biggest challenges of working on another machine, I wanted to quickly cover a bunch of annoying paper cuts. None of these are particularly hard to work around, but they're likely to be confusing the first time you encounter them and they continue to be a minor nuisance for long into in your production journey.
+Before we dive into the biggest challenges of working on another machine, I want to quickly cover a bunch of annoying paper cuts. None of these are particularly hard to work around, but they're likely to be confusing the first time you encounter them and they continue to be a minor nuisance long into your production journey.
 
-These are particularly likely to surprise you when you first move from running R code on your laptop (usually Windows or Mac) to Linux. That might be because you've joined a company that provides a central development environment on Linux or you're deploying production code onto a Linux server.
+These issues are particularly likely to surprise you when you first move from running R code on your laptop (usually Windows or Mac) to Linux. This might happen because you've joined a company that provides a central development environment on Linux or you're deploying production code onto a Linux server.
 
 ## Windows vs Mac/Linux
 
@@ -18,15 +18,15 @@ There are a few differences specifically between Windows and Linux that you need
 
 ### Paths
 
-There are three main differences when it comes to handling paths on windows: the path separator, the meaning of `~`, and case-sensitivity.
+There are three main differences when it comes to handling paths on Windows: the path separator, the meaning of `~`, and case-sensitivity.
 
-In Windows generally, you use `\` to separate directories in a path. This is a pain in R because `\` is the string escape character so whenever you're typing a path you have to use `\\`. On Linux (and Mac), you use `/` to separate directories and `\` doesn't work. So the easiest way around this is to just get in the habit of using `/`; this works everywhere and is easier to type 😄. Alternatively, you can avoid ever typing a directory separator by using a tool like `file.path()`, or even better, `fs::path()`. We highly recommend using the [fs package](https://fs.r-lib.org) for path manipulations as it standardizes every input to use `/` and ensures that your paths never have have multiple `/` or trailing `/`.
+In Windows, you generally use `\` to separate directories in a path. This is a pain in R because `\` is the string escape character, so whenever you're typing a path, you have to use `\\`. On Linux (and Mac), you use `/` to separate directories, and `\` doesn't work. The easiest way around this is to get in the habit of using `/`; this works everywhere and is easier to type 😄. Alternatively, you can avoid ever typing a directory separator by using a tool like `file.path()`, or even better, `fs::path()`. We highly recommend using the [fs package](https://fs.r-lib.org) for path manipulations as it standardizes every input to use `/` and ensures that your paths never have multiple `/` or trailing `/`.
 
-Another path issue is the meaning of `~.` On Linux and Mac this is a shortcut to your home directory, i.e. the directory in which your desktop and documents directories live. On Windows, however, `~` points to your documents directory. You can again avoid this problem by using fs, which uses the standard meaning of `~`. This is unlikely to affect your production code (since it should be self-contained) but it's good to be aware of.
+Another path issue is the meaning of `~`. On Linux and Mac, this is a shortcut to your home directory, i.e., the directory in which your desktop and documents directories live. On Windows, however, `~` points to your documents directory. You can again avoid this problem by using fs, which uses the standard meaning of `~`. This is unlikely to affect your production code (since it should be self-contained), but it's good to be aware of.
 
-The final path issue that you might run into is that paths on Linux are generally case-sensitive, and paths on Windows are not. If you're ever scratching your head wondering why your production script can't find a file that's very obviously there, start by double-checking the case! (The most common way that this affects me is that I refer to `foo.r` but I have actually created `foo.R`.)
+The final path issue that you might run into is that paths on Linux are generally case-sensitive, while paths on Windows are not. If you're ever scratching your head wondering why your production script can't find a file that's very obviously there, start by double-checking the case! (The most common way this affects me is when I refer to `foo.r` but I have actually created `foo.R`.)
 
-Absolute paths look a little different depending on your operating system: on Windows they start with a drive letter (e.g., `C:`) or two backslashes (e.g., `\\servername`) but on Mac/Linux they start with a slash “/” (e.g., `/users/hadley`). Fortunately this should rarely be a problem for production scripts since they aren't going to work anyway because you can't assume that your production environment has exactly the same directory configuration as your development environment.
+Absolute paths look a little different depending on your operating system: on Windows, they start with a drive letter (e.g., `C:`) or two backslashes (e.g., `\\servername`), but on Mac/Linux, they start with a slash "/" (e.g., `/Users/hadley`). Fortunately, this should rarely be a problem for production scripts since they aren't going to work anyway if you assume that your production environment has exactly the same directory configuration as your development environment.
 
 ### Line endings
 
