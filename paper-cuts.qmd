@@ -26,7 +26,7 @@ Another path issue is the meaning of `~`. On Linux and Mac, this is a shortcut t
 
 The final path issue that you might run into is that paths on Linux are generally case-sensitive, while paths on Windows are not. If you're ever scratching your head wondering why your production script can't find a file that's very obviously there, start by double-checking the case! (The most common way this affects me is when I refer to `foo.r` but I have actually created `foo.R`.)
 
-Absolute paths look a little different depending on your operating system: on Windows, they start with a drive letter (e.g., `C:`) or two backslashes (e.g., `\\servername`), but on Mac/Linux, they start with a slash "/" (e.g., `/Users/hadley`). Fortunately, this should rarely be a problem for production scripts since they aren't going to work anyway if you assume that your production environment has exactly the same directory configuration as your development environment.
+Absolute paths look a little different depending on your operating system: on Windows, they start with a drive letter (e.g., `C:`) or two backslashes (e.g., `\\servername`), but on Mac/Linux, they start with a slash "/" (e.g., `/Users/hadley`). Fortunately, this should rarely be a problem for production scripts since they aren't going to work anyway unless you assume that your production environment has exactly the same directory configuration as your development environment.
 
 ### Line endings
 
@@ -36,7 +36,7 @@ Windows uses `\r\n` (CRLF) as a line-ending character and Linux uses `\n` (LF). 
 
 Git also provides some tools to deal with this problem: on your Windows machine you can configure git to automatically convert CRLF to LF:
 
-```
+```         
 git config --global core.autocrlf true
 ```
 
@@ -65,13 +65,13 @@ We recommend rig for four reasons:
 
 The main downside to using rig is that installing it the first time a bit more work, and you'll need to [follow the instructions](https://github.com/r-lib/rig?tab=readme-ov-file#installing-rig-on-linux-) on its website. But once you've got it, it's really easy to install new versions of R:
 
-```
+```         
 rig install release
 ```
 
 Or change your default R back to an older version:
 
-```
+```         
 rig default 3.6
 ```
 
