@@ -1,15 +1,181 @@
 # GitHub actions
 
+In many cases, the easiest way to put some R code in production is with GitHub Actions (or GHA for short): since you're code is already in Git, and on GitHub, it's easy to use GitHub Actions. The main constraint here is that if you want to do it for free, you code needs to be public.
+
+-   For learning
+-   For personal projects
+-   If your company using GitHub enterprise, for work projecdts.
+
+Only suitable for batch jobs, not interactive.
+
+GHA are extremely powerful and flexible. My goal is not to demonstrate the full power but to give you the most useful bits. I'll point you to the docs so you can learn more if needed.
+
+## Big picture
+
+To use GHA, you create a yaml file like `.github/actions/{name}.yml`. It defines **when** your job will run and **what** your job will do. By and large, you not create a GitHub action from scratch by hand; you'll typically copy from an nearby existing example and modify it as needed. (You might also try creating it with an LLM; but beware debugging a GHA is frustrating.)
+
+The yaml has two main components: `jobs` defines **what** to do and `on` defines **when** to do it. You'll also supply a `name` field. Here's a simple example that runs an R script every time you push to GitHub.
+
+``` yaml
+name: run.yaml
+
+on:
+  push: main
+
+jobs:
+  run:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: r-lib/actions/setup-r@v2
+      - uses: r-lib/actions/setup-r-dependencies@v2
+      - run: Rscript myscript.R
+```
+
+As you might guess from the individual steps, GHA is quite low level. Here we have to first checkout our code, then install R, then install the R packages that our script needs, then run the script. We'll go into more details of each component as we move through the chapter.
+
+There are three names involved: the file name, a name within the yaml, and the job name. In most of the cases we'll be seeing, there's only one job, so we recommend this simple naming convention. If the filename is `foo.yaml`, then the action name should also be `foo.yaml`, and the job name should be `foo`.
+
+The easiest way to get started is to use a template from <https://github.com/r-lib/actions/tree/v2-branch/examples>. And you can get that into your project with `usethis::use_github_action()`.
+
+Some basic vocabulary:
+
+-   A **workflow** is a yaml file that defines what to do and when to do it.
+-   A **job** is part of a workflow that happens in sequence in a container. State preserved within a job, but not across jobs. Multiple jobs run in parallel by default, but you can make them run in sequence. Passing data between jobs is fiddly. And out of scope for this book.
+-   A **step** is one command inside of an action. A step can be as simple or as complicated as you like, but generally you want to keep steps fairly simple because it makes debugging easier when things go wrong.
+
 ## When
 
-### Scheduling
+There are over 40 different ways to [trigger a GHA to run](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows), but fortunately there are only 4 that cover 90% of your needs:
 
-### On push
+-   `schedule`: run on a specific schedule
+-   `push`: run when you push to GitHub.
+-   `pull_request`: run when you open or update a pull request.
+-   `workflow_dispatch`: run manually, on demand.
 
-### Manual
+### Schedule
+
+The [schedule](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule) event
+
+``` yaml
+on:
+  schedule:
+    # Every day at 5:30am and 5:30pm
+    - cron: '30 5,17 * * *'
+```
+
+This format is a called the "cron spec" because it's the specification used by the Linux `cron` utility (it's named after the Greek chronos, which means time). It is organised into five fields representing minute, hour, day, month, and day of week.
+
+Fortunately you don't need to know anything about this format to use it effectively. You can either use <https://crontab.guru/> or ask an LLM to generate a cron spec for you.
+
+-   Every Friday at 9am: `0 9 * * 5`
+-   Every day at midnight: `0 0 * * *`
+
+I recommend that you always include a comment describing the schedule.
+
+Whenever you create a cron spec to use on a shared compute (like on GitHub actions), I highly recommend specifying a random minute offset: `sample(setdiff(0:59, seq(0, 60, by = 5)), 1)`. This is because humans tend to pick nice round numbers which means that a bunch of jobs are likely to be kicked off exactly on the hour etc, and are likely to be slow.
+
+There a two challenges to be aware of with GHA:
+
+-   The scheduled job will only run for 60 days after last commit to repo. That means if you want it to keep running indefinitely, your job will need to commit to the repo when something changes. We'll cover that later.
+
+-   There's no way to pick a time zone: it's always run in UTC time. That means, for example, there's no way to actually run a report at 9am your time every day. You can use your offset from UTC, but in most places your offset from UTC is not constant because of daylight savings time.
+
+    ```{R}
+    library(lubridate, warn.conflicts = FALSE)
+    my_time <- ymd_hm("2024-08-15 09:00", tz = "America/Chicago")
+    with_tz(my_time, "UTC")
+    ```
+
+You can also provide multiple cron specifications if you want something more complicated.
+
+### Pushes
+
+Useful to run every time your code changes:
+
+``` yaml
+on:
+  push:
+    branches: main
+```
+
+Typically, you only want this to run on your main branch; if you want to it run on other branches you'll create a pull request, the topic of the next section.
+
+### Pull requests
+
+Also useful to run when others (or you) submit pull requests.
+
+``` yaml
+on:
+  pull_request:
+```
+
+By default runs when the PR is opened and whenever it's updated. It won't run if there are merge conflicts.
+
+We'll mention this again later, but pull requests that come from forks don't have access to secrets. (Otherwise anyone could provide a pull request to your repo and print your secrets.)
+
+### Workflow dispatch
+
+Finally, it's useful to provide an escape hatch to manually run the job whenever you need it (for example, if it failed for some reason and you need to re-publish).
+
+``` yaml
+on:
+  push:
+    workflow_dispatch:
+```
+
+Once you add this, commit, and push it, you'll see a new button on the actions page:
+
+![](screenshots/workflow-dispatch.png)
 
 ## What
 
+
+### Job context
+
+
+Pick which runner to use: we recommend `ubuntu-latest`. You definitely want to be running on Linux to improve your production skills, and in our experience for R jobs there's no harm in opting to the latest stable version (and then that's one less thing that you need to maintain on your jobs)
+
+```yaml
+  run:
+    runs-on: ubuntu-latest
+```
+
+```yaml
+    permissions:
+      contents: write
+```
+
+```yaml
+    permissions:
+      pages: write      # to deploy to Pages
+      id-token: write   # to verify the deployment originates from an appropriate source
+```
+
 ### Setup
 
+Every job has to do three things:
+
+* Check out the code
+* Install R
+* Install R packages
+
+Might also need to install quarto/pandoc.
+
+### Work
+
+* Run an R script
+* Build a quarto site
+
+
 ### Publishing
+
+You probably don't want to run this in pull requests; and you might not want to run for pushs.
+
+<https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/triggering-a-workflow#example-using-event-type>
+
+``` yaml
+    if: github.event.schedule | github.event.workflow_dispatch
+```
