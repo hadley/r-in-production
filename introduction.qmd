@@ -4,31 +4,31 @@
 
 What does it mean for code to be running in production? I think there are three main characteristics:
 
-* It's **run on another computer**. This is called your production environment and is typically a linux server. This often means its a different operating system to your person computer (which is usually linux or windows), is configured differently, because it's a server and not a desktop, and it offers limited capabilities for interactive debugging.
+-   It's **run on another computer**. This is called your production environment and is typically a linux server. This often means its a different operating system to your person computer (which is usually linux or windows), is configured differently, because it's a server and not a desktop, and it offers limited capabilities for interactive debugging.
 
-* It's **run repeatedly**. A production job is not a one off. It's something's that run repeatedly over months or years. This introduces new challenges because of all the things that can change over time: the data schema, package versions, system libraries, operating systems, the universe, and requirements.
+-   It's **run repeatedly**. A production job is not a one off. It's something's that run repeatedly over months or years. This introduces new challenges because of all the things that can change over time: the data schema, package versions, system libraries, operating systems, the universe, and requirements.
 
-* **Someone cares about the results**. If your job stops working someone is going to bug you about it. This means that you need to take additional care when programming to minimise the chances of failure and if something goes wrong while you're on vacation, you want your colleagues to be able to step in. That implies shared knowledge, tools, and processes.
+-   **Someone cares about the results**. If your job stops working someone is going to bug you about it. This means that you need to take additional care when programming to minimise the chances of failure and if something goes wrong while you're on vacation, you want your colleagues to be able to step in. That implies shared knowledge, tools, and processes.
 
     The highest level of caring leads to Production-with-a-capital-P which adds in paging: i.e, if something goes wrong, you need to fix it immediately, even if it's 2am on Saturday morning. Most data science projects don't end up in Production, not because you can't put R in Production, but because you don't want to put your data scientists in Production.
 
 It's useful to split production jobs up into two categories based on how the computation happen: is it run in the background as **batch job** or is a human or computer waiting for the results of an **interactive job**.
 
-* A typical batch job renders documents, transforms and saves data, fits models, or sends notifications (or any combination of the above). Batch jobs are usually run on a schedule or when some other job completes. If needed, these jobs can be computationally intensive because they’re running in the background.
+-   A typical batch job renders documents, transforms and saves data, fits models, or sends notifications (or any combination of the above). Batch jobs are usually run on a schedule or when some other job completes. If needed, these jobs can be computationally intensive because they’re running in the background.
 
-* Interactive jobs are either apps (if the target audience is a human) or an APIs (if the target audience is another computer). They're executed dynamically when someone needs them, and if there's a lot of demand, multiple instances might be run at the same time. Interactive jobs should not generally be computationally intensive because someone is waiting for the results.
+-   Interactive jobs are either apps (if the target audience is a human) or an APIs (if the target audience is another computer). They're executed dynamically when someone needs them, and if there's a lot of demand, multiple instances might be run at the same time. Interactive jobs should not generally be computationally intensive because someone is waiting for the results.
 
 Some examples that help illustrate the difference are:
 
-* Depending on what technology you use to build it, a dashboard might be a batch job (e.g. flexdashboard, quarto dashboards) or an interactive job (e.g. shinydashboard, shiny + bslib).
+-   Depending on what technology you use to build it, a dashboard might be a batch job (e.g. flexdashboard, quarto dashboards) or an interactive job (e.g. shinydashboard, shiny + bslib).
 
-* If your interactive job is slow, a powerful and general technique is to pair it with a batch job that performs as much computation as possible and caches results.
+-   If your interactive job is slow, a powerful and general technique is to pair it with a batch job that performs as much computation as possible and caches results.
 
-* Parameterising an RMarkdown report turns it from batch a job to an interactive job. (Behind the scenes parameterising a report turns it into a Shiny app that runs `rmarkdown::render()` on demand.)
+-   Parameterising an RMarkdown report turns it from batch a job to an interactive job. (Behind the scenes parameterising a report turns it into a Shiny app that runs `rmarkdown::render()` on demand.)
 
-* You could use shinylive to turn a shiny app from an interactive job to a batch job. This produces a static HTML file that you can deploy anywhere and the viewer's computer now does any computation.
+-   You could use shinylive to turn a shiny app from an interactive job to a batch job. This produces a static HTML file that you can deploy anywhere and the viewer's computer now does any computation.
 
-* The online version of this book is an example a batch job. Every time I push a change to GitHub, a GitHub action renders the book and publishes it to GitHub pages.
+-   The online version of this book is an example a batch job. Every time I push a change to GitHub, a GitHub action renders the book and publishes it to GitHub pages.
 
 # Why R?
 
@@ -38,12 +38,12 @@ Because R is an unparallel environment for exploratory data anaylsis. So why not
 
 Putting code into production requires some computational platform. While many of the details are the same regardless of platform, there are often minor, but important differences. Not possible to cover every possible platform so in this book we'll focus on three:
 
-* [GitHub Actions](https://docs.github.com/en/actions): Hosted offering. GitHub Actions are free for public repos and available to anyone with a GitHub account. They're a great way to learn the basics of R in production and to generate outputs for the whole world to see. But it's not likely that you'll use them in a job. Cheap and easy to use. But only supports static content. Very popular in open source world (e.g. many R packages use it for automated test) so useful tool regardless.
+-   [GitHub Actions](https://docs.github.com/en/actions): Hosted offering. GitHub Actions are free for public repos and available to anyone with a GitHub account. They're a great way to learn the basics of R in production and to generate outputs for the whole world to see. But it's not likely that you'll use them in a job. Cheap and easy to use. But only supports static content. Very popular in open source world (e.g. many R packages use it for automated test) so useful tool regardless.
 
-* [Posit Connect Cloud](https://connect.posit.cloud): A centrally hosted service. At this moment in time is free and public, but in the future there will be a paid offering that is private. Supports dynamic content.
+-   [Posit Connect Cloud](https://connect.posit.cloud): A centrally hosted service. At this moment in time is free and public, but in the future there will be a paid offering that is private. Supports dynamic content.
 
-* [Posit Connect](https://posit.co/products/enterprise/connect/): On prem offering designed to make publishing R (and now Python) data science content as easy as possible. 
+-   [Posit Connect](https://posit.co/products/enterprise/connect/): On prem offering designed to make publishing R (and now Python) data science content as easy as possible.
 
-I have picked these three because they embrace three different ways of working, but they have all been tooled up specifically to support R. That means that they 
+I have picked these three because they embrace three different ways of working, but they have all been tooled up specifically to support R. That means that they
 
-Two of them are created by my employer Posit. 
+Two of them are created by my employer Posit.
