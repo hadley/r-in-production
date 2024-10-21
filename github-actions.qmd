@@ -10,17 +10,26 @@ Only suitable for batch jobs, not interactive.
 
 GHA are extremely powerful and flexible. My goal is not to demonstrate the full power but to give you the most useful bits. I'll point you to the docs so you can learn more if needed.
 
+A few of my jobs you might be interested to read about:
+
+-   <https://github.com/hadley/available-work>: scrapes an artist’s website and notifies me when new work is available.
+
+-   <https://github.com/hadley/houston-pollen>: scrapes daily pollen data and aggregates it into a yearly parquet file.
+
+-   [https://github.com/hadley/cran-deadlines](https://github.com/hadley/cran-deadlines:): turns CRAN deadline data into a Quarto dashboard.
+
 ## Big picture
 
 To use GHA, you create a yaml file like `.github/actions/{name}.yml`. It defines **when** your job will run and **what** your job will do. By and large, you not create a GitHub action from scratch by hand; you'll typically copy from an nearby existing example and modify it as needed. (You might also try creating it with an LLM; but beware debugging a GHA is frustrating.)
 
-The yaml has two main components: `jobs` defines **what** to do and `on` defines **when** to do it. You'll also supply a `name` field. Here's a simple example that runs an R script every time you push to GitHub.
+Here's a simple example that runs an R script every time you push to GitHub.
 
 ``` yaml
 name: run.yaml
 
 on:
-  push: main
+  push:
+    branches: main
 
 jobs:
   run:
@@ -31,8 +40,14 @@ jobs:
       - uses: actions/checkout@v4
       - uses: r-lib/actions/setup-r@v2
       - uses: r-lib/actions/setup-r-dependencies@v2
-      - run: Rscript myscript.R
+      - run: Rscript index.R
 ```
+
+::: llm
+If you're ever confused by exactly what is going on in a GHA workflow, copying and pasting it into your favorite LLM engine and ask for an explanation.
+:::
+
+The yaml has two main components: `jobs` defines **what** to do and `on` defines **when** to do it. You'll also supply a `name` field.
 
 As you might guess from the individual steps, GHA is quite low level. Here we have to first checkout our code, then install R, then install the R packages that our script needs, then run the script. We'll go into more details of each component as we move through the chapter.
 
@@ -57,7 +72,7 @@ There are over 40 different ways to [trigger a GHA to run](https://docs.github.c
 
 ### Schedule
 
-The [schedule](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule) event
+The [schedule](https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/events-that-trigger-workflows#schedule) event is useful when data is changing independently of your code (the most likely scenario).
 
 ``` yaml
 on:
@@ -101,7 +116,9 @@ on:
     branches: main
 ```
 
-Typically, you only want this to run on your main branch; if you want to it run on other branches you'll create a pull request, the topic of the next section.
+Typically, you only want this to run on your primary, or **main** branch[^github-actions-1]; if you want to it run on other branches you'll create a pull request, the topic of the next section.
+
+[^github-actions-1]: Git itself has no concept of a primary or default branch, but every Git repo on GitHub does. The default branch is where code ends up, and using a default branch considerably simplifies most workflows. However, it's not something that's baked into Git itself.
 
 ### Pull requests
 
@@ -122,57 +139,112 @@ Finally, it's useful to provide an escape hatch to manually run the job whenever
 
 ``` yaml
 on:
-  push:
-    workflow_dispatch:
+  workflow_dispatch:
 ```
 
 Once you add this, commit, and push it, you'll see a new button on the actions page:
 
 ![](screenshots/workflow-dispatch.png)
 
+### Putting it all together
+
+Most repos will have all four, looking something like this:
+
+``` yaml
+on:
+  schedule:
+    # Every day at 5:30am and 5:30pm
+    - cron: '30 5,17 * * *'
+  push:
+    branches: main
+  workflow_dispatch:
+  pull_request:
+```
+
 ## What
 
+Now that you've defined when your code will run, it's time to define what it will actually do. There are two main parts to this: you first need to set up your computational environment and then define the individual steps to setup, run, and publish your content.
 
-### Job context
+### Computational environment
 
+Pick which runner to use: we recommend `ubuntu-latest`. You definitely want to be running on Linux to improve your production skills, and in our experience for R jobs there's no harm in opting to the latest stable version (and then that's one less thing that you need to maintain on your jobs).
 
-Pick which runner to use: we recommend `ubuntu-latest`. You definitely want to be running on Linux to improve your production skills, and in our experience for R jobs there's no harm in opting to the latest stable version (and then that's one less thing that you need to maintain on your jobs)
-
-```yaml
-  run:
+``` yaml
+jobs:
+  jobname:
     runs-on: ubuntu-latest
 ```
 
-```yaml
+Depending on how you publish your results you might also need some additional permissions. This block gives the Git client running on GHA the ability to do things other than just read from your existing repo.
+
+``` yaml
     permissions:
       contents: write
 ```
 
-```yaml
-    permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
-```
+We'll see some other examples later on.
 
 ### Setup
 
 Every job has to do three things:
 
-* Check out the code
-* Install R
-* Install R packages
+-   Check out the code
+-   Install R
+-   Install R packages
 
-Might also need to install quarto/pandoc.
+So pretty much every job will start with these steps:
+
+``` yaml
+jobs:
+  jobname:
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: r-lib/actions/setup-r@v2
+        with:
+          use-public-rspm: true
+
+      - uses: r-lib/actions/setup-r-dependencies@v2
+```
+
+`setup-r-dependencies` will automatically install quarto if not already install and the repo has one or more `.qmd` files. If for some reason you need to install it manually you can do so with:
+
+``` yaml
+      - name: Install Quarto
+        uses: quarto-dev/quarto-actions/install-quarto@v1
+```
+
+These steps all use the `uses` field, which refers to a workflow step that someone else has written. You can find the documentation and more source code by going to the corresponding GitHub repo, e.g. <https://github.com/actions/checkout> or <https://github.com/r-lib/actions>.
+
+The `actions` organization is maintained by the maintained by GitHub, and the `r-lib` organization in maintained by tidyverse team. It's important to think about the maintenance of these actions because they can run arbitrary code on your repo. While I'll show you how to minimize the scope of any secrets you share, you should carefully consider the pros and cons of using an action from an unknown author.
 
 ### Work
 
-* Run an R script
-* Build a quarto site
+Now that you've checked your code and installed everything it needs to run, it's time to actually run it! Now we're going to switch from `use` to `run`. Here are the three most common jobs you're likely to see:
 
+``` yaml
+- name: Run an .R file
+  run: Rscript scrape.R
+
+- name: Render a .Rmd file
+  shell: Rscript {0}
+  run: rmarkdown::render("myfile.Rmd")
+
+- name: Render a directory of .qmd files
+  run: quarto render
+```
+
+(Something about tests and about not deploying unless the tests pass)
 
 ### Publishing
 
-You probably don't want to run this in pull requests; and you might not want to run for pushs.
+It doesn't matter how much work you've done unless you've got some way to share it. There are two main ways to publish your results from GHA:
+
+-   Commit the results back to the main branch. This is particularly useful for data engineering jobs where you want to save data in the repo itself.
+
+-   Publish the results to GitHub pages.
+
+Depending on what publication means for you, you will want to consider if every event trigger should publish. For example, you probably don't want pull requests to cause publication to happen, but you do want it to run and test your code.
 
 <https://docs.github.com/en/actions/writing-workflows/choosing-when-your-workflow-runs/triggering-a-workflow#example-using-event-type>
 
