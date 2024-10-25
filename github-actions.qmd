@@ -1,14 +1,14 @@
 # GitHub actions
 
-In many cases, the easiest way to put some R code in production is with GitHub Actions (or GHA for short): since you're code is already in Git, and on GitHub, it's easy to use GitHub Actions. The main constraint here is that if you want to do it for free, you code needs to be public.
+In many cases, the easiest way to put some R code in production is with GitHub Actions (or GHA for short): since your code is already in Git, and on GitHub, it's easy to use GitHub Actions. The main constraint here is that if you want to do it for free, your code needs to be public.
 
 -   For learning
 -   For personal projects
--   If your company using GitHub enterprise, for work projecdts.
+-   If your company using GitHub enterprise, for work projects.
 
 Only suitable for batch jobs, not interactive.
 
-GHA are extremely powerful and flexible. My goal is not to demonstrate the full power but to give you the most useful bits. I'll point you to the docs so you can learn more if needed.
+GHA are extremely powerful and flexible. My goal is not to demonstrate their full power, but to give you the most useful bits. I'll point you to the docs so you can learn more if needed.
 
 A few of my jobs you might be interested to read about:
 
@@ -20,7 +20,7 @@ A few of my jobs you might be interested to read about:
 
 ## Big picture
 
-To use GHA, you create a yaml file like `.github/actions/{name}.yml`. It defines **when** your job will run and **what** your job will do. By and large, you not create a GitHub action from scratch by hand; you'll typically copy from an nearby existing example and modify it as needed. (You might also try creating it with an LLM; but beware debugging a GHA is frustrating.)
+To use GHA, you create a YAML file like `.github/actions/{name}.yml`. It defines **when** your job will run and **what** your job will do. By and large, you do not create a GitHub action from scratch by hand; you'll typically copy from an nearby existing example and modify it as needed. (You might also try creating it with an LLM; but beware, debugging a GHA is frustrating.)
 
 Here's a simple example that runs an R script every time you push to GitHub.
 
@@ -81,7 +81,7 @@ on:
     - cron: '30 5,17 * * *'
 ```
 
-This format is a called the "cron spec" because it's the specification used by the Linux `cron` utility (it's named after the Greek chronos, which means time). It is organised into five fields representing minute, hour, day, month, and day of week.
+This format is a called the "cron spec" because it's the specification used by the Linux `cron` utility (it's named after the Greek *chronos*, which means time). It is organised into five fields representing minute, hour, day, month, and day of week.
 
 Fortunately you don't need to know anything about this format to use it effectively. You can either use <https://crontab.guru/> or ask an LLM to generate a cron spec for you.
 
@@ -90,9 +90,9 @@ Fortunately you don't need to know anything about this format to use it effectiv
 
 I recommend that you always include a comment describing the schedule.
 
-Whenever you create a cron spec to use on a shared compute (like on GitHub actions), I highly recommend specifying a random minute offset: `sample(setdiff(0:59, seq(0, 60, by = 5)), 1)`. This is because humans tend to pick nice round numbers which means that a bunch of jobs are likely to be kicked off exactly on the hour etc, and are likely to be slow.
+Whenever you create a cron spec to use on a shared computer (like on GitHub actions), I highly recommend specifying a random minute offset: `sample(setdiff(0:59, seq(0, 60, by = 5)), 1)`. This is because humans tend to pick nice round numbers which means that a bunch of jobs are likely to be kicked off exactly on the hour etc, and are likely to be slow.
 
-There a two challenges to be aware of with GHA:
+There are two challenges to be aware of with GHA:
 
 -   The scheduled job will only run for 60 days after last commit to repo. That means if you want it to keep running indefinitely, your job will need to commit to the repo when something changes. We'll cover that later.
 
@@ -207,7 +207,7 @@ jobs:
       - uses: r-lib/actions/setup-r-dependencies@v2
 ```
 
-`setup-r-dependencies` will automatically install quarto if not already install and the repo has one or more `.qmd` files. If for some reason you need to install it manually you can do so with:
+`setup-r-dependencies` will automatically install Quarto if it is not already installed and the repo has one or more `.qmd` files. If for some reason you need to install it manually, you can do so with:
 
 ``` yaml
       - name: Install Quarto
@@ -216,7 +216,7 @@ jobs:
 
 These steps all use the `uses` field, which refers to a workflow step that someone else has written. You can find the documentation and more source code by going to the corresponding GitHub repo, e.g. <https://github.com/actions/checkout> or <https://github.com/r-lib/actions>.
 
-The `actions` organization is maintained by the maintained by GitHub, and the `r-lib` organization in maintained by tidyverse team. It's important to think about the maintenance of these actions because they can run arbitrary code on your repo. While I'll show you how to minimize the scope of any secrets you share, you should carefully consider the pros and cons of using an action from an unknown author.
+The `actions` organization is maintained by the maintained by GitHub, and the `r-lib` organization in maintained by the tidyverse team. It's important to think about the maintenance of these actions because they can run arbitrary code on your repo. While I'll show you how to minimize the scope of any secrets you share, you should carefully consider the pros and cons of using an action from an unknown author.
 
 ### Work
 
@@ -242,7 +242,7 @@ It doesn't matter how much work you've done unless you've got some way to share 
 
 -   Commit the results back to the main branch. This is particularly useful for data engineering jobs where you want to save data in the repo itself.
 
--   Publish the results to GitHub pages.
+-   Publish the results to GitHub Pages.
 
 Depending on what publication means for you, you will want to consider if every event trigger should publish. For example, you probably don't want pull requests to cause publication to happen, but you do want it to run and test your code.
 
