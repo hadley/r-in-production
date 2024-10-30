@@ -24,9 +24,9 @@ We'll begin by learning about pak, because it's useful for both development and 
 
 Regardless of where you're installing packages, we recommend that you use `pak::pak()` instead of `install.packages()`. There are three main reasons:
 
--   It's **safe**: pak works out an installation plan up front, and tells you exactly what it's going to do. It also protects you against common failure modes including a package being loaded in another session on Windws or missing a system dependency on Linux.
+-   It's **safe**: pak works out an installation plan up front, and tells you exactly what it's going to do. It also protects you against common failure modes including a package being loaded in another session on Windows or missing a system dependency on Linux.
 
--   It's **convenient**: as well as installing packages from CRAN, pak can also install packages from GitHub, GitLab, Biocondutor and much much more. It also makes it easy to install historical versions of packages and works with P3M to provide CRAN snapshots at any given point in time.
+-   It's **convenient**: as well as installing packages from CRAN, pak can also install packages from GitHub, GitLab, Bioconductor and much much more. It also makes it easy to install historical versions of packages and works with P3M to provide CRAN snapshots at any given point in time.
 
 -   It's **fast**: pak downloads and installs packages in parallel. It also caches packages, making it fast to switch between multiple versions of the same package.
 
@@ -62,7 +62,7 @@ To resolve these two problems we can use P3M and pak.
 
 ### Package binaries from P3M
 
-P3M is a freely available service[^packages-2] provided by Posit. It's very similar to CRAN, but provides binaries for many popular Linux distributions, like CentOS, Rocky Linux, OpenSUSE, RHEL, SLES, Ubunutu and Debian. (Not relevant to this discussion, but very useful in general, it also provides snapshots so you can easily roll back packages to any point in time.)
+P3M is a freely available service[^packages-2] provided by Posit. It's very similar to CRAN, but provides binaries for many popular Linux distributions, like CentOS, Rocky Linux, OpenSUSE, RHEL, SLES, Ubuntu and Debian. (Not relevant to this discussion, but very useful in general, it also provides snapshots so you can easily roll back packages to any point in time.)
 
 [^packages-2]: We also provide the non-free Posit Package Manager which you can use inside your organisation. Using PPM typically makes your IT department happy because you're not installing code from random corners of the internet, and it makes you happy because it allows you to install all the open source data science packages (in R and Python) that you need to do your job. You can also use PPM to distribute your own internal packages. We'll come back to that later in the book.
 

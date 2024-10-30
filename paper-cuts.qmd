@@ -87,7 +87,7 @@ You almost certainly have your laptop set up with your current time zone and wha
 
 -   Whenever you `sort()`, `order()`, or `rank()` a character vector, R will use the current locale to determine the sorting order. On Linux server likely to default to C ordering, which orders strings by their underlying numeric representation. This is unlikely to be what you want, even for English, because it sorts upper case and lower case letters far apart. You can instead use `stringr::str_sort()`, `stringr::str_order()`, and `stringr::str_rank()`which all take an explicit locale argument.
 
--   When you create a new `factor()`, it creates the levels from the sorted unique values. Becausing sorting varies (as above) this means that your factor levels might vary, and because factor levels define the contrasts this means that coefficients of models can differ (but not their predictions). Instead you can explicitly supply the `levels` or use `forcats::fct()` which uses the unique values in the order that they appear.
+-   When you create a new `factor()`, it creates the levels from the sorted unique values. Because sorting varies (as above) this means that your factor levels might vary, and because factor levels define the contrasts this means that coefficients of models can differ (but not their predictions). Instead you can explicitly supply the `levels` or use `forcats::fct()` which uses the unique values in the order that they appear.
 
 -   `toupper()` and `tolower()` can vary based on the current locale. For example, Turkish has a dotless i, ı, which is the lower case form of I. There are relatively few languages where this matters[^paper-cuts-2] but it's worth knowing about the problem and the solution: switching `stringr::str_to_upper()` and `stringr::str_to_lower()`.
 
@@ -104,7 +104,7 @@ options(OutDec = ",")
 x
 ```
 
-This doesn't affect parsing, so is less likely to cause problems, but you may need to explicit set it if numbers are not correctly formatted in your ouptut.
+This doesn't affect parsing, so is less likely to cause problems, but you may need to explicit set it if numbers are not correctly formatted in your output.
 
 ## Plots
 

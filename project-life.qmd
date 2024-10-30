@@ -89,13 +89,13 @@ No strong feelings yet, except that if you start writing reusable functions they
 
 ## Git
 
-What's commited to Git is the source of truth.
+What's committed to Git is the source of truth.
 
 In this book, I assume that you're already familiar with the basics of Git. You certainly don't need to be an expert but you should know how to add and commit files, push and pull, and create branches. I also expect you to know the other key skill for using Git: how to Google/LLM for advice when you get yourself stuck in a situation that you've never seen before.
 
 If you haven't used Git before, I'd recommend that you start by reading [Happy Git and GitHub for the useR](https://happygitwithr.com/).
 
-Depending on how you work you may or may not be storing data in your Git repo. But often for production jobs you won't be; because the goal is to run the job regularly with changing datasets. But if the data doesn't live in the repo, you need to include code to get it. No manual steps allowed! (At least aspriationally; they're fine to do pragmatically but over time you want to reduce your reliance on manual steps as much as possible so that your process is reproducible and reliable regardless of who's running it.)
+Depending on how you work you may or may not be storing data in your Git repo. But often for production jobs you won't be; because the goal is to run the job regularly with changing datasets. But if the data doesn't live in the repo, you need to include code to get it. No manual steps allowed! (At least aspirationally; they're fine to do pragmatically but over time you want to reduce your reliance on manual steps as much as possible so that your process is reproducible and reliable regardless of who's running it.)
 
 ## GitHub
 
@@ -103,11 +103,11 @@ You only get a small amount of the value of Git if you use it locally. You get m
 
 If you don't have access to any of these inside your organisation, you need to start a campaign to get it. Any of these tools will provide the opportunity to substantially improve collaboration and coordination within your data science team.
 
-We'll talk about GitHub particularly when it comes to working with a team. But we'll also use it a bunch when deploying your own personal production jobs because GitHub Actions are such a great platform for deplying batch jobs.
+We'll talk about GitHub particularly when it comes to working with a team. But we'll also use it a bunch when deploying your own personal production jobs because GitHub Actions are such a great platform for deploying batch jobs.
 
 If you're just starting out in your career GitHub is a great place to build a portfolio of some of the production jobs you've created for your own life.
 
-This is the way you share your code with others: no on a shared network drive and certainly not by attaching it to emails!
+This is the way you share your code with others: not on a shared network drive and certainly not by attaching it to emails!
 
 ### Source of truth
 
@@ -115,7 +115,7 @@ Whenever you have multiple copies of something, you need to carefully think abou
 
 (Git is a decentralised protocol and it's certainly possible to use it that way. But it's almost always easier to consider one repo as "special" and that's the one that's available on GitHub.)
 
-Whereever possible we recommend using "Git-backed" deployments where the production environment retrieves the code directly from your central Git repo. This means avoiding click-to-deploy for important jobs, because it eliminates one possible copy of the project.
+Wherever possible we recommend using "Git-backed" deployments where the production environment retrieves the code directly from your central Git repo. This means avoiding click-to-deploy for important jobs, because it eliminates one possible copy of the project.
 
 ## Warning signs
 
