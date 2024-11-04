@@ -4,7 +4,7 @@
 
 What does it mean for code to be running in production? I think there are three main characteristics:
 
--   It's **run on another computer**. This is called your production environment and is typically a linux server. This often means its a different operating system to your person computer (which is usually linux or windows), is configured differently, because it's a server and not a desktop, and it offers limited capabilities for interactive debugging.
+-   It's **run on another computer**. This is called your production environment and is typically a Linux server. This often means its a different operating system to your person computer (which is usually Linux or Windows), is configured differently, because it's a server and not a desktop, and it offers limited capabilities for interactive debugging.
 
 -   It's **run repeatedly**. A production job is not a one off. It's something's that run repeatedly over months or years. This introduces new challenges because of all the things that can change over time: the data schema, package versions, system libraries, operating systems, the universe, and requirements.
 
@@ -32,7 +32,7 @@ Some examples that help illustrate the difference are:
 
 # Why R?
 
-Because R is an unparallel environment for exploratory data anaylsis. So why not use it for production to? It's totally possible - it just requires some new tools and techniques, and a slightly different mindset, that you need for interactive analysis.
+Because R is an unparallel environment for exploratory data analysis. So why not use it for production to? It's totally possible - it just requires some new tools and techniques, and a slightly different mindset, that you need for interactive analysis.
 
 ## Platforms
 

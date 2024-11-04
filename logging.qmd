@@ -6,7 +6,7 @@ When your scripts are running unattended, logging becomes an important tool for 
 
 The technology of logging is fairly simple: in most cases, the actual collection and recording of the logging data will be handled by someone else. All you need to do is get data out of R and into the log. There are three main scenarios:
 
-* Running an RScript: Anything that you print or `cat()` will be captured by the log.
+* Running an R script: Anything that you print or `cat()` will be captured by the log.
 
 * Running a `.rmd`/`.qmd`: Anything that you print or `cat()` will be captured by RMarkdown and will appear in the rendered doc. So if you want info to appear in the log, you'll need to manually send it to `stderr()`.
 
@@ -16,11 +16,11 @@ The technology of logging is fairly simple: in most cases, the actual collection
 
 ## General advice
 
-* Use emoji
+* Use emoji.
 
 * When rendering a `.rmd` or `.qmd` in an unattended environment, chunk names become particularly important because they'll give you some logging for free. Make sure to name all your chunks, so you can easily see what's happening.
 
-* Include information about the shape of data
+* Include information about the shape of data.
 
 * Log just before you take any important actions (e.g. saving to database, sending pull notification etc). Then if the action fails, you'll have a better sense of if it never got called for some reason or it didn't work.
 
@@ -52,6 +52,6 @@ Sometimes the problem isn't that your code doesn't work, but it performs particu
 * `.Rmd`/`.qmd`: `gha::knitr_time_chunks`
 * `.R`: tictoc
 
-### Summary page Github Actions
+### Summary page GitHub Actions
 
 Special GHA

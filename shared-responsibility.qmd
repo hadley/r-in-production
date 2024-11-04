@@ -18,7 +18,7 @@ Goal is for each project that you tackle to be a little bit faster and better th
 
 From Steph Locke:
 
-Everything we do requires maintainence. If you don't do anything to reduce that burden, maintainence inevitably ends up sucking up all your time, and you don't have time to do anything new.
+Everything we do requires maintenance. If you don't do anything to reduce that burden, maintenance inevitably ends up sucking up all your time, and you don't have time to do anything new.
 
 Flesh out concrete example based <https://www.linkedin.com/pulse/developer-velocity-choked-bau-stephanie-locke-fsiqe/?trackingId=eG5meBX8TZqUFQ2Q07jlYA%3D%3D>
 
