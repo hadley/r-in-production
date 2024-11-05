@@ -4,13 +4,11 @@
 
 What does it mean for code to be running in production? I think there are three main characteristics:
 
--   It's **run on another computer**. This is called your production environment and is typically a Linux server. This often means its a different operating system to your person computer (which is usually Linux or Windows), is configured differently, because it's a server and not a desktop, and it offers limited capabilities for interactive debugging.
+-   It's **run on another computer**. This is called your production environment and is typically a Linux server. This typically means its a different operating system to your development environment, which is often a Windows or Mac laptop. If you've never used Linux before, you've got some new stuff to learn. And even if your development environment is on a Linux server, your production environment is not going to be interactive, which means that you're going to need to learn some new debugging skills and more about logging.
 
 -   It's **run repeatedly**. A production job is not a one off. It's something's that run repeatedly over months or years. This introduces new challenges because of all the things that can change over time: the data schema, package versions, system libraries, operating systems, the universe, and requirements.
 
 -   **Someone cares about the results**. If your job stops working someone is going to bug you about it. This means that you need to take additional care when programming to minimise the chances of failure and if something goes wrong while you're on vacation, you want your colleagues to be able to step in. That implies shared knowledge, tools, and processes.
-
-    The highest level of caring leads to Production-with-a-capital-P which adds in paging: i.e, if something goes wrong, you need to fix it immediately, even if it's 2am on Saturday morning. Most data science projects don't end up in Production, not because you can't put R in Production, but because you don't want to put your data scientists in Production.
 
 It's useful to split production jobs up into two categories based on how the computation happen: is it run in the background as **batch job** or is a human or computer waiting for the results of an **interactive job**.
 
@@ -30,9 +28,39 @@ Some examples that help illustrate the difference are:
 
 -   The online version of this book is an example a batch job. Every time I push a change to GitHub, a GitHub action renders the book and publishes it to GitHub pages.
 
-# Why R?
+Regardless of whether you have a batch or an interactive job, there are always at least two steps when putting a job into production. You first **deploy** your code to the production environment, and then the production environment will **execute** it, either on a schedule (for a batch job) or on demand (for an interactive app). As you'll learn, we also recommend an additional **test** step which is run just prior to deployment. This ensures that you never deploy code with known bugs (unfortunately, there's no way to protect against unknown bugs!).
 
-Because R is an unparallel environment for exploratory data analysis. So why not use it for production to? It's totally possible - it just requires some new tools and techniques, and a slightly different mindset, that you need for interactive analysis.
+This process gives rise to three different environments in which your code is run:
+
+-   The **production environment**, where your code is executed. You want this environment to be as minimal as possible because these environments are usually created on the fly then thrown away, and you want this to happen as quickly as possible. The vast majority of production environments are inside a docker container.
+
+-   The **test environment**, which is where you run your tests. This requires everything in the production environment, plus whatever testing tools you're using, and is also highly likely to be a docker container.
+
+-   Your **development environment**, which is where you write your code and test it interactively. This includes everything in the test environment, plus all the tools you use for interactive development (i.e. devtools/usethis).
+
+It's important to keep the deploy and execute steps clear in your mind because your production environment has to replicate your development environment as closely as possible. That means that part of deployment is capturing all the packages you used, and which versions that you currently have installed.
+
+There are two common ways to deploy a job:
+
+-   **Push-button deployment**: As the name suggests, you push a button in your IDE and deployment just happens. This is a great place to start and is convenient when iterating at the beginning of a new project, especially when it's just you working on it.
+
+-   **Git-backed deployment**: You commit your code and push it, and then it's automatically deployed (if you have tests, they must pass). This requires a bit more work but is the workflow that we recommend for the long term because it clearly establishes the git repo as the source of truth and enables multiple people to collaborate on the same job.
+
+## "production" vs "Production"
+
+It's useful to draw the distinction between lower case and upper case production. "Production" is "production" with an additional constraint: whenever something breaks, someone gets paged regardless of the time of day or day or week. This is the definition of production that most IT organisations think of.
+
+The highest level of caring leads to Production-with-a-capital-P which adds in paging: i.e, if something goes wrong, you need to fix it immediately, even if it's 2am on Saturday morning. Most data science projects don't end up in Production, not because you can't put R in Production, but because you don't want to put your data scientists in Production.
+
+This book covers "production" not "Production" becuase we don't believe that you want to put your data scientists in production. It's not what they're good at and not what they're trained for.
+
+## Why R?
+
+Because R is an unparalleled environment for exploratory data analysis. So why not use it for production to? It's totally possible - it just requires some new tools and techniques, and a slightly different mindset, that you need for interactive analysis.
+
+It is 100% possible to put R in production and many companies are already doing so. The goal of this book is to publicise the patterns that make it easiest and most effective, so that regardless of the size of the maturity of your data science org, you can put your R code into production with a minimum of fuss.
+
+(Both the open source and pro sides of Posit have also spent a bunch of time making the whole process as painless as possible. There might not be the same range of deployment options available as in Python, but the options we provide have been thoughtfully design to "just work" so that you can focus on the data analysis challenges that you care about, rather than wrestling with systems to get your code running in production.)
 
 ## Platforms
 
@@ -44,6 +72,4 @@ Putting code into production requires some computational platform. While many of
 
 -   [Posit Connect](https://posit.co/products/enterprise/connect/): On prem offering designed to make publishing R (and now Python) data science content as easy as possible.
 
-I have picked these three because they embrace three different ways of working, but they have all been tooled up specifically to support R. That means that they
-
-Two of them are created by my employer Posit.
+I have picked these three because they embrace three different ways of working, but they have all been tooled up specifically to support R. Two of them are created by my employer Posit. High quality hosting is expensive so they products cost money. However, Posit Connect Cloud will always have with a free version that can be used for publicly available products, and we also discuss GitHub Actions which is also free for public usage.
