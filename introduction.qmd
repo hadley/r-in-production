@@ -14,15 +14,15 @@ What does it mean for code to be running in production? I think there are three 
 
 ### Deploying vs executing
 
-There are always at least two steps when putting a job into production:
+There are always at three steps in the ideal production environment:
 
-* From your development environment, you deploy **deploy** your code to the production environment. This captures all dependencies that your code needs to run and transmits them along with your code to the production environment.
+* From your development environment, you **deploy** your code to the production environment. This captures all dependencies that your code needs to run and transmits them along with your code to the production environment.
 
-* The production environment then **executes** the job, either on a schedule or on demand.
+* The production environment then **tests** your code. If the tests fail, the deployment fails, ensuring that you never deploy code with known bugs (unfortunately, there's no way to protect against unknown bugs!). This step is optional, particularly when you're starting out, but it's important as you work on higher-stakes longer-term projects because it makes it easier for you to make changes to your code without worrying that you are breaking something unexpected.
+
+* If the tests pass, the production environment then **executes** the job, either on a schedule or on demand.
 
 Typically your code will be executed many more times than it is deployed. This means that it often makes sense to do some upfront work in the deployment step in order to save time in the production step. For example, a deployment might involve creating a docker container with all packages and other dependencies. This takes a little time, but saves time when executing the job because you can just download the container, rather than having to install everything from scratch.
-
-As you'll learn, we also recommend an additional **test** step which is in run just prior to deployment. If the tests fail, the deployment fails, ensuring that you never deploy code with known bugs (unfortunately, there's no way to protect against unknown bugs!).
 
 ### Production vs test vs development environments
 
@@ -81,6 +81,8 @@ Because R is an unparalleled environment for exploratory data analysis. So why n
 It is 100% possible to put R in production and many companies are already doing so. The goal of this book is to publicise the patterns that make it easiest and most effective, so that regardless of the size of the maturity of your data science org, you can put your R code into production with a minimum of fuss.
 
 (Both the open source and pro sides of Posit have also spent a bunch of time making the whole process as painless as possible. There might not be the same range of deployment options available as in Python, but the options we provide have been thoughtfully design to "just work" so that you can focus on the data analysis challenges that you care about, rather than wrestling with systems to get your code running in production.)
+
+Additionally, the tidyverse team and Posit developers generally have spent a lot of work across the stack to make all the pieces fit together smoothly, minimising the number of paper cuts that you'll experience.
 
 ## Platforms
 
