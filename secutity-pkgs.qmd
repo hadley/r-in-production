@@ -1,0 +1,3 @@
+# Security in packages
+
+Package Manager and Joe’s white paper on package security

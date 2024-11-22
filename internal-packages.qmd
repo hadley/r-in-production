@@ -1,0 +1,5 @@
+# A more detailed discussion on internal packages
+
+- How do you create a package and share it with your teammates so that you get all the advantages of a - CRAN package? 
+- What should you put in it (e.g. common data connections and theming functions)? 
+- How do you publish package docs?

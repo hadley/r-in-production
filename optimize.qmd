@@ -1,0 +1,8 @@
+# Optimizing for scalability and efficiency
+
+- Refactoring code for production  
+  - Principles of shiny performance  
+  - Profiling and benchmarking code to optimize runtime performance 👷  
+  - Don't be afraid of APIs  
+- Best practices for reusable functions  
+  - pointers to developing internal packages

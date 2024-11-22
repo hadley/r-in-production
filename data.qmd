@@ -1,0 +1,3 @@
+# Working with data
+
+Important to note that any code is also part of an organisational data science ecosystem. This means that you need to access data from where your organisation stores

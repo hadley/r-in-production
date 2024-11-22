@@ -1,0 +1,3 @@
+# Characteristtics of code in production 
+
+What does "production code" look like?

@@ -18,27 +18,64 @@ book:
     - whole-game.qmd
     - project-life.qmd
 
-    - part: another-machine.qmd
+    - part: production-code.qmd
       chapters:
-      - github-actions.qmd
-      - paper-cuts.qmd
-      - packages.qmd
-      - debugging.qmd
-      - logging.qmd
-      - auth.qmd
+        - another-machine.qmd
+        - right-tool.qmd
+        - auth.qmd
+        - optimize.qmd
+        - logging.qmd
+        - debugging.qmd
 
+    - part: getting-to-production.qmd
+      chapters:
+      - paper-cuts.qmd
+      - github-actions.qmd
+      - packages.qmd
+        
     - part: multiple-times.qmd
       chapters:
-      - schema.qmd
-      - packages-platform.qmd
-      - universe.qmd
-      - requirements.qmd
+        - run-repeatedly.qmd
+        - schema.qmd
+        - packages-platform.qmd
+        - universe.qmd
+        - requirements.qmd
+
+    - part: data.qmd
+      chapters: 
+        - access-data.qmd
+        - manage-credentials.qmd
+        - integrate.qmd
+
+    - part: packages-envs.qmd
+      chapters: 
+        - pkg-best-practices.qmd
+        - reproducibility.qmd
+        - it-sec-collab.qmd
+
+    - part: security.qmd
+      chapters: 
+        - security-code.qmd
+        - secutity-pkgs.qmd
+        - security-deployment.qmd
+        - security-event.qmd
+
+    - part: operations.qmd
+      chapters:
+        - version-control.qmd
+        - cicd.qmd
+        - shipdontsink.qmd
+        - careandfeeding.qmd
+
+    - where-to-run.qmd
 
     - part: shared-responsibility.qmd
       chapters:
-      - parquet.qmd
       - team-conventions.qmd
-      - code-review.qmd
+      - internal-packages.qmd
+      - parquet.qmd
+      - work-with-it.qmd
+      - metric.qmd
 
 format:
   html:

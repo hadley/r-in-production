@@ -1,0 +1,4 @@
+# Processes to respond to a security event
+
+- How to identify and update packages in production 👷  
+- How to roll R versions in production 👷

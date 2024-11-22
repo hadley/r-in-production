@@ -1,0 +1,11 @@
+# Right tool for the job
+
+- Know your audience, what do they need?  
+  - Documents / renders  
+    - “Static” doesn’t mean not exciting  
+    - Quarto, observable, javascript  
+    - Different output types, incl. email, pptx, docx, PDF  
+  - Documents with runtime   
+  - API  
+  - Web apps  
+    - WASM

@@ -1,0 +1,10 @@
+# Integrate with external tools and systems
+
+- Sending analytics output to other tools (BI dashboards, cloud platforms, etc.)  
+  - APIs, unique packages like `shinytableau`, etc.  
+- Interoperability and integrations   
+  - Python interoperability  
+  - Databricks, spark  
+  - Snowflake  
+  - BigQuery, others?  
+  - mlflow

@@ -1,0 +1,5 @@
+# CI/CD for data science projects
+
+- Implementing continuous integration and continuous deployment (CI/CD) for R projects 👷  
+- Automating testing and deployment of R code, models, and dashboards  
+- Integrating unit tests, linting, and package testing into CI pipelines

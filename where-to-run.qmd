@@ -1,0 +1,7 @@
+# Choosing infrastructure and architecture for R projects
+
+- Hosted vs. self-managed infrastructure for R analytics  
+- On prem vs cloud  
+- The unique considerations of stateful applications   
+- Choosing the right compute resources for large-scale R jobs  
+- Containerization with Docker and Kubernetes for R workloads

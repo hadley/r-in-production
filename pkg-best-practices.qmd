@@ -1,0 +1,5 @@
+# Package management best practices
+
+- Understanding package dependencies and version control in R
+- Managing R environments with `renv` 
+- Creating and managing custom R packages for internal use

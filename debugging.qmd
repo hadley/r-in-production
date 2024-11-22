@@ -1,3 +1,13 @@
+# Error handling and debugging
+
+_this is error handling and debugging within the code, not in the process of getting code to production_
+
+- Building error handling into your R code   
+- Provide advice about aggressively eliminating warnings and messages so that you get clean logs, and that you can more easily spot differences  
+- Logging and debugging 👷  
+  - logger or log4r   
+- Remote interactive debugging (wish list) 👷
+
 # Debugging
 
 ## Backtraces

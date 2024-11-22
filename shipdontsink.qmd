@@ -1,0 +1,5 @@
+# Ship it, don't sink it
+
+- Dev, Test, Prod concepts
+- How to promote code
+- Who can promote code

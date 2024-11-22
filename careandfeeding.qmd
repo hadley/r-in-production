@@ -1,0 +1,4 @@
+# Care and feeding
+
+- Keep code updated; no tropical fish 👷
+- Is this thing still working? Health check endpoints
