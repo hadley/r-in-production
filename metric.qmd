@@ -1,0 +1,20 @@
+# Masiello Metric ;) 
+
+Can we port the Joel Test [https://www.joelonsoftware.com/2000/08/09/the-joel-test-12-steps-to-better-code](https://www.joelonsoftware.com/2000/08/09/the-joel-test-12-steps-to-better-code)  to data science?
+
+WIP:
+
+1. Using version control individually and as a team  
+2. Style guide, linting, code review process, managing change  
+3. Projects are isolated and reproducible for other team members and in different environments  
+4. secure access to your data   
+5. what do you do when your upstream data changes, how do you know and how do you respond  
+6. Is your processing automated and do you have alerts and informants in place when an issue arises  
+7. code does not depend on you to run; protected from the bus factor  
+8. code is instrumented for baseline and performance metrics  
+9. means to rapid prototype deployments  
+10. process to securely deploy to production with no surprises  
+11. share outputs securely and snappily  
+12. manage change in deployed projects  
+13. plan for upkeep and iteration that isn’t 100% of your job  
+14. managed dependency graph for content and process for rolling changes

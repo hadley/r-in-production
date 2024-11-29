@@ -1,0 +1,6 @@
+# Reproducibility across environments
+
+- Ensuring reproducibility in different environments (local, cloud, containerized)   
+- Provide cross-team conventions around capturing and restoring package sources/versions  
+- Dependency mitigation strategies: advice on “right-sizing” package dependencies, i.e. why it doesn’t matter during exploration, and why it mostly doesn’t matter in production (unless you’re not using P3M, which is where you should start)  
+- Use the best practices from package development and testing in implementing testing for changing environments

@@ -1,0 +1,5 @@
+# Collaborating with IT and Security teams
+
+- The package management strategies  
+  - Working alongside IT teams to set up environments for production  
+  - Balancing flexibility for data scientists with security and stability concerns

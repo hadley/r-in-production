@@ -1,1 +1,10 @@
 # Building up team conventions
+
+- How to organise your projects so that other team members can find them.
+- Building shared conventions.
+- Writing up a team style guide.
+- How (and when) to do code reviews.
+- Building a culture of shared ownership.
+- How to effectively advocate for time spent on refactoring. 
+- Batching and time-boxing
+- tidyverse spring cleaning

@@ -1,0 +1,10 @@
+# Run code repeatedly and predictably
+- Data validation 👷  
+  - Protect for schema changes  
+  - validation practices   
+- Incorporate notifications into reports with rich information 👷  
+- Scheduling and automation
+    - Cron, DAG, Connect 
+- Targets/lightweight orchestration 👷  
+  - How does this scale up to a small team? How does this scale up to an org? How does this fit in with airflow/dagster/jenkins?  
+- How will you keep production code maintained and up to date?

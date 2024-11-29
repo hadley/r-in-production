@@ -1,0 +1,4 @@
+# Best practices for version control
+
+- Using Git for version control of R scripts, data, and models
+- Branching strategies for development, testing, and production environments

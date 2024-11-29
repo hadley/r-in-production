@@ -1,0 +1,4 @@
+# Security in code
+
+- Scanning 👷
+- Don't do stupid things

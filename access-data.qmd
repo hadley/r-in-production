@@ -1,0 +1,13 @@
+# Accessing data
+
+- External data review:   
+  - Databases  
+  - Parquet  
+  - Arrow  
+  - Duckdb  
+  -  Haven  
+  - blob   
+  - pins (straight talk)  
+  - Etc.  
+- Connecting R to databases 👷  
+- Leveraging APIs and web scraping for data collection
