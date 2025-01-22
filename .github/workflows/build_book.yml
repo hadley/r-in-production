@@ -9,7 +9,7 @@ name: Render and deploy book
 
 env:
   isExtPR: ${{ github.event.pull_request.head.repo.fork == true }}
- 
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -26,6 +26,8 @@ jobs:
           use-public-rspm: true
 
       - uses: r-lib/actions/setup-r-dependencies@v2
+        with:
+          pak-version: devel
 
       - name: Render book
         run: |
@@ -41,8 +43,8 @@ jobs:
     needs: build
 
     permissions:
-      pages: write      # to deploy to Pages
-      id-token: write   # to verify the deployment originates from an appropriate source
+      pages: write # to deploy to Pages
+      id-token: write # to verify the deployment originates from an appropriate source
 
     environment:
       name: github-pages
