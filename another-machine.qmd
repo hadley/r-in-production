@@ -1,11 +1,1 @@
 # Running code on another machine
-
-What it's all about getting your code to run on your computer vs someone else's
-
-- Differences between exploratory and production-ready code. Three primary characteristics:  
-  - Code is run on another computer, typically a linux server. This introduces a number of small frustrations if you’ve only ever worked on windows or mac laptops before, fundamentally changes the way that packages are installed, and makes debugging more challenging.  
-  - Code is run repeatedly, either on a schedule, after some other job completes, or on demand. This means that you need to be prepared to respond to changes in the data, the schema, the packages you use, the platform you compute on, the universe, and in requirements.  
-  - The output is sufficiently important that the code is a shared responsibility. If your app fails while you’re on holiday, hopefully someone else on your team can fix it. This means that your team needs to be able to find, run, understand, and edit each others code.  
-- Kinds of production jobs:  
-  - A typical batch job renders documents, transforms and saves data, fits models, or sends notifications (or any combination of the above). Batch jobs are usually run on a schedule or when some other job completes. If needed, these jobs can be computationally intensive because they’re running in the background.  
-  - Interactive jobs are either apps (if the target audience is a human) or an APIs (if the target audience is another computer). They’re executed dynamically when someone needs them, and if there’s a lot of demand, multiple instances might be run at the same time. Interactive jobs should not generally be computationally intensive because someone is waiting for the results.
