@@ -4,11 +4,28 @@
 
 What does it mean for code to be running in production? I think there are three main characteristics:
 
--   It's **run on another computer**. This is called your production environment and is typically a Linux server. This typically means its a different operating system to your development environment, which is often a Windows or Mac laptop. If you've never used Linux before, you've got some new stuff to learn. And even if your development environment is on a Linux server, your production environment is not going to be interactive, which means that you're going to need to learn some new debugging skills and more about logging.
+-   It's **run on another computer**. This is called your production environment and is typically a Linux server. This typically means it's a different operating system to your development environment, which is often a Windows or Mac laptop. If you've never used Linux before, you've got some new stuff to learn. And even if your development environment is on a Linux server, your production environment is not going to be interactive, which means that you're going to need to learn some new debugging skills and more about logging. You likely won't have control over this server either - you'll have an IT administrator, or a team of IT folks whose expertise is in things like Linux, network security, authentication and identity access management, cloud operations, and more. You're going to meet new people, and this is a good thing, because if you had to take on these roles to administer your production environment, you wouldn't have time to do the important data science work that you now need to put into production.  
 
 -   It's **run repeatedly**. A production job is not a one off. It's something's that run repeatedly over months or years. This introduces new challenges because of all the things that can change over time: the data schema, package versions, system libraries, operating systems, the universe, and requirements.
 
 -   **Someone cares about the results**. If your job stops working someone is going to bug you about it. This means that you need to take additional care when programming to minimise the chances of failure and if something goes wrong while you're on vacation, you want your colleagues to be able to step in. That implies shared knowledge, tools, and processes.
+
+## What is data science in production done well?
+
+Data science in production can sometimes happen by accident. You create something of value, it's shared across the organization, and before you know it, you're "in production," but the foundation of this production system was so hastily put together that it could crumble much like the houses built of straw and sticks in the fable about the three little pigs.
+
+The topics of this book are selected to provide a well-rounded and strong foundation for your data science in production. The chapters in this book address: 
+
+- **Characteristics of code in production**: In production, code efficiency, optimization, and observability become much more important. This chapter will help you prepare your code to be robust and performant, while planning for what could go wrong and how to avoid surprises.
+- **Getting code to production**: How do we actually move code from development to a production server? Not just once, but in a way that's repeatable and automated.
+- **Running code multiple times**: Dependencies change, usually without notice. The upstream data you depend on might have a column name or format change. Package and system dependency versions may update. Will that break your production web app? Or perhaps more scary, go undetected and lead to incorrect reporting? 
+- **Working with data**: How do you access the data you need in production, securely? 
+- **Managing packages and environments**: We discuss the best practices in package management, reproducibility, and strategies for striking a balance between package availability, environment stability, and secure environments.
+- **Security**: We discuss security practices within your code and package dependencies, and ensuring secure access to your production data science so that the only people who have access to your work are those who should have access
+- **Operations**: Version control, automation, monitoring, auditing. These are the elements that provide the grease to the wheels of your production machine. 
+- **Infrastructure and architecture**: It takes more than optimized code to keep a production environment humming. The infrastructure your code runs on can be critical to production success.
+- **Shared responsibility**: You, your team, and your organization will need to work together to establish and follow organizational norms and processes. And you'll work with teams in different organizations with different roles in supporting production. We'll discuss those roles and appreciate their perspectives, making it easier to have productive conversations when it's time to collaborate.
+
 
 ## Key vocabulary
 
