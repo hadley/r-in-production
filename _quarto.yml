@@ -56,7 +56,7 @@ book:
     - part: security.qmd
       chapters: 
         - security-code.qmd
-        - secutity-pkgs.qmd
+        - security-pkgs.qmd
         - security-deployment.qmd
         - security-event.qmd
 
