@@ -18,6 +18,12 @@ book:
     - whole-game.qmd
     - project-life.qmd
 
+    - part: getting-to-production.qmd
+      chapters:
+      - paper-cuts.qmd
+      - github-actions.qmd
+      - packages.qmd
+
     - part: production-code.qmd
       chapters:
         - another-machine.qmd
@@ -26,12 +32,6 @@ book:
         - optimize.qmd
         - logging.qmd
         - debugging.qmd
-
-    - part: getting-to-production.qmd
-      chapters:
-      - paper-cuts.qmd
-      - github-actions.qmd
-      - packages.qmd
         
     - part: multiple-times.qmd
       chapters:
