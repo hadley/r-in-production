@@ -16,9 +16,8 @@ Data science in production can sometimes happen by accident. You create somethin
 
 The topics of this book are selected to provide a well-rounded and strong foundation for your data science in production. The chapters in this book address: 
 
-- **Characteristics of code in production**: In production, code efficiency, optimization, and observability become much more important. This chapter will help you prepare your code to be robust and performant, while planning for what could go wrong and how to avoid surprises.
 - **Getting code to production**: How do we actually move code from development to a production server? Not just once, but in a way that's repeatable and automated.
-- **Running code multiple times**: Dependencies change, usually without notice. The upstream data you depend on might have a column name or format change. Package and system dependency versions may update. Will that break your production web app? Or perhaps more scary, go undetected and lead to incorrect reporting? 
+- **Code in production**: When running code repeatedly in production, code efficiency, optimization, and observability become much more important, and the consequences of dependency changes are higher. This chapter will help you prepare your code to be robust and performant, while planning for what could go wrong and how to avoid surprises.
 - **Working with data**: How do you access the data you need in production, securely? 
 - **Managing packages and environments**: We discuss the best practices in package management, reproducibility, and strategies for striking a balance between package availability, environment stability, and secure environments.
 - **Security**: We discuss security practices within your code and package dependencies, and ensuring secure access to your production data science so that the only people who have access to your work are those who should have access
