@@ -3,7 +3,9 @@ project:
 
 book:
   title: R in Production
-  author: Hadley Wickham
+  author: 
+   - Hadley Wickham
+   - Katie Masiello
 
   reader-mode: true
 

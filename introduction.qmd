@@ -23,7 +23,7 @@ The topics of this book are selected to provide a well-rounded and strong founda
 - **Security**: We discuss security practices within your code and package dependencies, and ensuring secure access to your production data science so that the only people who have access to your work are those who should have access
 - **Operations**: Version control, automation, monitoring, auditing. These are the elements that provide the grease to the wheels of your production machine. 
 - **Infrastructure and architecture**: It takes more than optimized code to keep a production environment humming. The infrastructure your code runs on can be critical to production success.
-- **Shared responsibility**: You, your team, and your organization will need to work together to establish and follow organizational norms and processes. And you'll work with teams in different organizations with different roles in supporting production. We'll discuss those roles and appreciate their perspectives, making it easier to have productive conversations when it's time to collaborate.
+- **The "Us" in production**: You, your team, and your organization will need to work together to establish and follow organizational norms and processes. And you'll work with teams in different organizations with different roles in supporting production. We'll discuss those roles and appreciate their perspectives, making it easier to have productive conversations when it's time to collaborate.
 
 
 ## Key vocabulary
