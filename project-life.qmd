@@ -1,3 +1,9 @@
+---
+editor:
+  markdown:
+    wrap: sentence
+---
+
 # Living the project-oriented life
 
 ```{=html}
@@ -15,7 +21,10 @@ Drawn from:
 library(usethis)
 ```
 
-While the focus of this book is putting your R code into production, we also need to lay out some principles for how to organise your work. In this chapter, you'll learn about how to live the project-oriented life, how you organise your file and how you share them with others. The goal is to get you into a workflow where when you work on a project you live in a specific directory. And if you need to share that project with others, you're already ready to go.
+While the focus of this book is putting your R code into production, we also need to lay out some principles for how to organise your work.
+In this chapter, you'll learn about how to live the project-oriented life, how you organise your file and how you share them with others.
+The goal is to get you into a workflow where when you work on a project you live in a specific directory.
+And if you need to share that project with others, you're already ready to go.
 
 There are three basic principles:
 
@@ -27,23 +36,35 @@ But before we can get to those principle we need to recommend a little setup.
 
 ## Setup
 
-One of the advantages of choosing to live this lifestyle is that you get a bunch of free tools from the usethis package. We recommend automatically loading usethis in your `.Rprofile` so these tools are always available to you. We recommend that you automatically load usethis in your interactive sessions so that you can access usethis functions with a minimum of fuss. This is done by adding some code to your `.Rprofile` file, and of course usethis has a helper for that: `usethis::use_usethis()`. I highly recommend running that function and following its advice before continuing.
+One of the advantages of choosing to live this lifestyle is that you get a bunch of free tools from the usethis package.
+We recommend automatically loading usethis in your `.Rprofile` so these tools are always available to you.
+We recommend that you automatically load usethis in your interactive sessions so that you can access usethis functions with a minimum of fuss.
+This is done by adding some code to your `.Rprofile` file, and of course usethis has a helper for that: `usethis::use_usethis()`.
+I highly recommend running that function and following its advice before continuing.
 
-If you use RStudio, we also highly recommend that you run `usethis::use_blank_slate()` to ensure that RStudio never saves or reloads state. This forces you to capture all important information in your code files, ensuring that you never have objects in your global environment that you don't know how to recreate. You don't need to worry about this if you use Positron, since it defaults to those settings.
+If you use RStudio, we also highly recommend that you run `usethis::use_blank_slate()` to ensure that RStudio never saves or reloads state.
+This forces you to capture all important information in your code files, ensuring that you never have objects in your global environment that you don't know how to recreate.
+You don't need to worry about this if you use Positron, since it defaults to those settings.
 
 ## Each project is a directory
 
-You're probably already familiar with the concept of the **working directory**. This is the place that all relative paths (i.e. all paths that don't start with `/` or `C:/`) start from.
+You're probably already familiar with the concept of the **working directory**.
+This is the place that all relative paths (i.e. all paths that don't start with `/` or `C:/`) start from.
 
--   You should only ever use relative paths in your project[^project-life-1]. If you share your project with others, you can't expect your project to live to in the same place, so if you've used absolute paths, they are unlikely to work.
+-   You should only ever use relative paths in your project[^project-life-1].
+    If you share your project with others, you can't expect your project to live to in the same place, so if you've used absolute paths, they are unlikely to work.
 
--   Projects should be self-contained and self-reliant. The project directory should contain all the files needed to complete the project. Your code should not touch any files outside of the project directory[^project-life-2].
+-   Projects should be self-contained and self-reliant.
+    The project directory should contain all the files needed to complete the project.
+    Your code should not touch any files outside of the project directory[^project-life-2].
 
 [^project-life-1]: Note that you can't use `setwd()` to work around this problem, because `setwd()` will generally require an absolute path.
 
 [^project-life-2]: One less obvious consequence of this is that your project code shouldn't install packages, because they will usually be installed outside of the project.
 
-There is one small challenge when using RMarkdown and Quarto, namely that paths in an `.Rmd`/`.qmd` are relative to the location of the file, not the project. If this becomes a problem, you can work around it by using `here::here()`. This function always returns the path to the project directory, so you can use `here::here("data/my-data.csv")` to refer to a file in the project directory regardless of where/how it's called.
+There is one small challenge when using RMarkdown and Quarto, namely that paths in an `.Rmd`/`.qmd` are relative to the location of the file, not the project.
+If this becomes a problem, you can work around it by using `here::here()`.
+This function always returns the path to the project directory, so you can use `here::here("data/my-data.csv")` to refer to a file in the project directory regardless of where/how it's called.
 
 ### File naming advice
 
@@ -81,7 +102,9 @@ report-draft-notes.txt
 
 ### R code and tests
 
-Where relevant we recommend that you follow the same conventions as R packages. We don't believe that every data analysis project needs to be a package, but where the two overlap, you get a number of tools for free. For example this means:
+Where relevant we recommend that you follow the same conventions as R packages.
+We don't believe that every data analysis project needs to be a package, but where the two overlap, you get a number of tools for free.
+For example this means:
 
 -   When you start writing functions that you reuse in multiple places in your analysis, you should put those functions in files that live in `R/`.
 
@@ -91,36 +114,65 @@ Don't worry if you've never created an R package before as we'll cover these con
 
 ### Data
 
-While your code is going to fetch data and possibly save it locally, probably won't want to commit it to your repo (that's a recipe for your repo exploding in size). You should make sure to that sort of data in your `.gitignore` so that you never accidentally commit it. That doesn't mean you won't ever commit data — it's certainly useful to include small supplementary datasets (like look up tables, if they're found in your data documentation, not the database), and example data that you use for testing.
+While your code is going to fetch data and possibly save it locally, probably won't want to commit it to your repo (that's a recipe for your repo exploding in size).
+You should make sure to that sort of data in your `.gitignore` so that you never accidentally commit it.
+That doesn't mean you won't ever commit data — it's certainly useful to include small supplementary datasets (like look up tables, if they're found in your data documentation, not the database), and example data that you use for testing.
 
 ## Each project has a single source of truth
 
-Whenever you have multiple copies of something, you need to carefully think about which think is going to be the "source of truth" (i.e. if they're different, which one do you believe?). In production scenarios, you have at least two copies of the project: one in your development environment and one in your production environment. If it's a collaborative project there's at least one more copy for each of your collaborators. So which of these copies should you "bless" and make it the official source? I'd argue none of them: instead you need to introduce one more copy, which is the copy that lives in a central git repository. This pattern is illustrated in @fig-single-source.
+Whenever you have multiple copies of something, you need to carefully think about which think is going to be the "source of truth" (i.e. if they're different, which one do you believe?).
+In production scenarios, you have at least two copies of the project: one in your development environment and one in your production environment.
+If it's a collaborative project there's at least one more copy for each of your collaborators.
+So which of these copies should you "bless" and make it the official source?
+I'd argue none of them: instead you need to introduce one more copy, which is the copy that lives in a central git repository.
+This pattern is illustrated in @fig-single-source.
 
 ![A collaborative development workflow where multiple team members interact with a central git repository, and that repository goes from git to production.](diagrams/project-life.svg){#fig-single-source fig-alt="A flowchart diagram showing a Git workflow with five boxes connected by arrows. The boxes are labeled \"You\", \"git\", \"Production\", \"Colleague A\", and \"Colleague B\". Bidirectional arrows connect \"You\", \"Colleage A\", and \"Colleague B\" with \"git\", a one-direcitonal arrow goes from \"git\" to \"Production\" (dashed line). T"}
 
-We recommend this workflow, because while Git takes some time to learn, it provides a principle way to maintain and share code, tracking the provenance of every change. There are many ways to use Git, but a central repository is easiest to understand and well supported by modern tools like GitHub. The following sections go into more details of why we recommend Git and GitHub.
+We recommend this workflow, because while Git takes some time to learn, it provides a principle way to maintain and share code, tracking the provenance of every change.
+There are many ways to use Git, but a central repository is easiest to understand and well supported by modern tools like GitHub.
+The following sections go into more details of why we recommend Git and GitHub.
 
 ### Git
 
-In this book, we assume that you're already familiar with the basics of Git. You certainly don't need to be an expert but you should know how to add and commit files, push and pull, and create branches. If you haven't used Git before, I'd recommend that put this book down now, and read [Happy Git and GitHub for the useR](https://happygitwithr.com/).
+In this book, we assume that you're already familiar with the basics of Git.
+You certainly don't need to be an expert but you should know how to add and commit files, push and pull, and create branches.
+If you haven't used Git before, I'd recommend that put this book down now, and read [Happy Git and GitHub for the useR](https://happygitwithr.com/).
 
-I also expect you to know the other key skill for using Git: how to Google or ask an LLM for advice when you get yourself stuck in a situation that you've never seen before. Another great resource for common problems is [Oh Shit, GIt!?!](https://ohshitgit.com).
+I also expect you to know the other key skill for using Git: how to Google or ask an LLM for advice when you get yourself stuck in a situation that you've never seen before.
+Another great resource for common problems is [Oh Shit, GIt!?!](https://ohshitgit.com).
 
 ### GitHub
 
-Git is valuable even if you use it locally; it makes it easier to understand how your code is changing over time, and makes it possible to undo mistakes. But git is vastly more valuable when you use it to share your code with others, using a tool like GitHub. Throughout the rest of the book, we'll talk about GitHub exclusively, but this is really just a short hand for saying your "Git-hosting platform". There are many professional and open source solutions including [GitLab](https://about.gitlab.com), [Bitbucket](https://bitbucket.org), or [Azure DevOps](https://azure.microsoft.com/en-us/services/devops/). You're unlikely to get to choose so you'll need to adapt to what you're given; but this is generally not too hard since the modern platforms are all provide pretty similar tools. If your organisation doesn't already have access to some git hosting platform, you should immediately start a campaign to get it[^project-life-3].
+Git is valuable even if you use it locally; it makes it easier to understand how your code is changing over time, and makes it possible to undo mistakes.
+But git is vastly more valuable when you use it to share your code with others, using a tool like GitHub.
+Throughout the rest of the book, we'll talk about GitHub exclusively, but this is really just a short hand for saying your "Git-hosting platform".
+There are many professional and open source solutions including [GitLab](https://about.gitlab.com), [Bitbucket](https://bitbucket.org), or [Azure DevOps](https://azure.microsoft.com/en-us/services/devops/).
+You're unlikely to get to choose so you'll need to adapt to what you're given; but this is generally not too hard since the modern platforms are all provide pretty similar tools.
+If your organisation doesn't already have access to some git hosting platform, you should immediately start a campaign to get it[^project-life-3].
 
-[^project-life-3]: If you're interviewing for a data science job, you should definitely ask what Git hosting platform they use. If they don't use one, or worse don't use Git, this is a major red flag.
+[^project-life-3]: If you're interviewing for a data science job, you should definitely ask what Git hosting platform they use.
+    If they don't use one, or worse don't use Git, this is a major red flag.
 
-We'll talk about GitHub a lot when it comes to working with your team. But GitHub is also great when you're a solo data science or learning data science. As you'll learn later in the book, GitHub actions allow you to build-your-own production environment, and experience putting jobs into production just like you would in any larger organisation.
+We'll talk about GitHub a lot when it comes to working with your team.
+But GitHub is also great when you're a solo data science or learning data science.
+As you'll learn later in the book, GitHub actions allow you to build-your-own production environment, and experience putting jobs into production just like you would in any larger organisation.
 
-If you're just starting out in your career, GitHub is also a great place to build up portfolio of data science projects that you can talk about when interviewing/some of the production jobs you've created for your own life. If you're in that position, I'd highly recommend watching [GitHub: How To Tell Your Professional Story](https://www.youtube.com/watch?v=R-bPjavai5A), by Abigal Haddad.
+If you're just starting out in your career, GitHub is also a great place to build up portfolio of data science projects that you can talk about when interviewing/some of the production jobs you've created for your own life.
+If you're in that position, I'd highly recommend watching [GitHub: How To Tell Your Professional Story](https://www.youtube.com/watch?v=R-bPjavai5A), by Abigal Haddad.
 
 ### Deployment is automated
 
-Our last principle of the project lifestyle is that deployment is automated, based on the contents of your central git repository. The code that you deploy should ideally come from your Git host, not your local computer. In other words, we recommend that you use push-to-deploy (aka Git-backed deployments ), not click to-deploy from your IDE. It's totally fine to start with click-to-deploy to learn the basics, but over time you want to transition to a fully automate solution.
+Our last principle of the project lifestyle is that deployment is automated, based on the contents of your central git repository.
+The code that you deploy should ideally come from your Git host, not your local computer.
+In other words, we recommend that you use push-to-deploy (aka Git-backed deployments ), not click to-deploy from your IDE.
+It's totally fine to start with click-to-deploy to learn the basics, but over time you want to transition to a fully automate solution.
 
-We'll go into the details later in the book, but we also recommend that deployments be gated behind tests. In other words, you push to start the deployment process, but it will only complete if all your tests pass. This decreases the chances of accidentally deploying broken code.
+We'll go into the details later in the book, but we also recommend that deployments be gated behind tests.
+In other words, you push to start the deployment process, but it will only complete if all your tests pass.
+This decreases the chances of accidentally deploying broken code.
 
-For high-stakes projects, we also recommend working in a branch until you are confident that the work is correct. As we'll see, you can configure a branch to deploy into your staging environment so that you can experiment with confidence without having to worry that stakeholders will see your mistake. (This also gives your colleagues a way to review your code before it's merged). Once you're confident, you can merge your branch back in to the main flow of development, and have the results automatically pushed to production.
+For high-stakes projects, we also recommend working in a branch until you are confident that the work is correct.
+As we'll see, you can configure a branch to deploy into your staging environment so that you can experiment with confidence without having to worry that stakeholders will see your mistake.
+(This also gives your colleagues a way to review your code before it's merged).
+Once you're confident, you can merge your branch back in to the main flow of development, and have the results automatically pushed to production.
