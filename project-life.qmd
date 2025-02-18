@@ -4,7 +4,7 @@ editor:
     wrap: sentence
 ---
 
-# Living the project-oriented life
+# Project-oriented data science
 
 ```{=html}
 <!--
@@ -22,24 +22,32 @@ library(usethis)
 ```
 
 While the focus of this book is putting your R code into production, we also need to lay out some principles for how to organise your work.
-In this chapter, you'll learn about how to live the project-oriented life, how you organise your files and how you share them with others.
-The goal is to get you into a workflow where when you work on a project you live in a specific directory.
-And if you need to share that project with others, you're already ready to go.
+In this chapter, you'll learn the principles of project-oriented data science.
+This advice helps you organise your own projects and helps you share your work with others.
 
-There are three basic principles:
+Overall, our advice is fairly prescriptive because we want you to spend most of your time doing data science, not fretting about how to organise your project.
+And it's much easier to collaborate with others if everyone shares the same project layout.
+But the most important thing is that your team shares consistented and documented principles; so if you deviate from what we describe here, make sure to write it down!
+
+There are three basic principles to project-oriented data science:
 
 -   Each project is a directory.
 -   Each project has a single source of truth.
--   Deployment happens automatically.
+-   Projects are deployed to production in an automated fashion.
 
-But before we can get to those principles we need to recommend a little setup.
+Before we can get to those principles we need to recommend a little setup.
 
 ## Setup
 
-One of the advantages of choosing to live this lifestyle is that you get a bunch of free tools from the usethis package.
-We recommend automatically loading usethis in your `.Rprofile` so these tools are always available to you.
-We recommend that you automatically load usethis in your interactive sessions so that you can access usethis functions with a minimum of fuss.
-This is done by adding some code to your `.Rprofile` file, and of course usethis has a helper for that: `usethis::use_usethis()`.
+One of the advantages of choosing to live the project-oriented lifestyle is that you get a bunch of free tools from the usethis package.
+We'll use these throughout the book, so we recommend automatically loading usethis in your `.Rprofile` so they're always available to you.
+The easiest way to do so is to use the helper supplied by usethis:
+
+```R
+#| eval: false
+usethis::use_usethis()
+```
+
 I highly recommend running that function and following its advice before continuing.
 
 If you use RStudio, we also highly recommend that you run `usethis::use_blank_slate()` to ensure that RStudio never saves or reloads state.
@@ -48,23 +56,60 @@ You don't need to worry about this if you use Positron, since it defaults to tho
 
 ## Each project is a directory
 
-You're probably already familiar with the concept of the **working directory**.
-This is the place that all relative paths (i.e. all paths that don't start with `/` or `C:/`) start from.
+The most important principle of project-oriented data science a project is defined by a directory.
+This directory should include contain all the files needed to run the project, and all files created by the projects.
+In other words, your code should not read or write any files outside of the project directory.
 
--   You should only ever use relative paths in your project[^project-life-1].
-    If you share your project with others, you can't expect your project to live in the same place, so if you've used absolute paths, they are unlikely to work.
-
--   Projects should be self-contained and self-reliant.
-    The project directory should contain all the files needed to complete the project.
-    Your code should not touch any files outside of the project directory[^project-life-2].
-
-[^project-life-1]: Note that you can't use `setwd()` to work around this problem, because `setwd()` will generally require an absolute path.
-
-[^project-life-2]: One less obvious consequence of this is that your project code shouldn't install packages, because they will usually be installed outside of the project.
+Whenever you refer to a file in your project, always use a relative path (i.e. never start the path with `/`, `C:/`, or `~`).
+And since you should only use files inside your project, you should never use paths starting with `..` either.
+Relative paths are relative to the **working directory**, which should always be the project directory.
+(i.e. you should never use `setwd()` to manually change it.)
+This is important because when your share your project with other people, you can't expect it to live in the same place, so absolute paths are unlikely to work.
 
 There is one small challenge when using RMarkdown and Quarto, namely that paths in an `.Rmd`/`.qmd` are relative to the location of the file, not the project.
 If this becomes a problem, you can work around it by using `here::here()`.
-This function always returns the path to the project directory, so you can use `here::here("data/my-data.csv")` to refer to a file in the project directory regardless of where/how it's called.
+This function always returns the path to the project directory, so you can use `here::here("data/my-data.csv")` to refer to a file in the project directory regardless of where or how it's called.
+
+### Dependencies
+
+One less obvious consequence of the project-directory connection is how to handle packages.
+Usually in R, all your packages live in one or two central locations given by `.libPaths()`.
+So whenever you call `library()` it's going to read files outside of the project, and whenever you call `install.packages()` it's going to write files outside of the project.
+Obviously your analyses are going to be severely limited if you can't use packgaes, so what can you do?
+
+We'll come back to this idea in much detail later, but the basic idea is to use a package like {renv} that creates a project-specific library.
+That way `library()` will read  and `install.packages()` will write inside your project.
+That makes it ok to use `library()`, but you still shouldn't use `install.packages()`.
+The key problem with `install.packages()` is that it defaults to installing the latest version of the package available on CRAN.
+If you started work on this project in 2020, and your collaborator started work on in 2025, you might end up with radically different versions of the package, which might lead to difference in your analysis.
+We'll come back to this problem in much greater detail in Chapter TODO.
+
+Note that you won't actually want to store the packages inside your project because they're rather large and you need different versions of the package for different operating systems.
+Instead, you'll record the package names and versions that your project needs in a metadata file, and the people using your project will install these packages as needed.
+
+There's one last tool that never lives inside the package: R itself.
+Unfortunately there's currently no standard way to record which version of R your package requires in the package.
+
+### Secrets
+
+There's one exception to the rule that everything your project need should be contained within the project: secrets.
+Secrets are generally used for auth.
+
+<!-- TODO: flesh this out -->
+
+### Files and subdirectories
+
+Where relevant we recommend that you follow the same conventions as R packages.
+We don't believe that every data analysis project needs to be a package, but where the two overlap, you get a number of tools for free.
+For example this means:
+
+-   To add some overall documentation about your project, include a `README.md` (possibly generated from a `README.qmd`.)
+
+-   When you start writing functions that you reuse in multiple places in your analysis, you should put those functions in files that live in `R/`.
+
+-   When your functions get important enough and complicated enough that you need to test them, your tests should live in `tests/testthat/`.
+
+Don't worry if you've never created an R package before as we'll cover these conventions in more detail as we work through this book.
 
 ### File naming advice
 
@@ -100,18 +145,6 @@ report-2022-04-02.qmd
 report-draft-notes.txt
 ```
 
-### R code and tests
-
-Where relevant we recommend that you follow the same conventions as R packages.
-We don't believe that every data analysis project needs to be a package, but where the two overlap, you get a number of tools for free.
-For example this means:
-
--   When you start writing functions that you reuse in multiple places in your analysis, you should put those functions in files that live in `R/`.
-
--   When your functions get important enough and complicated enough that you need to test them, your tests should live in `tests/testthat/`.
-
-Don't worry if you've never created an R package before as we'll cover these conventions in more detail as we work through this book.
-
 ### Data
 
 While your code is going to fetch data and possibly save it locally, you probably won't want to commit it to your repo (that's a recipe for your repo exploding in size).
@@ -133,6 +166,8 @@ We recommend this workflow, because while Git takes some time to learn, it provi
 There are many ways to use Git, but a central repository is easiest to understand and well supported by modern tools like GitHub.
 The following sections go into more details of why we recommend Git and GitHub.
 
+(The idea of the single soure of truth also applies to packages. The source of truth is not the packages installed in your library, but the packages you have recorded in a metadata file because these are what the production server and your colleagues will use.)
+
 ### Git
 
 In this book, we assume that you're already familiar with the basics of Git.
@@ -149,14 +184,16 @@ But git is vastly more valuable when you use it to share your code with others, 
 Throughout the rest of the book, we'll talk about GitHub exclusively, but this is really just a shorthand for saying your "Git-hosting platform".
 There are many professional and open source solutions including [GitLab](https://about.gitlab.com), [Bitbucket](https://bitbucket.org), or [Azure DevOps](https://azure.microsoft.com/en-us/services/devops/).
 You're unlikely to get to choose so you'll need to adapt to what you're given; but this is generally not too hard since the modern platforms all provide pretty similar tools.
-If your organisation doesn't already have access to some git hosting platform, you should immediately start a campaign to get it[^project-life-3].
+If your organisation doesn't already have access to some git hosting platform, you should immediately start a campaign to get it[^project-life-2].
 
-[^project-life-3]: If you're interviewing for a data science job, you should definitely ask what Git hosting platform they use.
+[^project-life-2]: If you're interviewing for a data science job, you should definitely ask what Git hosting platform they use.
     If they don't use one, or worse don't use Git, this is a major red flag.
 
 We'll talk about GitHub a lot when it comes to working with your team.
 But GitHub is also great when you're a solo data scientist or learning data science.
 As you'll learn later in the book, GitHub actions allow you to build your own production environment, and experience putting jobs into production just like you would in any larger organisation.
+
+<!-- TODO: issues + pull requests/code review -->
 
 If you're just starting out in your career, GitHub is also a great place to build up a portfolio of data science projects that you can talk about when interviewing for jobs, showcasing some of the production jobs you've created for your own life.
 If you're in that position, I'd highly recommend watching [GitHub: How To Tell Your Professional Story](https://www.youtube.com/watch?v=R-bPjavai5A), by Abigail Haddad.
@@ -176,3 +213,5 @@ For high-stakes projects, we also recommend working in a branch until you are co
 As we'll see, you can configure a branch to deploy into your staging environment so that you can experiment with confidence without having to worry that stakeholders will see your mistakes.
 (This also gives your colleagues a way to review your code before it's merged).
 Once you're confident, you can merge your branch back in to the main flow of development, and have the results automatically pushed to production.
+
+<!-- TODO: call ahead to GHA workflows for this -->
