@@ -198,7 +198,7 @@ As you'll learn later in the book, GitHub actions allow you to build your own pr
 If you're just starting out in your career, GitHub is also a great place to build up a portfolio of data science projects that you can talk about when interviewing for jobs, showcasing some of the production jobs you've created for your own life.
 If you're in that position, I'd highly recommend watching [GitHub: How To Tell Your Professional Story](https://www.youtube.com/watch?v=R-bPjavai5A), by Abigail Haddad.
 
-### Deployment is automated
+## Automated deployments
 
 Our last principle of the project lifestyle is that deployment is automated, based on the contents of your central git repository.
 The code that you deploy should ideally come from your Git host, not your local computer.
