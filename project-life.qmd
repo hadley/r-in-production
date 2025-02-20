@@ -21,18 +21,18 @@ Drawn from:
 library(usethis)
 ```
 
-In this chapter, you'll learn about our recommend practices for organising your production-bound projects.
-This advice helps you projects for yourself, but is particularly important when you're collaborating with others.
+This chapter will introduce you to our recommend practices for organising your production-bound projects.
+This advice helps you organise your own projects, but is particularly important when you're collaborating with others.
 Our advice is fairly prescriptive because we want you to spend your time doing data science, not fretting about how to organise your project.
-And it's much easier to collaborate with others if everyone shares the same project layout.
-But the most important thing is to develop consistent principles with the people you work with.
-So if you want to deviate from what we describe here, just make sure to write it down!
+It's also much easier to collaborate with others if everyone shares the same project layout.
+But the most important thing is to be consistent, and you can't be consistent unless you've documented what you do.
+So if you want to deviate from what we describe here, make sure to write it down!
 
-So far we have three important principles:
+In this chapter, you'll learn about three important principles:
 
--   A project is a self-contained directory.
--   There's a single source of truth.
--   Deployment is automated.
+-   **A project is a self-contained directory**: every file a project needs lives in that directory, and every file that project creates goes in that directory.
+-   **There's a single source of truth**: you'll inevitably end up with multiple copies of your project and you need to decide which one is "real". We recommend using git, and making the copy of your project that lives in a central git repo the truth.
+-   **Deployment is automated**: deploying your code to production should involve minimal manual steps. We recommend you build a workflow so that as soon as your code is merged into the main branch, it gets deployed to your production server.
 
 ````{=html}
 <!--
@@ -61,29 +61,46 @@ You don't need to worry about this if you use Positron, since it defaults to tho
 
 ## A project is a directory
 
-The most important principle of project-oriented data science a project is defined by a directory.
-This directory should include contain all the files needed to run the project and all files created by the project; your code should not read or write any files outside of the project directory.
+The first, and most important, organisational principle is the each project you work is defined by a self-contained directory.
+This directory includes all the files needed to run the project and all files created by the project; i.e. your code should not read or write any files outside of the project directory.
 This principle is the foundation to making your code work when it's run on another machine (either your colleagues or in production).
 
-Additionally, when you share your project with other people, you can't expect it to live in the same place, so absolute paths won't work.
-Instead, always use a relative paths[^project-life-1].
-Relative paths are relative to the **working directory**, which should always be the project directory[^project-life-2]
+#### Paths and working directories
+
+When you deploy your project to production or share your project with other people, it's not going to live in the same location.
+That means absolute paths won't work and you should always use a project-relative paths.
+The safest way to generate a project-relative path is to use `here::here()` which will always create a path relative to the root of current project.
+In other words, regardless of where or how you call `here::here("data/foo.csv")` it will always point to a the `foo.csv` file that lives in the data directory at the top-level of the project.
+
+You can also use relative paths[^project-life-1], but it's important to note that these are a relative to the working directory, and the working directory varies based on how your R code is run.
+For shiny apps, plumber APIs, and quarto/RMarkdown docs, the working directory will be the directory the file lives in.
+For R scripts, the working directory will be the project root[^project-life-2]
 .
 
 [^project-life-1]: i.e. never start the path with `/`, `C:/`, or `~.`
 
-[^project-life-2]: In other words, don't change the working directory either by calling `setwd()` or clicking some button in your IDE.
+[^project-life-2]: Assuming you have manually changed the working directory by calling `setwd()` or clicking some button in your IDE.
 
-There is one small challenge when using RMarkdown and Quarto, namely that paths in an `.Rmd`/`.qmd` are relative to the location of the file, not the project.
-If this becomes a problem, you can work around it by using `here::here()`.
-This function always returns the path to the project directory, so you can use `here::here("data/my-data.csv")` to refer to a file in the project directory regardless of where or how it's called.
+### Files and subdirectories
 
-You can also work around this problem by using `..` in the path.
-We don't recommend this because that pattern signals that you are reaching outside of the working directory, something you generally want to avoid.
+Our advice on project structure is still evolving.
+But where possible we recommend that you follow the same conventions as R packages.
+We don't believe that data analysis projects need to be a package, but where the two overlap, you get a number of tools for free.
+For example this means:
+
+-   To add some overall documentation about your project, include a `README.md` (possibly generated from a `README.qmd`)
+
+-   When you start writing functions that you reuse in multiple places in your analysis, you should put those functions in files that live in `R/`.
+
+-   When your functions get important enough and complicated enough that you need to test them, your tests should live in `tests/testthat/`.
+
+Don't worry if you've never created an R package before as we'll cover these conventions in more detail as we work through this book.
+
+In terms of naming individual files, We recommend that you follow the advice in the [tidyverse style guide](https://style.tidyverse.org/files.html#names).
 
 ### Dependencies
 
-A literal reading of the rule to only reading and writing inside your project directory imply that you can't use packages!
+A literal reading of the rule to only read and write inside your project directory implies that you can't use packages!
 That's because the default configuration of R stores packages in one or two central locations.
 So whenever you call `library()` it's going to read files outside of the project, and whenever you call `install.packages()` it's going to write files outside of the project.
 Obviously your analyses are going to be severely limited if you can't use packages, so how do we resolve this rule?
@@ -102,33 +119,17 @@ Instead, you'll record the package names and versions that your project needs in
 ### Exceptions
 
 There are a handful of exceptions to the self-contained rule.
-We'll go into these in much detail later in the book, but it's good to be aware of them now:
+We'll go into these in much more detail later in the book, but it's good to be aware of them now:
 
--   **R**: despite needing R to run your code, you'll never include it in your project.
-    Unfortunately there's currently no standard way to record which version of R your package requires currently, but it's something we're working on.
+-   **R**: despite needing R to run your code, you'll won't include it in your project.
+    Instead, you'll use tools like `renv` that automatically record the version of R that you're running so that your deployment environment can use the same version.
 
 -   **Secrets**: depending on how your authentication system works, you project may need secrets like passwords or API keys in order to run.
     These should **never** be stored in the project itself.
-    We'll talk about alternativvs in ...
+    We'll talk about alternatives in ...
 
--   **Data**: by and large, you project will not include data inside of it, it will instead be retrieved on demand.
-    That doesn't mean you won't ever commit data — it's certainly useful to include small supplementary datasets (like look up tables, if they're found in your data documentation, not the database), and example data that you use for testing.
-
-### Files and subdirectories
-
-We recommend that you follow the advice in the tidyverse style guide on [naming files](https://style.tidyverse.org/files.html#names).
-
-Where relevant we recommend that you follow the same conventions as R packages.
-We don't believe that every data analysis project needs to be a package, but where the two overlap, you get a number of tools for free.
-For example this means:
-
--   To add some overall documentation about your project, include a `README.md` (possibly generated from a `README.qmd`.)
-
--   When you start writing functions that you reuse in multiple places in your analysis, you should put those functions in files that live in `R/`.
-
--   When your functions get important enough and complicated enough that you need to test them, your tests should live in `tests/testthat/`.
-
-Don't worry if you've never created an R package before as we'll cover these conventions in more detail as we work through this book.
+-   **Data**: by and large, your project will not include data, because your data will be retrieved on demand with a database query or API call.
+    That doesn't mean you won't ever commit data — it's certainly useful to include small supplementary datasets (like look-up tables, if they're found in your data documentation, not the database), and example data used for testing.
 
 ## There's one source of truth
 
