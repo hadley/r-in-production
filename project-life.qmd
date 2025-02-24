@@ -59,44 +59,59 @@ You don't need to worry about this if you use Positron, since it defaults to tho
 -->
 ````
 
-## A project is a directory
+## Each project is a self-contained directory
 
-The first, and most important, organisational principle is the each project you work is defined by a self-contained directory.
-This directory includes all the files needed to run the project and all files created by the project; i.e. your code should not read or write any files outside of the project directory.
+Each project you work in should be defined by a self-contained directory.
+Self-contained means two things:
+
+-   The directory includes all the files needed to run the project; i.e. it only reads files inside this directory.
+
+-   The project only even modified files in this directory; i.e. it only writes files inside this directory.
+
 This principle is the foundation to making your code work when it's run on another machine (either your colleagues or in production).
 
-#### Paths and working directories
+### Files and sub-directories
+
+Every project will have:
+
+-   `artifact/`: the directory where the app/api/report and its dependencies lives.
+    If you have multiple deployable artefacts in the same project, these will live in sub-directories.
+
+-   `README.md`: overall project level documentation.
+
+-   A lockfile that specifies the dependencies needed to execute your artefact.
+
+Most projects will also grow to include two additional projects:
+
+-   `R/`: standalone functions that are used in multiple places in your code.
+
+-   `tests/testthat/`: tests for your standalone functions.
+
+Additionally you might also have:
+
+-   `data/`: small supplementary datasets and sample data used for testing.
+
+-   `src/`: in the rare case that you need compiled C code.
+
+For naming the files that live inside these directories, we recommend that you follow the advice in the [tidyverse style guide](https://style.tidyverse.org/files.html#names).
+
+### Paths and working directories
 
 When you deploy your project to production or share your project with other people, it's not going to live in the same location.
-That means absolute paths won't work and you should always use a project-relative paths.
-The safest way to generate a project-relative path is to use `here::here()` which will always create a path relative to the root of current project.
-In other words, regardless of where or how you call `here::here("data/foo.csv")` it will always point to a the `foo.csv` file that lives in the data directory at the top-level of the project.
-
-You can also use relative paths[^project-life-1], but it's important to note that these are a relative to the working directory, and the working directory varies based on how your R code is run.
-For shiny apps, plumber APIs, and quarto/RMarkdown docs, the working directory will be the directory the file lives in.
-For R scripts, the working directory will be the project root[^project-life-2]
-.
+That means absolute paths won't work and you need to use a relative path[^project-life-1].
+There are two type of relative paths:
 
 [^project-life-1]: i.e. never start the path with `/`, `C:/`, or `~.`
 
-[^project-life-2]: Assuming you have manually changed the working directory by calling `setwd()` or clicking some button in your IDE.
+-   **Project-relative** paths start at the project root, and can be created with `here::here()`.
+    You should not need to use these too frequently because our tools will automatically load files from the most commonly used project directories.
+    For example `pkgload::load_all()` automatically sources all files in `R/` and lazily loads all datasets in `data/`.
 
-### Files and subdirectories
+-   **Artefact-relative** paths start at the same location as the app, api, doc, or script that you're deploying.
+    These will generally be the same as `here::here("artifacts")` unless you have multiple artefacts in subdirectories.
 
-Our advice on project structure is still evolving.
-But where possible we recommend that you follow the same conventions as R packages.
-We don't believe that data analysis projects need to be a package, but where the two overlap, you get a number of tools for free.
-For example this means:
-
--   To add some overall documentation about your project, include a `README.md` (possibly generated from a `README.qmd`)
-
--   When you start writing functions that you reuse in multiple places in your analysis, you should put those functions in files that live in `R/`.
-
--   When your functions get important enough and complicated enough that you need to test them, your tests should live in `tests/testthat/`.
-
-Don't worry if you've never created an R package before as we'll cover these conventions in more detail as we work through this book.
-
-In terms of naming individual files, We recommend that you follow the advice in the [tidyverse style guide](https://style.tidyverse.org/files.html#names).
+In general, avoid manually changing the working directory by calling `setwd()` or clicking some button in your IDE.
+Rely on relative paths to clearly and consistently indicate.
 
 ### Dependencies
 
@@ -128,9 +143,6 @@ We'll go into these in much more detail later in the book, but it's good to be a
     These should **never** be stored in the project itself.
     We'll talk about alternatives in ...
 
--   **Data**: by and large, your project will not include data, because your data will be retrieved on demand with a database query or API call.
-    That doesn't mean you won't ever commit data — it's certainly useful to include small supplementary datasets (like look-up tables, if they're found in your data documentation, not the database), and example data used for testing.
-
 ## There's one source of truth
 
 Whenever you have multiple copies of something, you need to carefully think about which one is going to be the "source of truth" (i.e. if they're different, which one do you believe?).
@@ -140,7 +152,13 @@ So which of these copies should you "bless" and make it the official source?
 I'd argue none of them: instead you need to introduce one more copy, which is the copy that lives in a central git repository.
 This pattern is illustrated in @fig-single-source.
 
-![A collaborative development workflow where multiple team members interact with a central git repository, and that repository goes from git to production.](diagrams/project-life.svg){#fig-single-source fig-alt="A flowchart diagram showing a Git workflow with five boxes connected by arrows. The boxes are labeled \"You\", \"git\", \"Production\", \"Colleague A\", and \"Colleague B\". Bidirectional arrows connect \"You\", \"Colleage A\", and \"Colleague B\" with \"git\", a one-directional arrow goes from \"git\" to \"Production\" (dashed line)."}
+![A collaborative development workflow where multiple team members interact with a central git repository, and that repository goes from git to production.](diagrams/project-life/goal.svg){#fig-single-source fig-alt="A flowchart diagram showing a Git workflow with five boxes connected by arrows. The boxes are labeled \"You\", \"git\", \"Production\", \"Colleague A\", and \"Colleague B\". Bidirectional arrows connect \"You\", \"Colleage A\", and \"Colleague B\" with \"git\", a one-directional arrow goes from \"git\" to \"Production\" (dashed line)."}
+
+@fig-production-central shows a less idea workflow where if your colleagues want to see your code, they download it from your production server.
+This works ok if they just want to look at your code, but if they edit it, how do they get the changes back to you?
+It's also easy for them to edit it then deploy back to production, leading to an inconsistency between your version and their version.
+
+![A less ideal workflow where you and your colleagues share a project by downloading deployed artefacts from production. If there are conflicts between versions, it's very difficult to know which one is true.](diagrams/project-life/production-central.svg){#fig-production-central fig-alt="A flowchart diagram with four rectangular boxes connected by bidirectional arrows. At the top is a box labeled \"You\" which connects downward to a box labeled \"Production\". The \"Production\" box has two connections below it, linking to boxes labeled \"Colleague A\" (on the left) and \"Colleague B\" (on the right). "}
 
 We recommend this workflow, because while Git takes some time to learn, it provides a principled way to maintain and share code, tracking the provenance of every change.
 There are many ways to use Git, but a central repository is easiest to understand and well supported by modern tools like GitHub.
@@ -161,27 +179,29 @@ Another great resource for common problems is [Oh Shit, Git!?!](https://ohshitgi
 
 Git is valuable even if you use it locally; it makes it easier to understand how your code is changing over time, and makes it possible to undo mistakes.
 But git is vastly more valuable when you use it to share your code with others, using a tool like GitHub.
-Throughout the rest of the book, we'll talk about GitHub exclusively, but this is really just a shorthand for saying your "Git-hosting platform".
+Throughout the rest of the book, we'll talk about GitHub exclusively, but this is really just a shorthand for saying your "Git hosting platform".
 There are many professional and open source solutions including [GitLab](https://about.gitlab.com), [Bitbucket](https://bitbucket.org), or [Azure DevOps](https://azure.microsoft.com/en-us/services/devops/).
-You're unlikely to get to choose so you'll need to adapt to what you're given; but this is generally not too hard since the modern platforms all provide pretty similar tools.
-If your organisation doesn't already have access to some git hosting platform, you should immediately start a campaign to get it[^project-life-3].
+Your organisation will usually provide this as a service, and you'll need to adapt to what you're given.
+Fortunately this is generally not too hard since all the modern platforms all provide very similar tools.
+If your organisation doesn't already provide GitHub or similar, you should immediately start a campaign to get it[^project-life-2].
 
-[^project-life-3]: If you're interviewing for a data science job, you should definitely ask what Git hosting platform they use.
+[^project-life-2]: If you're interviewing for a data science job, you should definitely ask what Git hosting platform they use.
     If they don't use one, or worse don't use Git, this is a major red flag.
 
-We'll talk about GitHub a lot when it comes to working with your team.
-But GitHub is also great when you're a solo data scientist or learning data science.
+We'll talk about GitHub a lot when it comes to working in a team.
+The most important tools are issues and pull requests.
+Issues provide a great way to track TODO items for your project, making it easy to see what work is remaining.
+Pull requests facilitate code review, which an extremely powerful technique for improving quality and upskilling your entire team.
+
+GitHub is also great when you're a solo data scientist or learning data science.
 As you'll learn later in the book, GitHub actions allow you to build your own production environment, and experience putting jobs into production just like you would in any larger organisation.
-
-<!-- TODO: issues + pull requests/code review -->
-
 If you're just starting out in your career, GitHub is also a great place to build up a portfolio of data science projects that you can talk about when interviewing for jobs, showcasing some of the production jobs you've created for your own life.
 If you're in that position, I'd highly recommend watching [GitHub: How To Tell Your Professional Story](https://www.youtube.com/watch?v=R-bPjavai5A), by Abigail Haddad.
 
 ## Deployment is automated
 
 Our final principle of the project lifestyle is that deployment is automated, based on the contents of your central git repository.
-The code that you deploy should ideally come from your Git host, not your local computer.
+The code that you deploy should come from your central Git repo, not your local computer.
 In other words, we recommend that you use push-to-deploy (aka Git-backed deployments), not click-to-deploy from your IDE.
 It's totally fine to start with click-to-deploy to learn the basics, but over time you want to transition to a fully automated solution.
 

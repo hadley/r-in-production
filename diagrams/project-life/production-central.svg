@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:dc="http://purl.org/dc/elements/1.1/" version="1.1" xmlns:xl="http://www.w3.org/1999/xlink" viewBox="215 256 241 161" width="241" height="161">
+  <defs>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-1 -4 8 8" markerWidth="8" markerHeight="8" color="black">
+      <g>
+        <path d="M 6 0 L 0 -2.25 L 0 2.25 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+    <marker orient="auto" overflow="visible" markerUnits="strokeWidth" id="FilledArrow_Marker_2" stroke-linejoin="miter" stroke-miterlimit="10" viewBox="-7 -4 8 8" markerWidth="8" markerHeight="8" color="black">
+      <g>
+        <path d="M -6 0 L 0 2.25 L 0 -2.25 Z" fill="currentColor" stroke="currentColor" stroke-width="1"/>
+      </g>
+    </marker>
+  </defs>
+  <g id="production-central" stroke-opacity="1" stroke="none" fill="none" fill-opacity="1" stroke-dasharray="none">
+    <title>production-central</title>
+    <rect fill="white" x="215" y="256" width="241" height="161"/>
+    <g id="production-central_Layer_1">
+      <title>Layer 1</title>
+      <g id="Graphic_2">
+        <rect x="285.62205" y="260.15748" width="97.08662" height="34.01575" fill="white"/>
+        <rect x="285.62205" y="260.15748" width="97.08662" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(290.62205 268.96936)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="31.87431" y="13" xml:space="preserve">You</tspan>
+        </text>
+      </g>
+      <g id="Graphic_3">
+        <rect x="284.55906" y="319.68504" width="99.2126" height="34.01575" fill="white"/>
+        <rect x="284.55906" y="319.68504" width="99.2126" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(289.55906 328.4969)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="10.3763" y="13" xml:space="preserve">Production </tspan>
+        </text>
+      </g>
+      <g id="Graphic_4">
+        <rect x="219.3622" y="379.2126" width="99.2126" height="34.01575" fill="white"/>
+        <rect x="219.3622" y="379.2126" width="99.2126" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(224.3622 388.0245)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="6.7573" y="13" xml:space="preserve">Colleague A</tspan>
+        </text>
+      </g>
+      <g id="Graphic_6">
+        <rect x="352.59056" y="379.2126" width="99.2126" height="34.01575" fill="white"/>
+        <rect x="352.59056" y="379.2126" width="99.2126" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(357.59056 388.0245)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="6.4983" y="13" xml:space="preserve">Colleague B</tspan>
+        </text>
+      </g>
+      <g id="Line_7">
+        <line x1="334.16536" y1="302.07323" x2="334.16536" y2="311.78504" marker-end="url(#FilledArrow_Marker)" marker-start="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_8">
+        <line x1="293.4302" y1="373.88587" x2="309.70365" y2="359.0275" marker-end="url(#FilledArrow_Marker)" marker-start="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_9">
+        <line x1="376.81393" y1="374.0104" x2="359.5483" y2="358.90298" marker-end="url(#FilledArrow_Marker)" marker-start="url(#FilledArrow_Marker_2)" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+    </g>
+  </g>
+</svg>
