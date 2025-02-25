@@ -74,38 +74,43 @@ This principle is the foundation to making your code work when it's run on anoth
 
 Every project will have:
 
--   `artifact/`: the directory where the app/api/report and its dependencies lives.
-    If you have multiple deployable artefacts in the same project, these will live in sub-directories.
+-   `artifact/`: the directory where the app/api/report/script lives.
+    If you have multiple deployable artefacts in the same project, or a large number of R scripts, you can use sub-directories of `artifact/`.
+    (The only time you won't have an `artifact/` directory is if when you're deploying a package, in which case the project root itself will be deployed.)
+
+    For the files that will live inside this directory, we recommend that you follow the advice in the [tidyverse style guide](https://style.tidyverse.org/files.html#names).
 
 -   `README.md`: overall project level documentation.
+    This is a great place to describe the overall goal of the project, provide a link to the deploy artefact, and generally to jot down anything important that you and your collaborators need to remember about this project.
 
--   A lockfile that specifies the dependencies needed to execute your artefact.
+-   `renv.lock`: a "lock" file that specifies the exact versions of the dependencies needed to execute your project.
 
-Most projects will also grow to include two additional projects:
+Most projects will grow to include a `R/` and `tests/testthat`[^project-life-1] directory.
+You'll create these when you extract out the first reusable function from your existing code.
+This is an important technique as your project grows in complexity because it allows you to isolate that complexity and test it independently to the rest of your code.
+This gives you the confidence to refactor your code and update your dependencies while knowing that your production job will continue to return the correct results.
 
--   `R/`: standalone functions that are used in multiple places in your code.
+[^project-life-1]: You might wonder why tests don't just live in `tests`/.
+    Firstly, this allows for the user of testing packages other than testthat (including packages that don't exist now but might in the future).
+    Secondly, this matches the directory structure of R packages, which is useful because it allows us to share tools between production projects and packages.
 
--   `tests/testthat/`: tests for your standalone functions.
-
-Additionally you might also have:
+There are a few other directories that some projects will have:
 
 -   `data/`: small supplementary datasets and sample data used for testing.
 
 -   `src/`: in the rare case that you need compiled C code.
 
-For naming the files that live inside these directories, we recommend that you follow the advice in the [tidyverse style guide](https://style.tidyverse.org/files.html#names).
-
 ### Paths and working directories
 
 When you deploy your project to production or share your project with other people, it's not going to live in the same location.
-That means absolute paths won't work and you need to use a relative path[^project-life-1].
+That means absolute paths won't work and you need to use a relative path[^project-life-2].
 There are two type of relative paths:
 
-[^project-life-1]: i.e. never start the path with `/`, `C:/`, or `~.`
+[^project-life-2]: i.e. never start the path with `/`, `C:/`, or `~.`
 
 -   **Project-relative** paths start at the project root, and can be created with `here::here()`.
-    You should not need to use these too frequently because our tools will automatically load files from the most commonly used project directories.
-    For example `pkgload::load_all()` automatically sources all files in `R/` and lazily loads all datasets in `data/`.
+    You should only need project-relative paths relatively infrequently because the tools we recommend will automatically load files from the most commonly used project directories.
+    For example `producethis::load_all()` will automatically sources all files in `R/` and lazily loads all datasets in `data/`, and `producethis::test_all()` will automatically run the tests in `tests/testthat`.
 
 -   **Artefact-relative** paths start at the same location as the app, api, doc, or script that you're deploying.
     These will generally be the same as `here::here("artifacts")` unless you have multiple artefacts in subdirectories.
@@ -183,9 +188,9 @@ Throughout the rest of the book, we'll talk about GitHub exclusively, but this i
 There are many professional and open source solutions including [GitLab](https://about.gitlab.com), [Bitbucket](https://bitbucket.org), or [Azure DevOps](https://azure.microsoft.com/en-us/services/devops/).
 Your organisation will usually provide this as a service, and you'll need to adapt to what you're given.
 Fortunately this is generally not too hard since all the modern platforms all provide very similar tools.
-If your organisation doesn't already provide GitHub or similar, you should immediately start a campaign to get it[^project-life-2].
+If your organisation doesn't already provide GitHub or similar, you should immediately start a campaign to get it[^project-life-3].
 
-[^project-life-2]: If you're interviewing for a data science job, you should definitely ask what Git hosting platform they use.
+[^project-life-3]: If you're interviewing for a data science job, you should definitely ask what Git hosting platform they use.
     If they don't use one, or worse don't use Git, this is a major red flag.
 
 We'll talk about GitHub a lot when it comes to working in a team.
