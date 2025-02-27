@@ -72,23 +72,22 @@ This principle is the foundation to making your code work when it's run on anoth
 
 ### Files and sub-directories
 
-Every project will have:
+In every project, the most important directory will contain the code that generates your production artefact.
+You are free to call this directory whatever you want, but if you have a single artefact we recommend putting in it a `artifact/` directory.
+For the files that will live inside this directory, we recommend that you follow the advice in the [tidyverse style guide](https://style.tidyverse.org/files.html#names).
 
--   `artifact/`: the directory where the app/api/report/script lives.
-    If you have multiple deployable artefacts in the same project, or a large number of R scripts, you can use sub-directories of `artifact/`.
-    (The only time you won't have an `artifact/` directory is if when you're deploying a package, in which case the project root itself will be deployed.)
-
-    For the files that will live inside this directory, we recommend that you follow the advice in the [tidyverse style guide](https://style.tidyverse.org/files.html#names).
+You can put your artefact directly in the project root, but we don't recommend it because over time your project will accumulate other files and it's a little cleaner to keep those apart from your deployed code.
+For example, you might add:
 
 -   `README.md`: overall project level documentation.
     This is a great place to describe the overall goal of the project, provide a link to the deploy artefact, and generally to jot down anything important that you and your collaborators need to remember about this project.
 
 -   `renv.lock`: a "lock" file that specifies the exact versions of the dependencies needed to execute your project.
 
-Most projects will grow to include a `R/` and `tests/testthat`[^project-life-1] directory.
-You'll create these when you extract out the first reusable function from your existing code.
-This is an important technique as your project grows in complexity because it allows you to isolate that complexity and test it independently to the rest of your code.
-This gives you the confidence to refactor your code and update your dependencies while knowing that your production job will continue to return the correct results.
+-   Most projects will grow to include a `R/` and `tests/testthat`[^project-life-1] directory.
+    You'll create these when you extract out the first reusable function from your existing code.
+    This is an important technique as your project grows in complexity because it allows you to isolate that complexity and test it independently to the rest of your code.
+    This gives you the confidence to refactor your code and update your dependencies while knowing that your production job will continue to return the correct results.
 
 [^project-life-1]: You might wonder why tests don't just live in `tests`/.
     Firstly, this allows for the user of testing packages other than testthat (including packages that don't exist now but might in the future).
@@ -99,6 +98,8 @@ There are a few other directories that some projects will have:
 -   `data/`: small supplementary datasets and sample data used for testing.
 
 -   `src/`: in the rare case that you need compiled C code.
+
+You can include multiple deployable artefacts in a single project if they are closely related (i.e. they share the same dependencies and use many of the same reusable functions).
 
 ### Paths and working directories
 
@@ -171,6 +172,14 @@ The following sections go into more details of why we recommend Git and GitHub.
 
 (The idea of the single soure of truth also applies to packages. The source of truth is not the packages installed in your library, but the packages you have recorded in a metadata file because these are what the production server and your colleagues will use.)
 
+::: callout-note
+## Monorepos
+
+We recommend using one git repo per project, but there's a common alternative: the monorepo.
+When using a monorepo all of your projects live inside a single git repo.
+That is compatible with our workflow, as long as you ensure that your project doesn't read from or write to any of the other top-level directories in the monorepo.
+:::
+
 ### Git
 
 In this book, we assume that you're already familiar with the basics of Git.
@@ -206,7 +215,7 @@ If you're in that position, I'd highly recommend watching [GitHub: How To Tell Y
 ## Deployment is automated
 
 Our final principle of the project lifestyle is that deployment is automated, based on the contents of your central git repository.
-The code that you deploy should come from your central Git repo, not your local computer.
+(This is often called **continuous deployment**) The code that you deploy should come from your central Git repo, not your local computer.
 In other words, we recommend that you use push-to-deploy (aka Git-backed deployments), not click-to-deploy from your IDE.
 It's totally fine to start with click-to-deploy to learn the basics, but over time you want to transition to a fully automated solution.
 
@@ -220,3 +229,7 @@ As you'll learn later in the book, you can also configure your automation to dep
 A **staging** environment is identical to your production environment in every way, *except* that only data scientists use it, not your users.
 This allows you to fully test your project before your stakeholders see it.
 Once you're confident that your update is ready to go live, you merge your PR back into the main branch, and your automated system will deploy it to production.
+
+## Summing it up
+
+![Various ways of organising a project](diagrams/project-life/project-org.svg)

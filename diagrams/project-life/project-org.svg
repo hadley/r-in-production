@@ -1,0 +1,218 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg xmlns:xl="http://www.w3.org/1999/xlink" version="1.1" xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns="http://www.w3.org/2000/svg" viewBox="272 376 393 364" width="393" height="364">
+  <defs/>
+  <g id="Canvas_3" stroke-opacity="1" stroke="none" stroke-dasharray="none" fill="none" fill-opacity="1">
+    <title>project-org</title>
+    <rect fill="white" x="272" y="376" width="393" height="364"/>
+    <g id="Canvas_3_Layer_1">
+      <title>Layer 1</title>
+      <g id="Line_6">
+        <line x1="468.27697" y1="424.56693" x2="478.71727" y2="424.56693" stroke="black" stroke-linecap="square" stroke-linejoin="round" stroke-width="6"/>
+      </g>
+      <g id="Graphic_2">
+        <rect x="276.05512" y="407.55906" width="77.2441" height="34.01575" fill="white"/>
+        <rect x="276.05512" y="407.55906" width="77.2441" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(281.05512 416.37093)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="16.899047" y="13" xml:space="preserve">Repo</tspan>
+        </text>
+      </g>
+      <g id="Graphic_3">
+        <rect x="395.11024" y="407.55906" width="73.16673" height="34.01575" fill="white"/>
+        <rect x="395.11024" y="407.55906" width="73.16673" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(400.11024 416.37093)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="3.3243626" y="13" xml:space="preserve">Directory</tspan>
+        </text>
+      </g>
+      <g id="Graphic_4">
+        <rect x="478.71727" y="407.55906" width="54.88996" height="34.01575" fill="white"/>
+        <rect x="478.71727" y="407.55906" width="54.88996" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(483.71727 416.37093)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x=".4089806" y="13" xml:space="preserve">Project</tspan>
+        </text>
+      </g>
+      <g id="Graphic_5">
+        <rect x="563.2558" y="407.55906" width="97.08662" height="34.01575" fill="white"/>
+        <rect x="563.2558" y="407.55906" width="97.08662" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(568.2558 416.37093)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="20.205308" y="13" xml:space="preserve">“Thing”</tspan>
+        </text>
+      </g>
+      <g id="Line_7">
+        <line x1="395.11024" y1="424.56693" x2="353.2992" y2="424.56693" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_8">
+        <line x1="533.6072" y1="424.56693" x2="563.2558" y2="424.56693" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_9">
+        <line x1="468.27697" y1="501.10237" x2="477.31497" y2="501.10237" stroke="black" stroke-linecap="square" stroke-linejoin="round" stroke-width="6"/>
+      </g>
+      <g id="Graphic_10">
+        <rect x="276.05512" y="523.77953" width="77.2441" height="34.01575" fill="white"/>
+        <rect x="276.05512" y="523.77953" width="77.2441" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(281.05512 532.5914)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="16.899047" y="13" xml:space="preserve">Repo</tspan>
+        </text>
+      </g>
+      <g id="Graphic_11">
+        <rect x="395.11024" y="484.0945" width="73.16673" height="34.01575" fill="white"/>
+        <rect x="395.11024" y="484.0945" width="73.16673" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(400.11024 492.90637)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="3.3243626" y="13" xml:space="preserve">Directory</tspan>
+        </text>
+      </g>
+      <g id="Graphic_12">
+        <rect x="477.31497" y="484.0945" width="54.88996" height="34.01575" fill="white"/>
+        <rect x="477.31497" y="484.0945" width="54.88996" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(482.31497 492.90637)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x=".4089806" y="13" xml:space="preserve">Project</tspan>
+        </text>
+      </g>
+      <g id="Graphic_13">
+        <rect x="563.2558" y="484.0945" width="97.08662" height="34.01575" fill="white"/>
+        <rect x="563.2558" y="484.0945" width="97.08662" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(568.2558 492.90637)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="20.205308" y="13" xml:space="preserve">“Thing”</tspan>
+        </text>
+      </g>
+      <g id="Line_14">
+        <line x1="395.11024" y1="513.5093" x2="353.2992" y2="527.6891" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_15">
+        <line x1="532.2049" y1="501.10237" x2="563.2558" y2="501.10237" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_16">
+        <line x1="468.27697" y1="540.7874" x2="477.31497" y2="540.7874" stroke="black" stroke-linecap="square" stroke-linejoin="round" stroke-width="6"/>
+      </g>
+      <g id="Graphic_17">
+        <rect x="395.11024" y="523.77953" width="73.16673" height="34.01575" fill="white"/>
+        <rect x="395.11024" y="523.77953" width="73.16673" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(400.11024 532.5914)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="3.3243626" y="13" xml:space="preserve">Directory</tspan>
+        </text>
+      </g>
+      <g id="Graphic_18">
+        <rect x="477.31497" y="523.77953" width="54.88996" height="34.01575" fill="white"/>
+        <rect x="477.31497" y="523.77953" width="54.88996" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(482.31497 532.5914)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x=".4089806" y="13" xml:space="preserve">Project</tspan>
+        </text>
+      </g>
+      <g id="Graphic_19">
+        <rect x="563.2558" y="523.77953" width="97.08662" height="34.01575" fill="white"/>
+        <rect x="563.2558" y="523.77953" width="97.08662" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(568.2558 532.5914)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="20.205308" y="13" xml:space="preserve">“Thing”</tspan>
+        </text>
+      </g>
+      <g id="Line_20">
+        <line x1="532.2049" y1="540.7874" x2="563.2558" y2="540.7874" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_21">
+        <line x1="468.27697" y1="580.47245" x2="477.31497" y2="580.47245" stroke="black" stroke-linecap="square" stroke-linejoin="round" stroke-width="6"/>
+      </g>
+      <g id="Graphic_22">
+        <rect x="395.11024" y="563.4646" width="73.16673" height="34.01575" fill="white"/>
+        <rect x="395.11024" y="563.4646" width="73.16673" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(400.11024 572.27645)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="3.3243626" y="13" xml:space="preserve">Directory</tspan>
+        </text>
+      </g>
+      <g id="Graphic_23">
+        <rect x="477.31497" y="563.4646" width="54.88996" height="34.01575" fill="white"/>
+        <rect x="477.31497" y="563.4646" width="54.88996" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(482.31497 572.27645)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x=".4089806" y="13" xml:space="preserve">Project</tspan>
+        </text>
+      </g>
+      <g id="Graphic_24">
+        <rect x="563.2558" y="563.4646" width="97.08662" height="34.01575" fill="white"/>
+        <rect x="563.2558" y="563.4646" width="97.08662" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(568.2558 572.27645)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="20.205308" y="13" xml:space="preserve">“Thing”</tspan>
+        </text>
+      </g>
+      <g id="Line_25">
+        <line x1="532.2049" y1="580.47245" x2="563.2558" y2="580.47245" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_26">
+        <line x1="353.2992" y1="540.7874" x2="395.11024" y2="540.7874" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_27">
+        <line x1="353.2992" y1="553.8857" x2="395.11024" y2="568.06554" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_35">
+        <line x1="468.81103" y1="679.68505" x2="479.1179" y2="679.68505" stroke="black" stroke-linecap="square" stroke-linejoin="round" stroke-width="6"/>
+      </g>
+      <g id="Graphic_36">
+        <rect x="276.05512" y="662.6772" width="77.2441" height="34.01575" fill="white"/>
+        <rect x="276.05512" y="662.6772" width="77.2441" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(281.05512 671.48905)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="16.899047" y="13" xml:space="preserve">Repo</tspan>
+        </text>
+      </g>
+      <g id="Graphic_37">
+        <rect x="395.6443" y="662.6772" width="73.16673" height="34.01575" fill="white"/>
+        <rect x="395.6443" y="662.6772" width="73.16673" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(400.6443 671.48905)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="3.3243626" y="13" xml:space="preserve">Directory</tspan>
+        </text>
+      </g>
+      <g id="Graphic_38">
+        <rect x="479.1179" y="662.6772" width="54.88996" height="34.01575" fill="white"/>
+        <rect x="479.1179" y="662.6772" width="54.88996" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(484.1179 671.48905)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x=".4089806" y="13" xml:space="preserve">Project</tspan>
+        </text>
+      </g>
+      <g id="Graphic_39">
+        <rect x="563.9645" y="662.6772" width="97.08662" height="34.01575" fill="white"/>
+        <rect x="563.9645" y="662.6772" width="97.08662" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(568.9645 671.48905)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="20.205308" y="13" xml:space="preserve">“Thing”</tspan>
+        </text>
+      </g>
+      <g id="Line_40">
+        <line x1="395.6443" y1="679.68505" x2="353.2992" y2="679.68505" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_41">
+        <line x1="534.0079" y1="679.68505" x2="563.9645" y2="679.68505" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_42">
+        <rect x="563.2558" y="622.9921" width="97.08662" height="34.01575" fill="white"/>
+        <rect x="563.2558" y="622.9921" width="97.08662" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(568.2558 631.804)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="20.205308" y="13" xml:space="preserve">“Thing”</tspan>
+        </text>
+      </g>
+      <g id="Graphic_43">
+        <rect x="563.2558" y="702.3622" width="97.08662" height="34.01575" fill="white"/>
+        <rect x="563.2558" y="702.3622" width="97.08662" height="34.01575" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+        <text transform="translate(568.2558 711.1741)" fill="black">
+          <tspan font-family="Helvetica Neue" font-size="14" fill="black" x="20.205308" y="13" xml:space="preserve">“Thing”</tspan>
+        </text>
+      </g>
+      <g id="Line_44">
+        <line x1="534.0079" y1="669.3354" x2="566.6979" y2="657.0079" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Line_45">
+        <line x1="534.0079" y1="690.0347" x2="566.6979" y2="702.3622" stroke="black" stroke-linecap="round" stroke-linejoin="round" stroke-width="1"/>
+      </g>
+      <g id="Graphic_47">
+        <text transform="translate(277.05512 384.2126)" fill="black">
+          <tspan font-family="Helvetica Neue" font-weight="bold" font-size="16" fill="black" x="0" y="16" xml:space="preserve">Basic</tspan>
+        </text>
+      </g>
+      <g id="Graphic_48">
+        <text transform="translate(277.05512 500.4331)" fill="black">
+          <tspan font-family="Helvetica Neue" font-weight="bold" font-size="16" fill="black" x="0" y="16" xml:space="preserve">Monorepo</tspan>
+        </text>
+      </g>
+      <g id="Graphic_49">
+        <text transform="translate(277.05512 637.6137)" fill="black">
+          <tspan font-family="Helvetica Neue" font-weight="bold" font-size="16" fill="black" x="0" y="16" xml:space="preserve">Multideployment</tspan>
+        </text>
+      </g>
+    </g>
+  </g>
+</svg>
