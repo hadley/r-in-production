@@ -12,6 +12,24 @@ What does it mean for code to be running in production? I think there are three 
 
 ## Key vocabulary
 
+### Data science products
+
+* Reports (including dashboards). Quarto or RMarkdown. In this book we'll focus on Quarto, but most of the same ideas will apply to RMarkdown too.
+
+* Data.
+
+* Interactive apps.
+
+* APIs.
+
+* Other side effects. Sometimes you have an R script that does something to the world that doesn't fit neatly into these other categories. This typically involves calling some other API that makes has an impact on the world, like sending a push notification or printing some tickets.
+
+* Websites (including books). Sometimes you need more than one quarto file to tell a story. I think every team should have at least one website, a quarto site where you define your team's recommended practices.
+
+* Packages. Like websites, I think every team should have at least one. Your first package should collect together your most common data loading code, any functions for computing common metrics, and the themes you use to make your other reports and apps match your corporate style guide.
+
+
+
 ### Deploying vs executing
 
 There are always at three steps in the ideal production environment:
