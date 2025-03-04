@@ -14,17 +14,21 @@ What does it mean for code to be running in production? I think there are three 
 
 ### Data science products
 
-* Reports (including dashboards). You are likely to produce these using either Quarto or RMarkdown. In this book we'll focus on Quarto, but the same ideas apply to RMarkdown too.
+# Data Science Products
 
-* Interactive Shiny apps. These are the bread and butter of most data scientists. Like reports, they're aimed at humans, but instead of being a static document that's only controlled by the data scientist, they're an interactive collaboration between the data scientist and the end-user.
+* **Documents** produced by Quarto and RMarkdown (including dashboards). In this book we'll focus on Quarto, but the same ideas apply to RMarkdown too.
 
-* Plumber APIs (including models). Sometimes you don't need to communicate to other humans inside your organisation, but other computers. This is where an API comes in: you provide a API that's a black box from the outside but runs R code inside. A common use case of APIs for data scientists is to provider access to models: the caller supplies some data and the model returns a prediction or classification.
+* Interactive **apps** produced by Shiny. These are the bread and butter of most data scientists. Like reports, they're aimed at humans, but instead of being a static document that's only controlled by the data scientist, they're an interactive collaboration between the data scientist and the end-user.
 
-* Websites (including books and blogs). Sometimes you need more than one quarto file, you need multiple quarto files that live in one directory and are cross-linked. You can think of this as a book if it's something that you'd tend to read through in linear order, a blog if it's primarily organised in chronological order, or otherwise a website. I think every team should have at least one website, a quarto site where you define your team's recommended practices.
+* **APIs** produced by Plumber. Sometimes you don't need to communicate to other humans inside your organization, but other computers. This is where an API comes in: you provide an API that's a black box from the outside but runs R code inside. A common use case of APIs for data scientists is to provide access to models: the caller supplies some data and the model returns a prediction or classification.
 
-* Packages. Like websites, I think every team should have at least one. Your first package should collect together your most common data loading code, any functions for computing common metrics, and the themes you use to make your other reports and apps match your corporate style guide.
+* **Models**. Often exposed via an API but have their own development and deployment process.
 
-* Scripts that have side effects, like updating data or sending notifications.
+* **Websites** (including books and blogs) produced by Quarto. Sometimes you need more than one Quarto file, you need multiple Quarto files that live in one directory and are cross-linked. You can think of this as a book if it's something that you'd tend to read through in linear order, a blog if it's primarily organized in chronological order, or otherwise a website. I think every team should have at least one website, a Quarto site where you define your team's recommended practices.
+
+* **Packages**. Like websites, I think every team should have at least one. Your first package should collect together your most common data loading code, any functions for computing common metrics, and the themes you use to make your other reports and apps match your corporate style guide.
+
+* **Scripts** that have side effects, like updating data or sending notifications.
 
 ### Deploying vs executing
 
