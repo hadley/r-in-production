@@ -21,8 +21,7 @@ Drawn from:
 library(usethis)
 ```
 
-This chapter will introduce you to our recommend practices for organising your production-bound projects.
-This advice helps you organise your own projects, but is particularly important when you're collaborating with others.
+This chapter will introduce you to our recommend practices for organising your production projects.
 Our advice is fairly prescriptive because we want you to spend your time doing data science, not fretting about how to organise your project.
 It's also much easier to collaborate with others if everyone shares the same project layout.
 But the most important thing is to be consistent, and you can't be consistent unless you've documented what you do.
@@ -31,33 +30,10 @@ So if you want to deviate from what we describe here, make sure to write it down
 In this chapter, you'll learn about three important principles:
 
 -   **A project is a self-contained directory**: every file a project needs lives in that directory, and every file that project creates goes in that directory.
--   **There's a single source of truth**: you'll inevitably end up with multiple copies of your project and you need to decide which one is "real". We recommend using git, and making the copy of your project that lives in a central git repo the truth.
--   **Deployment is automated**: deploying your code to production should involve minimal manual steps. We recommend you build a workflow so that as soon as your code is merged into the main branch, it gets deployed to your production server.
+-   **There's a single source of truth**: you'll inevitably end up with multiple copies of your project and you need to decide which one is "real". We recommend using git, and making the copy of your project that lives in your central git repo the truth.
+-   **Deployment is automated**: deploying your code to production should involve minimal manual steps. We recommend you build a workflow so your product is deployed as soon as its is pushed to the main branch of your git rep.
 
-````{=html}
-<!--
-
-Before we can get to those principles we need to recommend a little setup.
-
-## Setup
-
-One of the advantages of choosing to live the project-oriented lifestyle is that you get a bunch of free tools from the usethis package.
-We'll use these throughout the book, so we recommend automatically loading usethis in your `.Rprofile` so they're always available to you.
-The easiest way to do so is to use the helper supplied by usethis:
-
-``` r
-#| eval: false
-usethis::use_usethis()
-```
-
-I highly recommend running that function and following its advice before continuing.
-
-If you use RStudio, we also highly recommend that you run `usethis::use_blank_slate()` to ensure that RStudio never saves or reloads state.
-This forces you to capture all important information in your code files, ensuring that you never have objects in your global environment that you don't know how to recreate.
-You don't need to worry about this if you use Positron, since it defaults to those settings.
-
--->
-````
+Lets dive in!
 
 ## Each project is a self-contained directory
 
@@ -68,16 +44,19 @@ Self-contained means two things:
 
 -   The project only even modified files in this directory; i.e. it only writes files inside this directory.
 
-This principle is the foundation to making your code work when it's run on another machine (either your colleagues or in production).
+This principle is the foundation to making your code work when it's run on another machine (either a colleague's or your production server).
 
-### Special files and directories
+### Organising your project
 
 We recommend that every project have either a `main.R` or `index.qmd` in the project root.
-These files are called the project **entry point**, and will be run by default when your project is deployed.
+This file is the project **entry point**, and will be run when your project is deployed.
 For very simple projects, you can put all of your code inside these files.
-But we generally recommend creating a separate `exec/` directory where you will put all code that will be executed in production.
+But as soon as your project no longer fits in one file, we recommending moving everything to a separate `exec/` directory.
 This helps keep a clear distinction between your production job and the code and metadata that supports its deployment.
-In this case, `main.R` will contain the code needed to execute your job:
+You can organise your `exec/` directory however makes sense for you.
+But we recommend that you follow the advice in the [tidyverse style guide](https://style.tidyverse.org/files.html#names), to ensure that you convey as much usable information in your file names as possible.
+
+Once you have a separate `exec/` directory, your `main.R` will just provide the code needed to execute your job:
 
 -   For report or dashboard: `quarto::quarto_render("exec/index.qmd")`.
 -   For a book or website: `quarto::quarto_render("exec/")`.
@@ -87,20 +66,16 @@ In this case, `main.R` will contain the code needed to execute your job:
 
 Later on, we'll introduce the producethis package which stores metadata in your `DESCRIPTION` file so you can use `producethis::exec()` in your `main.R`, regardless of your job type.
 
-You can organise your `exec/` directory however makes sense for you.
-But we recommend that you follow the advice in the [tidyverse style guide](https://style.tidyverse.org/files.html#names), to ensure that you convey as much usable information in your file names as possible.
+Over time, most projects will accumulate other files and directories such as:
 
-Over time, most projects will accumulate other files and directories like:
+-   A `README.md` for overall project level documentation.
+    This is a great place to describe the overall goal of the project, provide a link to the deployed product, and generally to jot down anything important that you and your collaborators need to remember about this project.
 
--   `README.md`: overall project level documentation.
-    This is a great place to describe the overall goal of the project, provide a link to the deploy artefact, and generally to jot down anything important that you and your collaborators need to remember about this project.
+-   A `renv.lock` file that specifies the exact versions of the dependencies needed to run your project.
 
--   `renv.lock`: a "lock" file that specifies the exact versions of the dependencies needed to execute your project.
-
--   Most projects will grow to include a `R/` and `tests/testthat`[^project-life-1] directory.
-    You'll create these when you extract out the first reusable function from your existing code.
-    This is an important technique as your project grows in complexity because it allows you to isolate that complexity and test it independently to the rest of your code.
-    This gives you the confidence to refactor your code and update your dependencies while knowing that your production job will continue to return the correct results.
+-   A pair of `R/` and `tests/testthat`[^project-life-1] directories.
+    You'll create these when you extract out the first reusable function, which you'll put in a file inside of `R/`. You can then write tests for this code, which live in `tests/testthat`. This is an important technique as your project grows because it allows you to isolate key pieces and test them independently from the rest of the job.
+    This gives you the confidence to refactor your code and update your dependencies while knowing that your product will continue to be correct.
 
 -   `data/`: small supplementary datasets.
     Most production jobs will access data dynamically as needed, but it's sometimes useful to a small amount of rarely changing static data.
@@ -109,27 +84,29 @@ Over time, most projects will accumulate other files and directories like:
     Firstly, this allows for the user of testing packages other than testthat (including packages that don't exist now but might in the future).
     Secondly, this matches the directory structure of R packages, which is useful because it allows us to share tools between production projects and packages.
 
+(If you've created an R package before, a lot of these directories might look familiar. That's no coincidence! Sharing as much structure as possible with packages allows us to reuse a lot of tools and makes it easier to learn one if you already know the other. That said, we don't believe that production projects should be packages, because there are subtle but important differences in their aims and structure.)
+
 It's ok to include multiple data science products in a single project as long as they are very closely related (i.e. they share the same dependencies and use many of the same reusable functions).
 In that case, we recommend that you put each product in a directory of `exec/` and have a matching `main-{subdirectory-name}.R` file for each directory.
-Deploying multi-product projects, is a bit more complicated and we'll cover it in XYZ.
+Deploying multi-product projects is a bit more complicated and we'll cover it in XYZ.
 
 ### Paths and working directories
 
 When you deploy your project to production or share your project with other people, it's not going to live in the same location.
-That means absolute paths won't work and you need to use a relative path[^project-life-2].
+That means absolute paths won't work and you need to use a relative paths[^project-life-2].
 There are two type of relative paths:
 
 [^project-life-2]: i.e. never start the path with `/`, `C:/`, or `~.`
 
 -   **Project-relative** paths start at the project root, and can be created with `here::here()`.
     You should only need project-relative paths relatively infrequently because the tools we recommend will automatically load files from the most commonly used project directories.
-    For example `producethis::load_all()` will automatically sources all files in `R/` and lazily loads all datasets in `data/`, and `producethis::test_all()` will automatically run the tests in `tests/testthat`.
+    For example `producethis::load()` will automatically sources all files in `R/` and lazily load all datasets in `data/`, and `producethis::test()` will automatically run the tests in `tests/testthat`.
 
--   **Artefact-relative** paths start at the same location as the app, api, doc, or script that you're deploying.
-    These will generally be the same as `here::here("artifacts")` unless you have multiple artefacts in subdirectories.
+-   **Product-relative** paths start at the same location as the app, api, report, or script that you're deploying.
+    These will generally be the same as `here::here("exec/)` unless you have multiple products in subdirectories.
 
 In general, avoid manually changing the working directory by calling `setwd()` or clicking some button in your IDE.
-Rely on relative paths to clearly and consistently indicate.
+Rely on relative paths to clearly and consistently indicate where files are located.
 
 ### Dependencies
 
@@ -176,13 +153,13 @@ This pattern is illustrated in @fig-single-source.
 This works ok if they just want to look at your code, but if they edit it, how do they get the changes back to you?
 It's also easy for them to edit it then deploy back to production, leading to an inconsistency between your version and their version.
 
-![A less ideal workflow where you and your colleagues share a project by downloading deployed artefacts from production. If there are conflicts between versions, it's very difficult to know which one is true.](diagrams/project-life/production-central.svg){#fig-production-central fig-alt="A flowchart diagram with four rectangular boxes connected by bidirectional arrows. At the top is a box labeled \"You\" which connects downward to a box labeled \"Production\". The \"Production\" box has two connections below it, linking to boxes labeled \"Colleague A\" (on the left) and \"Colleague B\" (on the right). "}
+![A less ideal workflow where you and your colleagues share a project by downloading deployed products. If there are conflicts between versions, it's very difficult to know which one is true.](diagrams/project-life/production-central.svg){#fig-production-central fig-alt="A flowchart diagram with four rectangular boxes connected by bidirectional arrows. At the top is a box labeled \"You\" which connects downward to a box labeled \"Production\". The \"Production\" box has two connections below it, linking to boxes labeled \"Colleague A\" (on the left) and \"Colleague B\" (on the right). "}
 
 We recommend this workflow, because while Git takes some time to learn, it provides a principled way to maintain and share code, tracking the provenance of every change.
 There are many ways to use Git, but a central repository is easiest to understand and well supported by modern tools like GitHub.
 The following sections go into more details of why we recommend Git and GitHub.
 
-(The idea of the single soure of truth also applies to packages. The source of truth is not the packages installed in your library, but the packages you have recorded in a metadata file because these are what the production server and your colleagues will use.)
+(The idea of the single source of truth also applies to packages. The source of truth is not the packages installed in your library, but the packages you have recorded in a metadata file because these are what the production server and your colleagues will use.)
 
 ::: callout-note
 ## Monorepos
