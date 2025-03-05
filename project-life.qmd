@@ -52,11 +52,11 @@ We recommend that every project have either a `main.R` or `index.qmd` in the pro
 This file is the project **entry point**, and will be run when your project is deployed.
 For very simple projects, you can put all of your code inside these files.
 But as soon as your project no longer fits in one file, we recommending moving everything to a separate `exec/` directory.
-This helps keep a clear distinction between your production job and the code and metadata that supports its deployment.
+This helps keep a clear distinction between your data science product and the code and metadata that supports its deployment.
 You can organise your `exec/` directory however makes sense for you.
 But we recommend that you follow the advice in the [tidyverse style guide](https://style.tidyverse.org/files.html#names), to ensure that you convey as much usable information in your file names as possible.
 
-Once you have a separate `exec/` directory, your `main.R` will just provide the code needed to execute your job:
+Once you have a separate `exec/` directory, your `main.R` will just provide the code needed to execute your product:
 
 -   For report or dashboard: `quarto::quarto_render("exec/index.qmd")`.
 -   For a book or website: `quarto::quarto_render("exec/")`.
@@ -64,7 +64,7 @@ Once you have a separate `exec/` directory, your `main.R` will just provide the 
 -   For a Shiny app: `shiny::runApp("exec/")`.
 -   For a plumber API: `plumber::plumb("exec/")`.
 
-Later on, we'll introduce the producethis package which stores metadata in your `DESCRIPTION` file so you can use `producethis::exec()` in your `main.R`, regardless of your job type.
+Later on, we'll introduce the producethis package which stores metadata in your `DESCRIPTION` file so you can use `producethis::exec()` in your `main.R`, regardless of your product type.
 
 Over time, most projects will accumulate other files and directories such as:
 
@@ -74,11 +74,11 @@ Over time, most projects will accumulate other files and directories such as:
 -   A `renv.lock` file that specifies the exact versions of the dependencies needed to run your project.
 
 -   A pair of `R/` and `tests/testthat`[^project-life-1] directories.
-    You'll create these when you extract out the first reusable function, which you'll put in a file inside of `R/`. You can then write tests for this code, which live in `tests/testthat`. This is an important technique as your project grows because it allows you to isolate key pieces and test them independently from the rest of the job.
+    You'll create these when you extract out the first reusable function, which you'll put in a file inside of `R/`. You can then write tests for this code, which live in `tests/testthat`. This is an important technique as your project grows because it allows you to isolate key pieces and test them independently from the rest of the product.
     This gives you the confidence to refactor your code and update your dependencies while knowing that your product will continue to be correct.
 
 -   `data/`: small supplementary datasets.
-    Most production jobs will access data dynamically as needed, but it's sometimes useful to a small amount of rarely changing static data.
+    Most data science products will access data dynamically as needed, but it's sometimes useful to a small amount of rarely changing static data.
 
 [^project-life-1]: You might wonder why tests don't just live in `tests`/.
     Firstly, this allows for the user of testing packages other than testthat (including packages that don't exist now but might in the future).
