@@ -21,32 +21,45 @@ Drawn from:
 library(usethis)
 ```
 
-This chapter will introduce you to our recommend practices for organising your production projects.
-Our advice is fairly prescriptive because we want you to spend your time doing data science, not fretting about how to organise your project.
+This chapter introduces our recommend practices for organising your production projects.
+Our advice is quite prescriptive: we want you to spend your time doing data science, not fretting about how to organise your project.
 It's also much easier to collaborate with others if everyone shares the same project layout.
 But the most important thing is to be consistent, and you can't be consistent unless you've documented what you do.
-So if you want to deviate from what we describe here, make sure to write it down!
+So it's fine if you deviate from what we describe here, just make sure to write it down!
 
 In this chapter, you'll learn about three important principles:
 
--   **A project is a self-contained directory**: every file a project needs lives in that directory, and every file that project creates goes in that directory.
--   **There's a single source of truth**: you'll inevitably end up with multiple copies of your project and you need to decide which one is "real". We recommend using git, and making the copy of your project that lives in your central git repo the truth.
--   **Deployment is automated**: deploying your code to production should involve minimal manual steps. We recommend you build a workflow so your product is deployed as soon as its is pushed to the main branch of your git rep.
+-   **A project is a self-contained directory**: all the files needed for a project should live in a single directory, and we recommend that you directory use standard subdirectories, so you always know where to look for a certain type of file.
+-   **There's a single source of truth**: you will inevitably end up with multiple copies of your project so you need to decide which one is "real". We recommend using git, and declaring that the version of your project that lives in your central git repo is the source of truth.
+-   **Deployment is automated**: deploying your code to production should involve minimal manual steps. We recommend you build a workflow so your product is deployed as soon as its is pushed to the main branch of your git repo.
 
 Lets dive in!
 
 ## Each project is a self-contained directory
 
-Each project you work in should be defined by a self-contained directory.
-Self-contained means two things:
+Each project you work in should be defined by a self-contained directory: you shouldn't read from or write to any file outside this directory.
+This principle is the foundation to making your code work when it's run on another machine (either a colleague's or your production server): you can only control the files inside your project directory.
+There are a handful of exceptions to the self-contained rule.
+We'll go into these in much more detail later in the book, but it's good to be aware of them now:
 
--   The directory includes all the files needed to run the project; i.e. it only reads files inside this directory.
+-   **R**: despite needing R to run your code, you'll won't include it in your project.
+    Instead, you'll use tools like `renv` that automatically record the version of R that you're running so that your deployment environment can use the same version.
+    We'll discuss this in \[TODO\].
 
--   The project only even modified files in this directory; i.e. it only writes files inside this directory.
+-   **Packages and system dependencies**: similarly you need to make sure the packages you use (and their dependencies) are also available on your production machine.
+    You won't save the packages directly in your project, but instead provide some metadata so that they can be installed on demand.
+    You'll learn more about this in \[TODO\].
 
-This principle is the foundation to making your code work when it's run on another machine (either a colleague's or your production server).
+-   **Secrets**: depending on how your authentication system works, you project may need secrets like passwords or API keys in order to run.
+    These should **never** be stored in the project itself and instead saved in some secure external storage and retrieved on demand.
+    We'll talk about how to do this in \[TODO\].
 
-### Organising your project
+In this section, you'll learn our recommendations for organising your project directory.
+The first and most critical element is the project entry point: this is the one file that controls what happens when your project is executed.
+This file is sufficient for very simple projects, but most projects will grow to require multiple other files and directories, which we'll also give you some recommendations for.
+We'll finish up by talking about relative paths and how you can reliably refer to the different pieces.
+
+### Project entry point
 
 We recommend that every project have either a `main.R` or `index.qmd` in the project root.
 This file is the project **entry point**, and will be run when your project is deployed.
@@ -69,7 +82,8 @@ Later on, we'll introduce the producethis package which stores metadata in your 
 Over time, most projects will accumulate other files and directories such as:
 
 -   A `README.md` for overall project level documentation.
-    This is a great place to describe the overall goal of the project, provide a link to the deployed product, and generally to jot down anything important that you and your collaborators need to remember about this project.
+    This is a great place to describe the overall goal of the project, provide a link to the deployed product, and generally to jot down anything important that you and your team need to remember about this project.
+    You'll learn more about this file in \[TODO\].
 
 -   A `renv.lock` file that specifies the exact versions of the dependencies needed to run your project.
 
@@ -78,7 +92,7 @@ Over time, most projects will accumulate other files and directories such as:
     This gives you the confidence to refactor your code and update your dependencies while knowing that your product will continue to be correct.
 
 -   `data/`: small supplementary datasets.
-    Most data science products will access data dynamically as needed, but it's sometimes useful to a small amount of rarely changing static data.
+    Most production products will access data dynamically as needed, but it's sometimes useful to a small amount of rarely changing static data.
 
 [^project-life-1]: You might wonder why tests don't just live in `tests`/.
     Firstly, this allows for the user of testing packages other than testthat (including packages that don't exist now but might in the future).
@@ -88,15 +102,19 @@ Over time, most projects will accumulate other files and directories such as:
 
 It's ok to include multiple data science products in a single project as long as they are very closely related (i.e. they share the same dependencies and use many of the same reusable functions).
 In that case, we recommend that you put each product in a directory of `exec/` and have a matching `main-{subdirectory-name}.R` file for each directory.
-Deploying multi-product projects is a bit more complicated and we'll cover it in XYZ.
+Deploying multi-product projects is a bit more complicated and we'll cover it in \[TODO\].
+
+Discovering that there's some code that almost all of your products share is not enough to put them all in the same project.
+Instead, we recommend creating a team package that extracts out code that you use in multiple projects.
+We'll come back to that in more detail in \[TODO\].
 
 ### Paths and working directories
 
 When you deploy your project to production or share your project with other people, it's not going to live in the same location.
-That means absolute paths won't work and you need to use a relative paths[^project-life-2].
+That means absolute paths won't work and you need to use a relative paths[^project-life-1].
 There are two type of relative paths:
 
-[^project-life-2]: i.e. never start the path with `/`, `C:/`, or `~.`
+[^project-life-1]: i.e. never start the path with `/`, `C:/`, or `~.`
 
 -   **Project-relative** paths start at the project root, and can be created with `here::here()`.
     You should only need project-relative paths relatively infrequently because the tools we recommend will automatically load files from the most commonly used project directories.
@@ -107,36 +125,6 @@ There are two type of relative paths:
 
 In general, avoid manually changing the working directory by calling `setwd()` or clicking some button in your IDE.
 Rely on relative paths to clearly and consistently indicate where files are located.
-
-### Dependencies
-
-A literal reading of the rule to only read and write inside your project directory implies that you can't use packages!
-That's because the default configuration of R stores packages in one or two central locations.
-So whenever you call `library()` it's going to read files outside of the project, and whenever you call `install.packages()` it's going to write files outside of the project.
-Obviously your analyses are going to be severely limited if you can't use packages, so how do we resolve this rule?
-
-We'll come back to this idea in much detail later, but the basic idea is to use a package like {renv} that creates a project-specific library.
-That way `library()` will read and `install.packages()` will write inside your project.
-
-That makes it ok to use `library()`, but you still shouldn't use `install.packages()`.
-The key problem with `install.packages()` is that it defaults to installing the latest version of the package available on CRAN.
-If you started work on this project in 2020, and your collaborator started work on in 2025, you might end up with radically different versions of the package, which might lead to difference in your analysis.
-We'll come back to this problem in much greater detail in Chapter TODO.
-
-Note that you won't actually want to store the packages inside your project because they're rather large and you need different versions of the package for different operating systems.
-Instead, you'll record the package names and versions that your project needs in a metadata file, and the people using your project will install these packages as needed.
-
-### Exceptions
-
-There are a handful of exceptions to the self-contained rule.
-We'll go into these in much more detail later in the book, but it's good to be aware of them now:
-
--   **R**: despite needing R to run your code, you'll won't include it in your project.
-    Instead, you'll use tools like `renv` that automatically record the version of R that you're running so that your deployment environment can use the same version.
-
--   **Secrets**: depending on how your authentication system works, you project may need secrets like passwords or API keys in order to run.
-    These should **never** be stored in the project itself.
-    We'll talk about alternatives in ...
 
 ## There's one source of truth
 
@@ -155,17 +143,15 @@ It's also easy for them to edit it then deploy back to production, leading to an
 
 ![A less ideal workflow where you and your colleagues share a project by downloading deployed products. If there are conflicts between versions, it's very difficult to know which one is true.](diagrams/project-life/production-central.svg){#fig-production-central fig-alt="A flowchart diagram with four rectangular boxes connected by bidirectional arrows. At the top is a box labeled \"You\" which connects downward to a box labeled \"Production\". The \"Production\" box has two connections below it, linking to boxes labeled \"Colleague A\" (on the left) and \"Colleague B\" (on the right). "}
 
-We recommend this workflow, because while Git takes some time to learn, it provides a principled way to maintain and share code, tracking the provenance of every change.
+We recommend using Git, because while it takes some time to learn, it provides a principled way to maintain and share code, tracking the provenance of every change.
 There are many ways to use Git, but a central repository is easiest to understand and well supported by modern tools like GitHub.
 The following sections go into more details of why we recommend Git and GitHub.
-
-(The idea of the single source of truth also applies to packages. The source of truth is not the packages installed in your library, but the packages you have recorded in a metadata file because these are what the production server and your colleagues will use.)
 
 ::: callout-note
 ## Monorepos
 
-We recommend using one git repo per project, but there's a common alternative: the monorepo.
-When using a monorepo all of your projects live inside a single git repo.
+We recommend using one git repo per project, but there's a common alternative: the **monorepo**.
+In a monorepo all of your projects live inside a single git repo.
 That is compatible with our workflow, as long as you ensure that your project doesn't read from or write to any of the other top-level directories in the monorepo.
 :::
 
@@ -174,21 +160,20 @@ That is compatible with our workflow, as long as you ensure that your project do
 In this book, we assume that you're already familiar with the basics of Git.
 You certainly don't need to be an expert but you should know how to add and commit files, push and pull, and create branches.
 If you haven't used Git before, I'd recommend that you put this book down now, and read [Happy Git and GitHub for the useR](https://happygitwithr.com/).
-
-I also expect you to know the other key skill for using Git: how to Google or ask an LLM for advice when you get yourself stuck in a situation that you've never seen before.
+I also expect you to know the other key skills for using Git: Googling or asking an LLM for advice when you get yourself stuck in a situation that you've never seen before.
 Another great resource for common problems is [Oh Shit, Git!?!](https://ohshitgit.com).
 
 ### GitHub
 
 Git is valuable even if you use it locally; it makes it easier to understand how your code is changing over time, and makes it possible to undo mistakes.
-But git is vastly more valuable when you use it to share your code with others, using a tool like GitHub.
+But Git is vastly more valuable when you use it to share your code with others, using a tool like GitHub.
 Throughout the rest of the book, we'll talk about GitHub exclusively, but this is really just a shorthand for saying your "Git hosting platform".
 There are many professional and open source solutions including [GitLab](https://about.gitlab.com), [Bitbucket](https://bitbucket.org), or [Azure DevOps](https://azure.microsoft.com/en-us/services/devops/).
 Your organisation will usually provide this as a service, and you'll need to adapt to what you're given.
 Fortunately this is generally not too hard since all the modern platforms all provide very similar tools.
-If your organisation doesn't already provide GitHub or similar, you should immediately start a campaign to get it[^project-life-3].
+If your organisation doesn't already provide GitHub or similar, you should immediately start a campaign to get it[^project-life-2].
 
-[^project-life-3]: If you're interviewing for a data science job, you should definitely ask what Git hosting platform they use.
+[^project-life-2]: If you're interviewing for a data science job, you should definitely ask what Git hosting platform they use.
     If they don't use one, or worse don't use Git, this is a major red flag.
 
 We'll talk about GitHub a lot when it comes to working in a team.
@@ -204,7 +189,7 @@ If you're in that position, I'd highly recommend watching [GitHub: How To Tell Y
 ## Deployment is automated
 
 Our final principle of the project lifestyle is that deployment is automated, based on the contents of your central git repository.
-(This is often called **continuous deployment**) The code that you deploy should come from your central Git repo, not your local computer.
+(This is often called **continuous deployment**).
 In other words, we recommend that you use push-to-deploy (aka Git-backed deployments), not click-to-deploy from your IDE.
 It's totally fine to start with click-to-deploy to learn the basics, but over time you want to transition to a fully automated solution.
 
@@ -221,4 +206,14 @@ Once you're confident that your update is ready to go live, you merge your PR ba
 
 ## Summing it up
 
-![Various ways of organising a project](diagrams/project-life/project-org.svg)
+In this chapter, we've introduced three fundamental principles that will help you organize your production data science projects effectively:
+
+1. **A project is a self-contained directory**. By keeping all your files in a single directory with a standardized structure, you make your project portable and easier to collaborate on. We've recommended specific conventions for organizing your files, including a clear entry point (`main.R` or `index.qmd`), and standard subdirectories like `exec/`, `R/`, `tests/`, and `data/`. Following these conventions means you'll always know where to find what you're looking for.
+
+2. **There's a single source of truth**. With multiple copies of your project inevitably existing across development and production environments, it's crucial to designate one authoritative version. We recommend using a central Git repository as this source of truth, establishing a clear workflow where changes are tracked, shared, and managed in a principled way.
+
+3. **Deployment is automated**. Moving from manual deployments to an automated push-to-deploy workflow ensures consistency and reliability. By automating deployment and gating it with tests, you reduce the risk of deploying broken code while building a more robust production pipeline.
+
+As your projects grow in complexity, these principles will help you maintain organization and focus on what matters most: doing great data science. While we've provided specific recommendations, remember that consistency is the most important thing. Document any deviations from these practices so that you and your team always know what to expect.
+
+In the upcoming chapters, we'll dive deeper into each of these areas, showing you how to handle dependencies, manage secrets, test your code, and implement automated deployment workflows that will make your production data science projects more reliable and maintainable.

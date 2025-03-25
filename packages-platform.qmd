@@ -2,6 +2,12 @@
 
 ## Packages {#sec-package-changes}
 
+A literal reading of the rule to only read and write inside your project directory implies that you can't use packages! That's because the default configuration of R stores packages in one or two central locations. So whenever you call `library()` it's going to read files outside of the project, and whenever you call `install.packages()` it's going to write files outside of the project. Obviously your analyses are going to be severely limited if you can't use packages, so how do we resolve this rule?
+
+The basic idea is to use a project-specific library like {renv}. That way `library()` will read and `install.packages()` will write inside your project. That makes it ok to use `library()`, but you still shouldn't use `install.packages()`. The key problem with `install.packages()` is that it defaults to installing the latest version of the package available on CRAN. If you started work on this project in 2020, and your collaborator started work on in 2025, you might end up with radically different versions of the package, which might lead to difference in your analysis.
+
+Note that you won't actually want to store the packages inside your project because they're rather large and you need different versions of the package for different operating systems. Instead, you'll record the package names and versions that your project needs in a metadata file, and the people using your project will install these packages as needed.
+
 ### Right sizing dependencies
 
 ### renv
@@ -10,9 +16,9 @@
 
 If you're familiar with Python, it's worth talking a little about the differences:
 
-* CRAN vs PyPI
-* Chances of random packages working together
-* Virtual env as default vs optional
-* SemVer
+-   CRAN vs PyPI
+-   Chances of random packages working together
+-   Virtual env as default vs optional
+-   SemVer
 
 ## Platform
