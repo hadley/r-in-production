@@ -92,7 +92,7 @@ Over time, most projects will accumulate other files and directories such as:
     This gives you the confidence to refactor your code and update your dependencies while knowing that your product will continue to be correct.
 
 -   `data/`: small supplementary datasets.
-    Most production products will access data dynamically as needed, but it's sometimes useful to a small amount of rarely changing static data.
+    Most production products will access data dynamically as needed, but it's sometimes useful to a small amount of rarely changing static data. This is also a good place to use if you're scraping and saving data.
 
 [^project-life-1]: You might wonder why tests don't just live in `tests`/.
     Firstly, this allows for the user of testing packages other than testthat (including packages that don't exist now but might in the future).
