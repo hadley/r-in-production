@@ -1,16 +1,18 @@
 # Right tool for the job
 
-<!-- TODO: This page needs some direction. Revisit and make this more than an overview of packages. -->
+<!--# TODO: This page needs some direction. Revisit and make this more than an overview of packages? -->
 
 Not every data science output is a Shiny app, but if the only tool in your toolbox is a hammer, everything looks like a nail. For maximum impact, you need to use the right tool for the job, considering your audience and the purpose of your data science project. In many cases, your data science project will include many different types of outputs all supporting the main deliverable that your stakeholders actually care about. Here we will cover the different types of outputs you can create with R, and how to choose the right one for your needs.
 
-<!-- TODO: Would diagrams be helpful here?  -->
+<!--# TODO: Would diagrams be helpful here?  -->
 
 ## Static documents
 
-A static document is compiled in batch process and then distributed to your audience. They can be updated programmatically or on a schedule so that the outputs are up to date. [R Markdown](https://rmarkdown.rstudio.com/) and [Quarto](https://quarto.org/) are the most common tools for creating static documents in R. These tools allow you to combine prose and code for literate programming, and have a low learning curve, with most of the syntax being markdown.
+<!--# TODO: should we also include scripts? -->
 
-Don't let the word "static" fool you; these documents are versatile and can be rich and engaging. Incorporating tools like Javascript or Observable can provide an interactive-type experience. Because they don't have an active runtime, they are also easier to distribute, and they can be compiled in many types of output formats, including html, PDF, Word, and Powerpoint.
+A static document is compiled in batch process and then distributed to your audience. It can be updated programmatically or on a schedule so that the outputs are up to date. [R Markdown](https://rmarkdown.rstudio.com/) and [Quarto](https://quarto.org/) are the most common tools for creating static documents in R. These tools allow you to combine prose and code for literate programming, and have a low learning curve, with most of the syntax being markdown.
+
+Don't let the word "static" fool you; these documents are versatile and can be rich and engaging. Incorporating tools like Javascript or Observable can provide an interactive-type experience. Quarto dashboards or `flexdashboard` (which uses R Markdown under the hood) generate polished dashboards with low effort. Because they don't have an active runtime, static documents are also easier to distribute, and they can be compiled in many types of output formats, including html, PDF, Word, and Powerpoint.
 
 Static documents are great for:
 
@@ -27,7 +29,7 @@ Often, one or more static documents on a schedule will be the backbone of a prod
 
 Static documents can be deployed to Posit Connect Cloud, Posit Connect, or GitHub Pages.
 
-<!-- TODO: Do we want to include opinions on Quarto vs R Markdown? -->
+<!--# TODO: Do we want to include opinions on Quarto vs R Markdown? -->
 
 ## Documents with Shiny runtime
 
@@ -35,7 +37,7 @@ R Markdown and Quarto can incorporate Shiny elements for additional reactivity a
 
 Both Posit Connect Cloud and Posit Connect support deployment of documents with a Shiny runtime.
 
-## Plumber API
+## APIs
 
 An application programming interface (API) is a way for two or more computer programs to communicate with each other. In plain language, this means that you can wrap up any R function as an API and then call it from another system or program. The other system or program does not have to be using R to access your function. This is the power and flexibility of APIs, allowing simple interoperability between systems.
 
@@ -45,26 +47,8 @@ Say you have prediction model that you want to share with your organization. You
 
 Plumber APIs require an R process at runtime, and they can be deployed on Posit Connect Cloud and Posit Connect.
 
-## Shiny web applications
+## Web applications
 
 [Shiny](https://shiny.posit.co/) is an R package that makes it easy to build interactive web applications and dashboards without needing to know html, css, or javascript. Traditionally, Shiny applications require a server-side R runtime, and Posit Connect Cloud or Posit Connect are ideal deployment platforms. Recent development with WebAssembly (Wasm) allows Shiny applications to run in the browser via [shinylive](https://posit-dev.github.io/r-shinylive/). This model, while novel, should be used in production settings with caution. It is important to note that WebAssembly sends all application code and data to the browser, which may not meet security models.
 
-<!-- TODO: Is a discussion around stateful vs stateless applications useful? -->
-
-## Comparison of tools
-
-+-----------------------+--------------------+--------------+
-| Tool                  | Package            | When it runs |
-+=======================+====================+==============+
-| Static document       | R Markdown         | batch        |
-|                       |                    |              |
-|                       | Quarto             |              |
-+-----------------------+--------------------+--------------+
-| Document with runtime | R Markdown + Shiny | interactive  |
-|                       |                    |              |
-|                       | Quarto + Shiny     |              |
-+-----------------------+--------------------+--------------+
-| API                   | Plumber            | interactive  |
-+-----------------------+--------------------+--------------+
-| Web application       | Shiny              | interactive  |
-+-----------------------+--------------------+--------------+
+<!--# TODO: Is a discussion around stateful vs stateless applications useful? -->
