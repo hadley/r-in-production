@@ -3,7 +3,9 @@ project:
 
 book:
   title: R in Production
-  author: Hadley Wickham
+  author: 
+   - Hadley Wickham
+   - Katie Masiello
 
   reader-mode: true
 
@@ -18,6 +20,12 @@ book:
     - whole-game.qmd
     - project-life.qmd
 
+    - part: getting-to-production.qmd
+      chapters:
+      - paper-cuts.qmd
+      - github-actions.qmd
+      - packages.qmd
+
     - part: production-code.qmd
       chapters:
         - another-machine.qmd
@@ -26,12 +34,6 @@ book:
         - optimize.qmd
         - logging.qmd
         - debugging.qmd
-
-    - part: getting-to-production.qmd
-      chapters:
-      - paper-cuts.qmd
-      - github-actions.qmd
-      - packages.qmd
         
     - part: multiple-times.qmd
       chapters:
@@ -56,7 +58,7 @@ book:
     - part: security.qmd
       chapters: 
         - security-code.qmd
-        - secutity-pkgs.qmd
+        - security-pkgs.qmd
         - security-deployment.qmd
         - security-event.qmd
 
