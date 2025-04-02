@@ -30,8 +30,6 @@ The topics of this book are selected to provide a well-rounded and strong founda
 
 ### Data science products
 
-# Data Science Products
-
 * **Documents** produced by Quarto and RMarkdown (including dashboards). In this book we'll focus on Quarto, but the same ideas apply to RMarkdown too.
 
 * Interactive **apps** produced by Shiny. These are the bread and butter of most data scientists. Like reports, they're aimed at humans, but instead of being a static document that's only controlled by the data scientist, they're an interactive collaboration between the data scientist and the end-user.
