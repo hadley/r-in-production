@@ -17,6 +17,7 @@ book:
     - introduction.qmd
     - whole-game.qmd
     - project-life.qmd
+    - right-tool.qmd
 
     - part: getting-to-production.qmd
       chapters:
@@ -27,7 +28,6 @@ book:
     - part: production-code.qmd
       chapters:
         - another-machine.qmd
-        - right-tool.qmd
         - auth.qmd
         - optimize.qmd
         - logging.qmd

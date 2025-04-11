@@ -1,8 +1,8 @@
-# Right tool for the job
+# What are you creating?
 
-<!--# TODO: This page needs some direction. Revisit and make this more than an overview of packages? -->
+As we talk about getting code to production, we need to consider what that code is. What type of output and supporting assets are you creating? 
 
-Not every data science output is, or should be, a Shiny app, but if the only tool in your toolbox is a hammer, everything looks like a nail. For maximum impact, you need to use the right tool for the job, considering your audience and the purpose of your data science project. In many cases, your data science project will include many different types of outputs all supporting the main deliverable that your stakeholders actually care about. Here we will cover the different types of outputs you can create with R, and how to choose the right one for your needs.
+Not every data science output is, or should be, a Shiny app, but if the only tool in your toolbox is a hammer, everything looks like a nail. For maximum impact, you need to use the right tool for the job, considering your audience and the purpose of your data science project. In many cases, your data science project will include many different types of outputs all supporting the main deliverable that your stakeholders actually care about. Here we will cover the different types of outputs you can create with R so you can choose the right tools for your needs.
 
 <!--# TODO: Would diagrams be helpful here?  -->
 
