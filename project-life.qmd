@@ -29,9 +29,9 @@ So it's fine if you deviate from what we describe here, just make sure to write 
 
 In this chapter, you'll learn about three important principles:
 
--   **A project is a self-contained directory**: all the files needed for a project should live in a single directory, and we recommend that you directory use standard subdirectories, so you always know where to look for a certain type of file.
+-   **A project is a self-contained directory**: all the files needed for a project should live in a single directory, and we recommend that your directory use standard sub directories, so you always know where to look for a certain type of file.
 -   **There's a single source of truth**: you will inevitably end up with multiple copies of your project so you need to decide which one is "real". We recommend using git, and declaring that the version of your project that lives in your central git repo is the source of truth.
--   **Deployment is automated**: deploying your code to production should involve minimal manual steps. We recommend you build a workflow so your product is deployed as soon as its is pushed to the main branch of your git repo.
+-   **Deployment is automated**: deploying your code to production should involve minimal manual steps. We recommend you build a workflow so your product is deployed as soon as it is pushed to the main branch of your git repo.
 
 Lets dive in!
 
@@ -66,7 +66,7 @@ This file is the project **entry point**, and will be run when your project is d
 For very simple projects, you can put all of your code inside these files.
 But as soon as your project no longer fits in one file, we recommending moving everything to a separate `exec/` directory.
 This helps keep a clear distinction between your data science product and the code and metadata that supports its deployment.
-You can organise your `exec/` directory however makes sense for you.
+You can organize your `exec/` directory in whatever way makes sense to you.
 But we recommend that you follow the advice in the [tidyverse style guide](https://style.tidyverse.org/files.html#names), to ensure that you convey as much usable information in your file names as possible.
 
 Once you have a separate `exec/` directory, your `main.R` will just provide the code needed to execute your product:
@@ -77,7 +77,7 @@ Once you have a separate `exec/` directory, your `main.R` will just provide the 
 -   For a Shiny app: `shiny::runApp("exec/")`.
 -   For a plumber API: `plumber::plumb("exec/")`.
 
-Later on, we'll introduce the producethis package which stores metadata in your `DESCRIPTION` file so you can use `producethis::exec()` in your `main.R`, regardless of your product type.
+Later on, we'll introduce the [producethis package](https://github.com/r-lib/producethis) which stores metadata in your `DESCRIPTION` file so you can use `producethis::exec()` in your `main.R`, regardless of your product type.
 
 Over time, most projects will accumulate other files and directories such as:
 
@@ -111,7 +111,7 @@ We'll come back to that in more detail in \[TODO\].
 ### Paths and working directories
 
 When you deploy your project to production or share your project with other people, it's not going to live in the same location.
-That means absolute paths won't work and you need to use a relative paths[^project-life-1].
+That means absolute paths won't work and you need to use relative paths[^project-life-1].
 There are two type of relative paths:
 
 [^project-life-1]: i.e. never start the path with `/`, `C:/`, or `~.`
@@ -137,7 +137,7 @@ This pattern is illustrated in @fig-single-source.
 
 ![A collaborative development workflow where multiple team members interact with a central git repository, and that repository goes from git to production.](diagrams/project-life/goal.svg){#fig-single-source fig-alt="A flowchart diagram showing a Git workflow with five boxes connected by arrows. The boxes are labeled \"You\", \"git\", \"Production\", \"Colleague A\", and \"Colleague B\". Bidirectional arrows connect \"You\", \"Colleage A\", and \"Colleague B\" with \"git\", a one-directional arrow goes from \"git\" to \"Production\" (dashed line)."}
 
-@fig-production-central shows a less idea workflow where if your colleagues want to see your code, they download it from your production server.
+@fig-production-central shows a less ideal workflow where if your colleagues want to see your code, they download it from your production server.
 This works ok if they just want to look at your code, but if they edit it, how do they get the changes back to you?
 It's also easy for them to edit it then deploy back to production, leading to an inconsistency between your version and their version.
 
@@ -179,10 +179,10 @@ If your organisation doesn't already provide GitHub or similar, you should immed
 We'll talk about GitHub a lot when it comes to working in a team.
 The most important tools are issues and pull requests.
 Issues provide a great way to track TODO items for your project, making it easy to see what work is remaining.
-Pull requests facilitate code review, which an extremely powerful technique for improving quality and upskilling your entire team.
+Pull requests facilitate code review, which is an extremely powerful technique for improving quality and upskilling your entire team.
 
 GitHub is also great when you're a solo data scientist or learning data science.
-As you'll learn later in the book, GitHub actions allow you to build your own production environment, and experience putting jobs into production just like you would in any larger organisation.
+As you'll learn later in the book, GitHub Actions allow you to build your own production environment, and experience putting jobs into production just like you would in any larger organisation.
 If you're just starting out in your career, GitHub is also a great place to build up a portfolio of data science projects that you can talk about when interviewing for jobs, showcasing some of the production jobs you've created for your own life.
 If you're in that position, I'd highly recommend watching [GitHub: How To Tell Your Professional Story](https://www.youtube.com/watch?v=R-bPjavai5A), by Abigail Haddad.
 
