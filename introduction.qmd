@@ -108,7 +108,7 @@ This book covers "production" not "Production" becuase we don't believe that you
 
 ## Why R?
 
-Because R is an unparalleled environment for exploratory data analysis. So why not use it for production to? It's totally possible - it just requires some new tools and techniques, and a slightly different mindset, that you need for interactive analysis.
+Because R is an unparalleled environment for exploratory data analysis. So why not use it for production too? It's totally possible - it just requires some new tools and techniques, and a slightly different mindset, that you need for interactive analysis.
 
 It is 100% possible to put R in production and many companies are already doing so. The goal of this book is to publicise the patterns that make it easiest and most effective, so that regardless of the size of the maturity of your data science org, you can put your R code into production with a minimum of fuss.
 
