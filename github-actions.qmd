@@ -16,7 +16,7 @@ A few of my jobs you might be interested to read about:
 
 -   <https://github.com/hadley/houston-pollen>: scrapes daily pollen data and aggregates it into a yearly parquet file.
 
--   [https://github.com/hadley/cran-deadlines](https://github.com/hadley/cran-deadlines:): turns CRAN deadline data into a Quarto dashboard.
+-   [https://github.com/hadley/cran-deadlines](https://github.com/hadley/cran-deadlines): turns CRAN deadline data into a Quarto dashboard.
 
 ## Big picture
 
