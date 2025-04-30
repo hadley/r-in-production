@@ -105,7 +105,7 @@ Using P3M resolves the speed problem by giving you binary packages, but it doesn
 
 That means you'll need to install some system dependencies in order to make some packages work. How do you know which packages need which system dependencies? That's a tricky problem because R projects have a very casual way of declaring system dependencies. Fortunately, however, Posit has invested a bunch of time and effort into turning that casual metadata into something actionable, which you can find at <https://github.com/rstudio/r-system-requirements>.
 
-`pak()` uses this metadata to automatically report if any system dependencies are missing, telling you exactly what you need to install. For example, if you attempt to install the tidyverse on a fresh Linux system, you'll get an message like this:
+`pak()` uses this metadata to automatically report if any system dependencies are missing, telling you exactly what you need to install. For example, if you attempt to install the tidyverse on a fresh Linux system, you'll get a message like this:
 
 ```
 → Will install 101 packages.
