@@ -104,7 +104,7 @@ It's useful to draw the distinction between lower case and upper case production
 
 The highest level of caring leads to Production-with-a-capital-P which adds in paging: i.e, if something goes wrong, you need to fix it immediately, even if it's 2am on Saturday morning. Most data science projects don't end up in Production, not because you can't put R in Production, but because you don't want to put your data scientists in Production.
 
-This book covers "production" not "Production" becuase we don't believe that you want to put your data scientists in production. It's not what they're good at and not what they're trained for.
+This book covers "production" not "Production" because we don't believe that you want to put your data scientists in production. It's not what they're good at and not what they're trained for.
 
 ## Why R?
 
