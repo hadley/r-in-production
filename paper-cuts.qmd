@@ -131,9 +131,9 @@ Alternatively, if you need vector plots, you can try [svglite](https://svglite.r
 
 ### Fonts
 
-Fonts are more likely to make a difference to the rendering of your plot than the graphics because different operating systems come with different fonts. This will inevitably crop up, even if you use ragg, since the default fonts (`"sans"`, `"serif"`, `"mono"`, and `"symbol"`) are mapped to different fonts. But if you decide to be explicit about the fonts by provide their full name, you'll run into a different problem: custom fonts probably aren't installed in your production environment. And while you probably know how to install a font on your laptop, installing installing fonts on a Linux server is a different challenge entirely.
+Fonts are more likely to make a difference to the rendering of your plot than the graphics because different operating systems come with different fonts. This will inevitably crop up, even if you use ragg, since the default fonts (`"sans"`, `"serif"`, `"mono"`, and `"symbol"`) are mapped to different fonts. But if you decide to be explicit about the fonts by provide their full name, you'll run into a different problem: custom fonts probably aren't installed in your production environment. And while you probably know how to install a font on your laptop, installing fonts on a Linux server is a different challenge entirely.
 
-Fortunately, the systemfonts package provides a solution: as well as looking for fonts installed with your operating system, it will also look for fonts in the `fonts/` directory of your current project. This means that means you can save a font file in that directory, and then use it in your plots. For example, this book includes a copy of the "Rubik Moonrocks" font, allowing me to use it in the following plot:
+Fortunately, the systemfonts package provides a solution: as well as looking for fonts installed with your operating system, it will also look for fonts in the `fonts/` directory of your current project. This means that you can save a font file in that directory, and then use it in your plots. For example, this book includes a copy of the "Rubik Moonrocks" font, allowing me to use it in the following plot:
 
 ```{r}
 library(ggplot2)
