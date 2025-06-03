@@ -9,3 +9,4 @@
 /_book/
 site_libs/
 *.html
+.vscode/settings.json
